@@ -1,0 +1,95 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@inherits Panel
+@namespace EmojiEngine
+
+<style>
+	EmojiPanel {
+        position: absolute;
+		color: white;
+		font-family: W10Emoji;
+		text-align: center;
+		align-items: center;
+		justify-content: center;
+    }
+</style>
+
+<root style="
+		left: @(Emoji.Position.x - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.x)px;
+		bottom: @(Emoji.Position.y - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.y)px;
+		font-size: @(Emoji.FontSize)px;
+		opacity: @(Emoji.Opacity);
+		transform: scaleX(@(Emoji.ScaleX)) scaleY(@(Emoji.ScaleY)) rotate(@(Emoji.Degrees)deg);
+		z-index: @(Emoji.ZIndex);
+		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
+		width: @(Emoji.PanelSize)px;
+		height: @(Emoji.PanelSize)px;
+		filter: blur(@(Emoji.Blur)px);
+		filter: brightness(@Emoji.Brightness);
+		filter: contrast(@Emoji.Contrast);
+		filter: invert(@Emoji.Invert);
+		filter: saturate(@Emoji.Saturation);
+		filter: sepia(@Emoji.Sepia);
+		filter: hue-rotate(@Emoji.HueRotateDegrees);
+	">
+
+	@(Emoji.Text)
+
+	<!-- child EmojiPanels  -->
+
+	<!-- <panel class="emoji" style="
+		text-shadow: 0 0 @(8f + Utils.FastSin(Time.Now * 2.55f) * 8f)px #000000;
+		text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
+	">
+		😘
+	</panel> -->
+
+	<!-- <panel class="emoji" style="
+		filter: drop-shadow( -5px -5px 10px rgba( red, 0.5 ), 5px 5px 10px rgba( blue, 0.5 ), 5px -5px 10px rgba( yellow, 0.5 ), -5px 5px 10px rgba( green, 0.5 ) );
+		filter: border-wrap(1px white);
+		text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
+		onclick="@(e => OnClick(e))"
+	>
+		😘
+	</panel> -->
+
+
+	<!-- <panel class="emoji" style="
+		font-size: @(64f + Utils.FastSin(Time.Now * 12f) * 12f)px;
+		left: @(600f + Utils.FastSin(Time.Now * 3.15f) * 10f - 32f)px; bottom: @(200f + Utils.FastSin(Time.Now * 3.7f) * 10f - 32f)px;
+	">
+		@(GetClockIcon())
+	</panel>-->
+
+</root>
+
+@code {
+	public Emoji Emoji { get; set; }
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Time.Now);
+	}
+
+	string GetClockIcon()
+	{
+		TimeSpan t = TimeSpan.FromSeconds(Time.Now);
+		int ticks = (int)t.Milliseconds;
+		int interval = 83;
+
+		if(ticks < interval * 1)		return "🕛";
+		else if(ticks < interval * 2)	return "🕐";
+		else if(ticks < interval * 3)	return "🕑";
+		else if(ticks < interval * 4)	return "🕒";
+		else if(ticks < interval * 5)	return "🕓";
+		else if(ticks < interval * 6)	return "🕔";
+		else if(ticks < interval * 7)	return "🕕";
+		else if(ticks < interval * 8)	return "🕖";
+		else if(ticks < interval * 9)	return "🕗";
+		else if(ticks < interval * 10)	return "🕘";
+		else if(ticks < interval * 11)	return "🕙";
+		else							return "🕚";
+	}
+}

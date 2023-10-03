@@ -1,0 +1,38 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@inherits Panel
+@namespace EmojiEngine
+
+<style>
+	DebugDisplay {
+		width: 0px;
+		height: 0px;
+		left: 2px;
+		top: 2px;
+		pointer-events: none;
+
+		color: #ddffdd77;
+		font-size: 24px;
+
+		.debug {
+			position: absolute;
+			transform-origin: 0% 50%;
+		}
+    }
+</style>
+
+<root>
+	<panel class="debug">@Text</panel>
+</root>
+
+@code {
+	public string Text { get; set; }
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(Text);
+	}
+}
+
