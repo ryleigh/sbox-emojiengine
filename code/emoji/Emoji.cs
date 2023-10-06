@@ -14,7 +14,7 @@ public class Emoji
 	public Vector2 Position { get; set; }
 	public Vector2 SpriteOffset { get; set; }
 	public string Text { get; set; }
-	public float FontSize { get; set; }
+	public float FontSize { get; set; } // warning - changing this is slow!
 	public float PanelSize { get; set; }
 	public float Opacity { get; set; }
 	public float Degrees { get; set; }
@@ -24,7 +24,11 @@ public class Emoji
 	public float ShadowBlur { get; set; }
 	public Color ShadowColor { get; set; }
 	public int ZIndex { get; set; }
-	public float Radius { get; set; }
+	private float _radius;
+	public float Radius { 
+		get { return _radius * Scale; } 
+		set { _radius = value; } 
+	}
 	public bool Interactable { get; set; }
 	public bool SwallowClicks { get; set; }
 	public bool IsHovered { get; set; }
@@ -32,6 +36,7 @@ public class Emoji
 	public float TransformOriginY { get; set; }
 	public float BaseTransformOriginX { get; set; }
 	public float BaseTransformOriginY { get; set; }
+	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
 	public float Blur { get; set; }
@@ -54,6 +59,7 @@ public class Emoji
 		SwallowClicks = true;
 		TransformOriginX = BaseTransformOriginX = 0.5f;
 		TransformOriginY = BaseTransformOriginY = 0.5f;
+		Scale = 1f;
 		ScaleX = 1f;
 		ScaleY = 1f;
 		Contrast = 1f;

@@ -28,7 +28,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	public bool MouseDownLeft { get; private set; }
 	public bool MouseDownRight { get; private set; }
 
-	private List<Emoji> _hoveredEmojis = new();
+	public List<Emoji> AllHoveredEmojis = new();
 	public Emoji HoveredEmoji { get; private set; }
 
 	public Color BgColorBottom { get; set; }
@@ -63,12 +63,12 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		Lines.Clear();
 		Rings.Clear();
-		_hoveredEmojis.Clear();
+		AllHoveredEmojis.Clear();
 		_faceEmojis.Clear();
 
 		DebugDisplay.Text = "";
 
-		for(int i = 0; i < 20; i++)
+		for(int i = 0; i < 50; i++)
 		{
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(ScreenWidth / 2f, ScreenHeight / 2f));
@@ -90,7 +90,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			Restart();
 
 		float HITBOX_RADIUS = 0.7f;
-		float REPEL_STRENGTH = 25f;
+		float REPEL_STRENGTH = 125f;
 		for(int i = _faceEmojis.Count - 1; i >= 0; i--)
 		{
 			var face = _faceEmojis[i];
@@ -113,9 +113,10 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 				if(distSqr < reqDistSqr)
 				{
 					float percent = Utils.Map(distSqr, reqDistSqr, 0f, 0f, 1f);
+					float repelStrength = REPEL_STRENGTH * Utils.Map(other.FontSize, FaceEmoji.FONT_SIZE_MIN, FaceEmoji.FONT_SIZE_MAX, 0.3f, 1f);
 					face.Velocity += (face.Position == other.Position)
-						? Utils.GetRandomVector() * REPEL_STRENGTH
-						: (face.Position - other.Position).Normal * percent * REPEL_STRENGTH;
+						? Utils.GetRandomVector() * repelStrength
+						: (face.Position - other.Position).Normal * percent * repelStrength;
 				}
 			}
 		}
@@ -142,7 +143,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	void HandleEmoji(float dt)
 	{
 		var mousePos = MousePos;
-		_hoveredEmojis.Clear();
+		AllHoveredEmojis.Clear();
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 		{
 			var emoji = Emojis[i];
@@ -154,11 +155,11 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			{
 				var distSqr = (mousePos - emoji.Position).LengthSquared;
 				if(distSqr < MathF.Pow(emoji.Radius, 2f))
-					_hoveredEmojis.Add(emoji);
+					AllHoveredEmojis.Add(emoji);
 			}
 		}
 
-		HoveredEmoji = _hoveredEmojis.Count > 0 ? _hoveredEmojis.OrderByDescending(x => x.ZIndex).First() : null;
+		HoveredEmoji = AllHoveredEmojis.Count > 0 ? AllHoveredEmojis.OrderByDescending(x => x.ZIndex).First() : null;
 		if(HoveredEmoji != null)
 			HoveredEmoji.IsHovered = true;
 	}

@@ -13,11 +13,14 @@ public partial class CursorEmoji : Emoji
 	public FaceEmoji DraggedEmoji { get; private set; }
 	public Vector2 CurrSpriteOffset { get; private set; }
 
-	public float Scale { get; set; }
 	private bool _isScaling;
 	private TimeSince _timeSinceScale;
 	private float _scaleTime;
 	private float _scaleAmount;
+
+	private float _bounceScale;
+
+	public bool IsHoveringSomething => Hud.Instance.AllHoveredEmojis.Count() > 0;
 
 	public CursorEmoji()
 	{
@@ -25,7 +28,7 @@ public partial class CursorEmoji : Emoji
 		FontSize = 64f;
 		ZIndex = 9999;
 		Interactable = true;
-		Scale = 1f;
+		_bounceScale = 1f;
 	}
 
 	public override void Update(float dt)
@@ -40,19 +43,19 @@ public partial class CursorEmoji : Emoji
 			if(_timeSinceScale > _scaleTime)
 			{
 				_isScaling = false;
-				Scale = 1f;
+				_bounceScale = 1f;
 			}
 			else
 			{
-				Scale = Utils.Map(_timeSinceScale, 0f, _scaleTime, _scaleAmount, 1f, EasingType.QuadOut);
+				_bounceScale = Utils.Map(_timeSinceScale, 0f, _scaleTime, _scaleAmount, 1f, EasingType.QuadOut);
 			}
 		}
 
 		Position = Hud.Instance.MousePos + new Vector2(-13f, -28f) + (IsDragging ? new Vector2(8f, 0f) : Vector2.Zero);
-
 		SpriteOffset = CurrSpriteOffset + (Hud.Instance.MouseDownLeft ? new Vector2(0f, 4f) : new Vector2(0f, 0f));
 
-		FontSize = 64f * Scale;
+		var hoveringScale = IsHoveringSomething ? 1.1f : 1f;
+		Scale = Utils.DynamicEaseTo(Scale, _bounceScale * hoveringScale, 0.8f, dt);
 
 		Degrees = Utils.DynamicEaseTo(Degrees, Math.Clamp(dX * 2.2f, -40f, 40f), 0.65f, dt);
 		ScaleY = Utils.DynamicEaseTo(ScaleY, Utils.Map(MathF.Abs(dY), 0f, 10f, 1f, dY < 0f ? 0.7f : 1.3f), 0.3f, dt);
@@ -68,13 +71,19 @@ public partial class CursorEmoji : Emoji
 			if((DraggedEmoji.Position - holdPos).LengthSquared > MathF.Pow(3f, 2f))
 				DraggedEmoji.Position = Utils.DynamicEaseTo(DraggedEmoji.Position, holdPos, 0.15f, dt);
 
-			DraggedEmoji.Degrees = Utils.DynamicEaseTo(DraggedEmoji.Degrees, dX * 2f, 0.2f, dt);
+			DraggedEmoji.Degrees = Utils.DynamicEaseTo(DraggedEmoji.Degrees, dX * 1.1f, 0.2f, dt);
 
 			DraggedEmoji.ScaleY = Utils.DynamicEaseTo(DraggedEmoji.ScaleY, Utils.Map(MathF.Abs(dY), 0f, 10f, 1f, dY < 0f ? 0.8f : 1.2f), 0.3f, dt);
 			DraggedEmoji.ScaleX = 1f + (1f - DraggedEmoji.ScaleY);
 
 			//DraggedEmoji.ScaleX = Utils.DynamicEaseTo(DraggedEmoji.ScaleX, Utils.Map(Hud.Instance.MouseDelta.Length, 0f, 10f, 1f, 0.8f), 0.3f, dt);
 			//DraggedEmoji.ScaleY = Utils.DynamicEaseTo(DraggedEmoji.ScaleY, Utils.Map(Hud.Instance.MouseDelta.Length, 0f, 10f, 1f, 1.2f), 0.3f, dt);
+		}
+
+		if(!IsDragging)
+		{
+			Text = IsHoveringSomething ? "👆" : "☝️";
+			CurrSpriteOffset = IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
 		}
 	}
 
@@ -93,8 +102,9 @@ public partial class CursorEmoji : Emoji
 
 	public void StopDragging()
 	{
-		Text = "☝️";
-		CurrSpriteOffset = new Vector2(0f, 0f);
+		Text = IsHoveringSomething ? "👆" : "☝️";
+		CurrSpriteOffset = IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
+
 		IsDragging = false;
 		DraggedEmoji.TransformOriginY = DraggedEmoji.BaseTransformOriginY;
 		DraggedEmoji.Position += new Vector2(-DraggedEmoji.Degrees, 0f);

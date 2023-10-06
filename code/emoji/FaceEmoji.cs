@@ -11,8 +11,6 @@ namespace EmojiEngine;
 
 public class FaceEmoji : Emoji
 {
-	public float Scale { get; set; }
-
 	private bool _isPoked;
 	private TimeSince _timeSincePoked;
 	private float _pokeTime;
@@ -31,11 +29,12 @@ public class FaceEmoji : Emoji
 	private float _shadowHeight;
 
 	public Vector2 Velocity { get; set; }
-	private float _fontSize;
-	private const float FONT_SIZE_MIN = 80f;
-	private const float FONT_SIZE_MAX = 150f;
+	public const float FONT_SIZE_MIN = 80f;
+	public const float FONT_SIZE_MAX = 150f;
 
-	private const float RADIUS_SIZE_FACTOR = 0.56f;
+	public const float RADIUS_SIZE_FACTOR = 0.56f;
+
+	float _pokedScale;
 
 	private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 			"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
@@ -45,14 +44,17 @@ public class FaceEmoji : Emoji
 	public FaceEmoji()
 	{
 		Text = GetFaceText();
-		Scale = 1f;
 		TransformOriginY = BaseTransformOriginY = 0.75f;
 
 		DetermineRotVars();
 
-		ShadowEmoji = Hud.Instance.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
+		FontSize = Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX);
+		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
-		_fontSize = Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX);
+		ShadowEmoji = Hud.Instance.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
+		ShadowEmoji.FontSize = FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f);
+
+		_pokedScale = 1f;
 	}
 
 	public override void Update(float dt)
@@ -63,12 +65,12 @@ public class FaceEmoji : Emoji
 		{
 			if(_timeSincePoked > _pokeTime)
 			{
-				Scale = 1f;
+				_pokedScale = 1f;
 				_isPoked = false;
 			}
 			else
 			{
-				Scale = Utils.Map(_timeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
+				_pokedScale = Utils.Map(_timeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
 			}
 		}
 
@@ -78,10 +80,18 @@ public class FaceEmoji : Emoji
 		if(IsBeingPressed && !IsHovered)
 			IsBeingPressed = false;
 
-		//Scale = Utils.DynamicEaseTo(Scale, BaseScale * (IsHovered ? 1.05f : 1f) * (IsBeingPressed ? 0.9f : 1f), 0.5f, dt);
+		float height = Hud.Instance.ScreenHeight;
+		float y = Position.y;
+		float centerY = height / 2f;
 
-		FontSize = _fontSize * Scale * (IsHovered ? 1.05f : 1f) * (IsBeingPressed ? 0.9f : 1f);
-		Radius = _fontSize * RADIUS_SIZE_FACTOR * Scale;
+		//float depthScale = Utils.Map(MathX.CeilToInt(Position.y / 100f) * 100f, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
+		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
+		float depthScale = 1f;
+
+		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * (IsHovered ? 1.1f : 1f) * (IsBeingPressed ? 0.9f : 1f), 0.3f, dt);
+
+		//FontSize = _fontSize * _scale * (IsHovered ? 1.05f : 1f) * (IsBeingPressed ? 0.9f : 1f);
+		//Radius = _fontSize * RADIUS_SIZE_FACTOR * _scale;
 
 		if(!IsBeingDragged)
 		{
@@ -94,28 +104,23 @@ public class FaceEmoji : Emoji
 			Velocity += Utils.GetRandomVector() * 1200f * dt;
 
 			Position += Velocity * dt;
-			Velocity *= (1f - 4f * dt);
+			float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
+			Velocity *= (1f - deceleration * dt);
 
 			CheckBounds();
 		}
-
-		float height = Hud.Instance.ScreenHeight;
-		float y = Position.y;
-		float centerY = height / 2f;
+		
 		ZIndex = (int)(height - y);
-
-		//if(y < centerY)
-			//Blur = Utils.Map(y, 0f, centerY, 8f, , EasingType.QuadIn);
 
 		Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
 
 		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, IsBeingDragged ? -65f : -40f, 0.2f, dt);
 		ShadowEmoji.Text = Text;
-		ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f * (IsBeingDragged ? -4f : 1f), _shadowHeight) * Utils.Map(_fontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+		ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f * (IsBeingDragged ? -4f : 1f), _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 		ShadowEmoji.ScaleX = ScaleX * 1.25f;
 		ShadowEmoji.ScaleY = ScaleY * 0.8f;
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, IsBeingDragged ? 8f : 6f, 0.2f, dt);
-		ShadowEmoji.FontSize = Utils.DynamicEaseTo(ShadowEmoji.FontSize, FontSize * Utils.Map(_fontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f) * (IsBeingDragged ? 0.8f : 1f), 0.2f, dt);
+		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale * (IsBeingDragged ? 0.8f : 1f), 0.2f, dt);
 		ShadowEmoji.Degrees = Degrees * 0.3f;
 
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";

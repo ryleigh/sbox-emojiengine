@@ -21,7 +21,7 @@
 		bottom: @(Emoji.Position.y - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.y)px;
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
-		transform: scaleX(@(Emoji.ScaleX)) scaleY(@(Emoji.ScaleY)) rotate(@(Emoji.Degrees)deg);
+		transform: scale(@Emoji.Scale) scaleX(@Emoji.ScaleX) scaleY(@Emoji.ScaleY) rotate(@(Emoji.Degrees)deg);
 		z-index: @(Emoji.ZIndex);
 		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
 		width: @(Emoji.PanelSize)px;
@@ -36,6 +36,8 @@
 	">
 
 	@(Emoji.Text)
+
+	<!-- chancing "font-size" is very slow!!!!!  -->
 
 	<!-- child EmojiPanels  -->
 
