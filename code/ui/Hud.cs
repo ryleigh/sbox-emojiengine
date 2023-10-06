@@ -68,7 +68,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		DebugDisplay.Text = "";
 
-		for(int i = 0; i < 50; i++)
+		for(int i = 0; i < 30; i++)
 		{
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(ScreenWidth / 2f, ScreenHeight / 2f));

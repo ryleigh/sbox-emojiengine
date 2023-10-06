@@ -202,6 +202,11 @@ public class FaceEmoji : Emoji
 
 			Degrees = 0f;
 			DetermineRotVars();
+
+			ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), Position) as ExplosionEmoji;
+			explosion.FontSize = FontSize;
+			explosion.ZIndex = ZIndex - 1;
+			explosion.FaceEmoji = this;
 		}
 	}
 
