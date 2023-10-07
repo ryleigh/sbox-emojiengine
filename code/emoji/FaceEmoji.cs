@@ -166,9 +166,9 @@ public class FaceEmoji : Emoji
 		}
 	}
 
-	public override void OnMouseDown(bool rightClick)
+	public override void OnClickedDown(bool rightClick)
 	{
-		base.OnMouseDown(rightClick);
+		base.OnClickedDown(rightClick);
 
 		if(!rightClick)
 		{
@@ -176,9 +176,9 @@ public class FaceEmoji : Emoji
 		}
 	}
 
-	public override void OnMouseUp(bool rightClick)
+	public override void OnClickedUp(bool rightClick)
 	{
-		base.OnMouseUp(rightClick);
+		base.OnClickedUp(rightClick);
 
 		if(IsBeingPressed && !rightClick)
 		{
@@ -196,7 +196,7 @@ public class FaceEmoji : Emoji
 
 			//Hud.Instance.AddRing(Position, color, Game.Random.Float(0.2f, 0.4f), Radius, Radius * Game.Random.Float(1.6f, 2f), 9f, 1f, numSegments, ZIndex - 1);
 
-			Hud.Instance.CursorEmoji.BounceScale(1.2f, 0.15f);
+			Hud.Instance.CursorEmoji?.BounceScale(1.2f, 0.15f);
 
 			IsBeingPressed = false;
 

@@ -18,12 +18,12 @@ public class ExplosionEmoji : Emoji
 	public ExplosionEmoji()
 	{
 		Text = "💥";
-		Interactable = false;
+		IsInteractable = false;
 		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.1f, 0.2f);
 		Degrees = Game.Random.Float(0f, 360f);
-		ScaleX = Game.Random.Float(0.5f, 1.5f);
-		ScaleY = Game.Random.Float(0.5f, 1.5f);
+		ScaleX = Game.Random.Float(0.66f, 1.33f);
+		ScaleY = Game.Random.Float(0.66f, 1.33f);
 		//Brightness = 10f;
 		Invert = 1f;
 	}
@@ -41,7 +41,7 @@ public class ExplosionEmoji : Emoji
 		float progress = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadOut);
 		Scale = 1f + progress * 0.7f;
 		Opacity = (1f - progress);
-		Blur = Utils.Map(progress, 0f, 1f, 0f, 10f);
+		Blur = (FaceEmoji?.Blur ?? 0f) + Utils.Map(progress, 0f, 1f, 0f, 10f);
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

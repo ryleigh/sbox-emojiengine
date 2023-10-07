@@ -29,7 +29,8 @@ public class Emoji
 		get { return _radius * Scale; } 
 		set { _radius = value; } 
 	}
-	public bool Interactable { get; set; }
+	public bool IsVisible { get; set; }
+	public bool IsInteractable { get; set; }
 	public bool SwallowClicks { get; set; }
 	public bool IsHovered { get; set; }
 	public float TransformOriginX { get; set; }
@@ -55,7 +56,8 @@ public class Emoji
 		FontSize = 32f;
 		PanelSize = 64f;
 		Opacity = 1f;
-		Interactable = true;
+		IsVisible = true;
+		IsInteractable = true;
 		SwallowClicks = true;
 		TransformOriginX = BaseTransformOriginX = 0.5f;
 		TransformOriginY = BaseTransformOriginY = 0.5f;
@@ -75,15 +77,10 @@ public class Emoji
 		PanelSize = FontSize * 1.5f;
 	}
 
-	public virtual void OnMouseDown(bool rightClick)
-	{
-		
-	}
-
-	public virtual void OnMouseUp(bool rightClick)
-	{
-
-	}
+	public virtual void OnMouseDown(bool rightClick) { }
+	public virtual void OnMouseUp(bool rightClick) { }
+	public virtual void OnClickedDown(bool rightClick) { }
+	public virtual void OnClickedUp(bool rightClick) { }
 
 	public void AddChild(Emoji emoji)
 	{

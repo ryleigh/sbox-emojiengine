@@ -27,7 +27,7 @@ public partial class CursorEmoji : Emoji
 		Text = "☝️";
 		FontSize = 64f;
 		ZIndex = 9999;
-		Interactable = false;
+		IsInteractable = false;
 		_bounceScale = 1f;
 	}
 
@@ -85,6 +85,24 @@ public partial class CursorEmoji : Emoji
 			Text = IsHoveringSomething ? "👆" : "☝️";
 			CurrSpriteOffset = IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
 		}
+	}
+
+	public override void OnMouseDown(bool rightClick)
+	{
+		base.OnMouseDown(rightClick);
+
+		if(rightClick && Hud.Instance.HoveredEmoji != null && Hud.Instance.HoveredEmoji is FaceEmoji faceEmoji)
+			StartDragging(faceEmoji);
+	}
+
+	public override void OnMouseUp(bool rightClick)
+	{
+		base.OnMouseUp(rightClick);
+
+		BounceScale(1.1f, 0.1f);
+
+		if(rightClick && IsDragging)
+			StopDragging();
 	}
 
 	public void StartDragging(FaceEmoji faceEmoji)

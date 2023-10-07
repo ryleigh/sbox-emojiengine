@@ -38,6 +38,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 	private List<FaceEmoji> _faceEmojis = new();
 	public CursorEmoji CursorEmoji { get; private set; }
+	public CrosshairEmoji CrosshairEmoji { get; private set; }
 
 	public const float BOUNDS_BUFFER = 40f;
 
@@ -59,7 +60,8 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	public void Restart()
 	{
 		Emojis.Clear();
-		CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
+		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
+		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), MousePos) as CrosshairEmoji;
 
 		Lines.Clear();
 		Rings.Clear();
@@ -151,7 +153,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 			emoji.IsHovered = false;
 
-			if(emoji.Interactable && emoji.Radius > 0f)
+			if(emoji.IsInteractable && emoji.Radius > 0f)
 			{
 				var distSqr = (mousePos - emoji.Position).LengthSquared;
 				if(distSqr < MathF.Pow(emoji.Radius, 2f))
@@ -206,10 +208,10 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		else
 			MouseDownLeft = true;
 
-		ProcessMouseEvent(rightClick, down: true);
+		for(int i = Emojis.Count - 1; i >= 0; i--)
+			Emojis[i].OnMouseDown(rightClick);
 
-		if(rightClick && HoveredEmoji != null && HoveredEmoji is FaceEmoji faceEmoji)
-			CursorEmoji.StartDragging(faceEmoji);
+		ProcessMouseEvent(rightClick, down: true);
 	}
 
 	protected override void OnMouseUp(MousePanelEvent e)
@@ -222,18 +224,16 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		else
 			MouseDownLeft = false;
 
-		CursorEmoji.BounceScale(1.1f, 0.1f);
+		for(int i = Emojis.Count - 1; i >= 0; i--)
+			Emojis[i].OnMouseUp(rightClick);
 
 		ProcessMouseEvent(rightClick, down: false);
-
-		if(rightClick && CursorEmoji.IsDragging)
-			CursorEmoji.StopDragging();
 	}
 
 	void ProcessMouseEvent(bool rightClick, bool down)
 	{
 		var emojis = Emojis
-			.Where(x => x.Interactable)
+			.Where(x => x.IsInteractable)
 			.Where(x => (x.Position - MousePos).LengthSquared < MathF.Pow(x.Radius, 2f))
 			.OrderBy(x => x.ZIndex)
 			.ToList();
@@ -243,9 +243,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			var emoji = emojis[i];
 
 			if(down)
-				emoji.OnMouseDown(rightClick);
+				emoji.OnClickedDown(rightClick);
 			else
-				emoji.OnMouseUp(rightClick);
+				emoji.OnClickedUp(rightClick);
 
 			if(emoji.SwallowClicks)
 				break;
@@ -284,9 +284,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			HoveredEmoji = null;
 	}
 
-	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 0)
+	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 0, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
-		Lines.Add(new LineData(posA, posB, thickness, color, Time.Now, lifetime, zIndex));
+		Lines.Add(new LineData(posA, posB, thickness, color, Time.Now, lifetime, zIndex, invert, saturation, blur));
 	}
 
 	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = 0)

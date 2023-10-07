@@ -15,8 +15,11 @@ public struct LineData
 	public float spawnTime;
 	public float lifetime;
 	public int zIndex;
+	public float invert;
+	public float saturation;
+	public float blur;
 
-	public LineData(Vector2 _posA, Vector2 _posB, float _thickness, Color _color, float _spawnTime, float _lifetime, int _zIndex)
+	public LineData(Vector2 _posA, Vector2 _posB, float _thickness, Color _color, float _spawnTime, float _lifetime, int _zIndex, float _invert, float _saturation, float _blur)
 	{
 		posA = _posA;
 		posB = _posB;
@@ -25,5 +28,8 @@ public struct LineData
 		spawnTime = _spawnTime;
 		lifetime = _lifetime;
 		zIndex = _zIndex;
+		invert = _invert;
+		saturation = _saturation;
+		blur = _blur;
 	}
 }
