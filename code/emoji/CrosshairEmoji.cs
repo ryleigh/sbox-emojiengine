@@ -56,7 +56,7 @@ public partial class CrosshairEmoji : Emoji
 		Hud.Instance.DrawLine(mousePos - new Vector2(0f, gap), mousePos - new Vector2(0f, gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
 		Hud.Instance.DrawLine(mousePos + new Vector2(0f, gap), mousePos + new Vector2(0f, gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
 
-		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.125f)
+		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.1f)
 			Shoot();
 
 		//Hud.Instance.OverlayDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.15f, 10f, 1f, EasingType.QuadOut);
@@ -81,7 +81,22 @@ public partial class CrosshairEmoji : Emoji
 		{
 			var emoji = hitEmojis[0];
 			if(emoji is FaceEmoji faceEmoji)
-				faceEmoji.Hit();
+			{
+				float HOLE_SIZE = 20f * faceEmoji.Scale;
+				if((pos - faceEmoji.Position).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
+					pos = faceEmoji.Position + (pos - faceEmoji.Position).Normal * (faceEmoji.Radius - HOLE_SIZE);
+
+				faceEmoji.Hit(pos);
+
+				WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), pos) as WoundEmoji;
+				wound.ZIndex = faceEmoji.ZIndex + 1;
+				wound.Parent = faceEmoji;
+				Vector2 faceAnchorPos = faceEmoji.AnchorPos;
+
+				wound.ParentOffsetDistance = (pos - faceAnchorPos).Length / faceEmoji.Scale;
+				wound.ParentOffsetDegrees = Utils.VectorToDegrees(pos - faceAnchorPos);
+				wound.ParentStartDegrees = faceEmoji.Degrees;
+			}
 		}
 		else
 		{

@@ -112,7 +112,7 @@ public class FaceEmoji : Emoji
 		
 		ZIndex = (int)(height - y);
 
-		Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
+		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
 
 		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, IsBeingDragged ? -65f : -40f, 0.2f, dt);
 		ShadowEmoji.Text = Text;
@@ -122,6 +122,8 @@ public class FaceEmoji : Emoji
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, IsBeingDragged ? 8f : 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale * (IsBeingDragged ? 0.8f : 1f), 0.2f, dt);
 		ShadowEmoji.Degrees = Degrees * 0.3f;
+
+		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
 
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
 
@@ -186,7 +188,7 @@ public class FaceEmoji : Emoji
 	//	}
 	//}
 
-	public void Hit()
+	public void Hit(Vector2 hitPos)
 	{
 		_isPoked = true;
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
@@ -209,9 +211,9 @@ public class FaceEmoji : Emoji
 		Degrees = 0f;
 		DetermineRotVars();
 
-		ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), Position) as ExplosionEmoji;
-		explosion.SetFontSize(FontSize);
-		explosion.ZIndex = ZIndex - 1;
+		ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), hitPos) as ExplosionEmoji;
+		explosion.SetFontSize(FontSize * Game.Random.Float(0.6f, 0.8f));
+		explosion.ZIndex = ZIndex + 1;
 		explosion.FaceEmoji = this;
 	}
 

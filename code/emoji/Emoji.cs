@@ -38,6 +38,7 @@ public class Emoji
 	public float TransformOriginY { get; set; }
 	public float BaseTransformOriginX { get; set; }
 	public float BaseTransformOriginY { get; set; }
+	public Vector2 AnchorPos => Position + new Vector2((TransformOriginX - 0.5f) * PanelSize, -(TransformOriginY - 0.5f) * PanelSize);
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }

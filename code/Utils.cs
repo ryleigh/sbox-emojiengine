@@ -100,6 +100,13 @@ public static class Utils
 		return new Vector2(MathF.Cos(rads), MathF.Sin(rads));
 	}
 
+	public static float VectorToDegrees(Vector2 vec)
+	{
+		float radians = (float)Math.Atan2(vec.y, vec.x);
+		float degrees = radians * (180f / (float)Math.PI);
+		return degrees;
+	}
+
 	public static Vector2 GetPerpendicularVector(Vector2 vec)
 	{
 		return new Vector2(-vec.y, vec.x);
