@@ -16,6 +16,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	public List<Emoji> Emojis { get; private set; }
 	public EEGame EEGame { get; set; }
 	public EmojiDisplay EmojiDisplay { get; private set; }
+	public OverlayDisplay OverlayDisplay { get; private set; }
 
 	public List<LineData> Lines { get; private set; }
 
@@ -53,6 +54,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		EmojiDisplay = AddChild<EmojiDisplay>();
 		DebugDisplay = AddChild<DebugDisplay>();
+		OverlayDisplay = AddChild<OverlayDisplay>();
 
 		Restart();
 	}

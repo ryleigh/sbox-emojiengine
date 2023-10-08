@@ -26,6 +26,7 @@
 		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;
+		text-stroke: @(Emoji.TextStroke)px @Emoji.TextStrokeColor.Rgba;
 		filter: blur(@(Emoji.Blur)px);
 		filter: brightness(@Emoji.Brightness);
 		filter: contrast(@Emoji.Contrast);
@@ -33,6 +34,7 @@
 		filter: saturate(@Emoji.Saturation);
 		filter: sepia(@Emoji.Sepia);
 		filter: hue-rotate(@Emoji.HueRotateDegrees);
+		@(Emoji.HasDropShadow ? $"filter: drop-shadow({@Emoji.DropShadowX}px {@Emoji.DropShadowY}px {@Emoji.DropShadowBlur}px {@Emoji.DropShadowColor.Rgba});" : "")
 	">
 
 	@(Emoji.Text)
@@ -42,7 +44,7 @@
 	<!-- child EmojiPanels  -->
 
 	<!-- <panel class="emoji" style="
-		text-shadow: 0 0 @(8f + Utils.FastSin(Time.Now * 2.55f) * 8f)px #000000;
+		text-shadow: @Emoji.TextShadowX @Emoji.TextShadowY @Emoji.TextShadowBlur @Emoji.TextShadowColor.Rgba
 		text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
 	">
 		😘

@@ -11,6 +11,7 @@
 		height:100%;
 		pointer-events: none;
 		z-index: 0;
+		position: absolute;
 		filter: blur(@(Blur)px);
 		filter: hue-rotate(@HueRotateDegrees);
 		filter: brightness(@Brightness);
@@ -83,26 +84,26 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine(Time.Now);
+		return HashCode.Combine(Time.Now); // todo
 	}
 
-	string GetClockIcon()
-	{
-		TimeSpan t = TimeSpan.FromSeconds(Time.Now);
-		int ticks = (int)t.Milliseconds;
-		int interval = 83;
+	//string GetClockIcon()
+	//{
+	//	TimeSpan t = TimeSpan.FromSeconds(Time.Now);
+	//	int ticks = (int)t.Milliseconds;
+	//	int interval = 83;
 
-		if(ticks < interval * 1)		return "🕛";
-		else if(ticks < interval * 2)	return "🕐";
-		else if(ticks < interval * 3)	return "🕑";
-		else if(ticks < interval * 4)	return "🕒";
-		else if(ticks < interval * 5)	return "🕓";
-		else if(ticks < interval * 6)	return "🕔";
-		else if(ticks < interval * 7)	return "🕕";
-		else if(ticks < interval * 8)	return "🕖";
-		else if(ticks < interval * 9)	return "🕗";
-		else if(ticks < interval * 10)	return "🕘";
-		else if(ticks < interval * 11)	return "🕙";
-		else							return "🕚";
-	}
+	//	if(ticks < interval * 1)		return "🕛";
+	//	else if(ticks < interval * 2)	return "🕐";
+	//	else if(ticks < interval * 3)	return "🕑";
+	//	else if(ticks < interval * 4)	return "🕒";
+	//	else if(ticks < interval * 5)	return "🕓";
+	//	else if(ticks < interval * 6)	return "🕔";
+	//	else if(ticks < interval * 7)	return "🕕";
+	//	else if(ticks < interval * 8)	return "🕖";
+	//	else if(ticks < interval * 9)	return "🕗";
+	//	else if(ticks < interval * 10)	return "🕘";
+	//	else if(ticks < interval * 11)	return "🕙";
+	//	else							return "🕚";
+	//}
 }

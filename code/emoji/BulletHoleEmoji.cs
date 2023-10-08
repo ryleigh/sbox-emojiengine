@@ -14,38 +14,45 @@ public class BulletHoleEmoji : Emoji
 	public float Lifetime { get; set; }
 
 	private float _brightness;
+	private float _brightnessTime;
 
 	public BulletHoleEmoji()
 	{
-		float rand = Game.Random.Float(0f, 1f);
-		if(rand < 0.8f)
-			Text = "💥";
-		else
-			Text = "⭐️";
+		Text = "💥";
 
 		IsInteractable = false;
 		ZIndex = -50;
 		Saturation = Game.Random.Float(1f, 2f);
 
-		ScaleX = Game.Random.Float(1.15f, 1.25f);
-		ScaleY = Game.Random.Float(0.75f, 0.85f);
+		ScaleX = Game.Random.Float(1.2f, 1.3f);
+		ScaleY = Game.Random.Float(0.7f, 0.8f);
 		_timeSinceSpawn = 0f;
-		Lifetime = Game.Random.Float(1.1f, 1.5f);
+		Lifetime = Game.Random.Float(1.4f, 1.8f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(20f, 24f));
-		Degrees = Game.Random.Float(-45f, 45f);
+		Degrees = Game.Random.Float(-25f, 25f);
 		_brightness = Game.Random.Float(1f, 4f);
+		_brightnessTime = Game.Random.Float(0.1f, 0.2f);
+
+		HasDropShadow = true;
+		DropShadowX = 0f;
+		DropShadowY = 5f;
+		DropShadowBlur = 12f;
+		DropShadowColor = Color.Black;
 	}
 
 	public override void Update(float dt)
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f);
-		Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 0f, EasingType.QuadOut);
-		ZIndex = (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, -50f, -99f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, 12f, 3f, EasingType.QuadOut);
+		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn);
+		Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 0f, EasingType.QuadOut);
+		ZIndex = (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, -50f, -99f, EasingType.QuadOut);
+		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 3f, EasingType.QuadOut);
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+
+		TextStroke = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.1f, 8f, 0f, EasingType.ExpoOut);
+		TextStrokeColor = new Color(1f, Game.Random.Float(0f, 1f), 0f);
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

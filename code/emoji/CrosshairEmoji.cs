@@ -43,7 +43,7 @@ public partial class CrosshairEmoji : Emoji
 
 		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, Utils.Map(Hud.Instance.MouseDelta.Length, 0f, 20f, 0f, 60f, EasingType.QuadIn), 0.25f, dt);
 		_recoilGap = Utils.DynamicEaseTo(_recoilGap, Utils.Map(_timeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut), 0.3f, dt);
-		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
+		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.1f, dt);
 
 		float gap = MIN_GAP + _mouseDeltaGap + _recoilGap;
 		Color color = Color.Lerp(Color.White, Color.Black, 0.5f + Utils.FastSin(Time.Now * 24f) * 0.5f).WithAlpha(0.5f);
@@ -55,6 +55,12 @@ public partial class CrosshairEmoji : Emoji
 		Hud.Instance.DrawLine(mousePos + new Vector2(gap, 0f), mousePos + new Vector2(gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
 		Hud.Instance.DrawLine(mousePos - new Vector2(0f, gap), mousePos - new Vector2(0f, gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
 		Hud.Instance.DrawLine(mousePos + new Vector2(0f, gap), mousePos + new Vector2(0f, gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
+
+		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.125f)
+			Shoot();
+
+		//Hud.Instance.OverlayDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.15f, 10f, 1f, EasingType.QuadOut);
+		//Hud.Instance.EmojiDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.15f, 10f, 1f, EasingType.QuadOut);
 	}
 
 	public override void OnMouseDown(bool rightClick)
@@ -63,13 +69,13 @@ public partial class CrosshairEmoji : Emoji
 
 		if(!rightClick)
 			Shoot();
-		
 	}
 
 	void Shoot()
 	{
 		float gap = MIN_GAP + _mouseDeltaGap + _recoilGap;
-		var pos = Hud.Instance.MousePos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
+		var mousePos = Hud.Instance.MousePos;
+		var pos = mousePos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
 
 		if(Hud.Instance.Raycast(pos, out List<Emoji> hitEmojis))
 		{
@@ -80,8 +86,12 @@ public partial class CrosshairEmoji : Emoji
 		else
 		{
 			Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
-			var dust = Hud.Instance.AddEmoji(new DustEmoji(), pos);
+			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), pos) as DustEmoji;
 			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - pos.y);
+
+			float offsetX = pos.x - mousePos.x;
+			dust.Degrees = Utils.Map(offsetX, -200f, 200f, -120f, -60f);
+			dust.Velocity = Utils.DegreesToVector(-dust.Degrees) * Game.Random.Float(1500f, 3000f);
 		}
 
 		_timeSinceShoot = 0f;

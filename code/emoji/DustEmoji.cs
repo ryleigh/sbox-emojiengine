@@ -14,7 +14,7 @@ public class DustEmoji : Emoji
 	public float Lifetime { get; set; }
 
 	private float _brightness;
-	private Vector2 _velocity;
+	public Vector2 Velocity { get; set; }
 
 	public DustEmoji()
 	{
@@ -30,10 +30,8 @@ public class DustEmoji : Emoji
 		Lifetime = Game.Random.Float(0.075f, 0.35f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(25f, 32f));
-		Degrees = Game.Random.Float(-75f, -105f);
 		_brightness = Game.Random.Float(1f, 4f);
-
-		_velocity = Utils.DegreesToVector(-Degrees) * Game.Random.Float(1500f, 3000f);
+		Opacity = 0f;
 	}
 
 	public override void Update(float dt)
@@ -44,9 +42,10 @@ public class DustEmoji : Emoji
 		Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
 		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, 12f, 5f, EasingType.QuadOut);
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, 1.1f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+		ScaleX = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.4f, 1.25f, 1f, EasingType.Linear);
 
-		Position += _velocity * dt;
-		_velocity *= (1f - 25f * dt);
+		Position += Velocity * dt;
+		Velocity *= (1f - 25f * dt);
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

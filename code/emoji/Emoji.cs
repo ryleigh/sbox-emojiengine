@@ -48,6 +48,13 @@ public class Emoji
 	public float Saturation { get; set; }
 	public float Sepia { get; set; }
 	public float HueRotateDegrees { get; set; }
+	public float TextStroke { get; set; }
+	public Color TextStrokeColor { get; set; }
+	public float DropShadowX { get; set; }
+	public float DropShadowY { get; set; }
+	public float DropShadowBlur { get; set; }
+	public Color DropShadowColor { get; set; }
+	public bool HasDropShadow { get; set; }
 
 	public List<Emoji> Children { get; private set; }
 
