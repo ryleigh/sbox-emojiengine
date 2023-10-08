@@ -42,6 +42,8 @@ public class Emoji
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
+	public bool FlipX { get; set; }
+	public bool FlipY { get; set; }
 	public float Blur { get; set; }
 	public float Contrast { get; set; }
 	public float Brightness { get; set; }
@@ -56,8 +58,6 @@ public class Emoji
 	public float DropShadowBlur { get; set; }
 	public Color DropShadowColor { get; set; }
 	public bool HasDropShadow { get; set; }
-
-	public List<Emoji> Children { get; private set; }
 
 	public Emoji()
 	{
@@ -89,14 +89,6 @@ public class Emoji
 	public virtual void OnMouseUp(bool rightClick) { }
 	//public virtual void OnClickedDown(bool rightClick) { }
 	//public virtual void OnClickedUp(bool rightClick) { }
-
-	public void AddChild(Emoji emoji)
-	{
-		if(Children == null)
-			Children = new List<Emoji>();
-
-		Children.Add(emoji);
-	}
 
 	public void SetFontSize(float fontSize)
 	{

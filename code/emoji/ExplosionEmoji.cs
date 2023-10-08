@@ -27,11 +27,11 @@ public class ExplosionEmoji : Emoji
 		//Brightness = 10f;
 		//Invert = 1f;
 
-		HasDropShadow = true;
-		DropShadowX = 0f;
-		DropShadowY = 0f;
-		DropShadowBlur = 8f;
-		DropShadowColor = Color.Red;
+		//HasDropShadow = true;
+		//DropShadowX = 0f;
+		//DropShadowY = 0f;
+		//DropShadowBlur = 8f;
+		//DropShadowColor = Color.Red;
 	}
 
 	public override void Update(float dt)
@@ -44,11 +44,10 @@ public class ExplosionEmoji : Emoji
 			//Position = FaceEmoji.Position;
 		}
 
-		float progress = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadOut);
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.5f, 1.7f, EasingType.QuadOut);
 		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 10f, 4f, EasingType.QuadOut);
-		//Invert = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadIn);
+		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 6f, 4f, EasingType.QuadOut);
+		Invert = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadIn);
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

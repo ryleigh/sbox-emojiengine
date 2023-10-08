@@ -82,7 +82,7 @@ public class FaceEmoji : Emoji
 
 		float height = Hud.Instance.ScreenHeight;
 		float y = Position.y;
-		float centerY = height / 2f;
+		//float centerY = height / 2f;
 
 		//float depthScale = Utils.Map(MathX.CeilToInt(Position.y / 100f) * 100f, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
 		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
@@ -194,6 +194,7 @@ public class FaceEmoji : Emoji
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
 		_timeSincePoked = 0f;
 
+		Text = "😲";
 		//Text = GetFaceText();
 
 		//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));

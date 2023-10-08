@@ -22,7 +22,7 @@
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);
-		transform: scale(@Emoji.Scale) scaleX(@Emoji.ScaleX) scaleY(@Emoji.ScaleY) rotate(@(Emoji.Degrees)deg);
+		transform: scale(@Emoji.Scale) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f))) scaleY(@(Emoji.ScaleY * (Emoji.FlipY ? -1f : 1f))) rotate(@(Emoji.Degrees)deg);
 		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;
@@ -40,8 +40,6 @@
 	@(Emoji.Text)
 
 	<!-- chancing "font-size" is very slow!!!!!  -->
-
-	<!-- child EmojiPanels  -->
 
 	<!-- <panel class="emoji" style="
 		text-shadow: @Emoji.TextShadowX @Emoji.TextShadowY @Emoji.TextShadowBlur @Emoji.TextShadowColor.Rgba
