@@ -79,8 +79,8 @@ public class Emoji
 
 	public virtual void OnMouseDown(bool rightClick) { }
 	public virtual void OnMouseUp(bool rightClick) { }
-	public virtual void OnClickedDown(bool rightClick) { }
-	public virtual void OnClickedUp(bool rightClick) { }
+	//public virtual void OnClickedDown(bool rightClick) { }
+	//public virtual void OnClickedUp(bool rightClick) { }
 
 	public void AddChild(Emoji emoji)
 	{

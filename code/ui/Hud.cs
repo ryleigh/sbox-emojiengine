@@ -211,7 +211,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 			Emojis[i].OnMouseDown(rightClick);
 
-		ProcessMouseEvent(rightClick, down: true);
+		//ProcessMouseEvent(rightClick, down: true);
 	}
 
 	protected override void OnMouseUp(MousePanelEvent e)
@@ -227,29 +227,40 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 			Emojis[i].OnMouseUp(rightClick);
 
-		ProcessMouseEvent(rightClick, down: false);
+		//ProcessMouseEvent(rightClick, down: false);
 	}
 
-	void ProcessMouseEvent(bool rightClick, bool down)
+	//void ProcessMouseEvent(bool rightClick, bool down)
+	//{
+	//	var emojis = Emojis
+	//		.Where(x => x.IsInteractable)
+	//		.Where(x => (x.Position - MousePos).LengthSquared < MathF.Pow(x.Radius, 2f))
+	//		.OrderBy(x => x.ZIndex)
+	//		.ToList();
+
+	//	for(int i = emojis.Count - 1; i >= 0; i--)
+	//	{
+	//		var emoji = emojis[i];
+
+	//		if(down)
+	//			emoji.OnClickedDown(rightClick);
+	//		else
+	//			emoji.OnClickedUp(rightClick);
+
+	//		if(emoji.SwallowClicks)
+	//			break;
+	//	}
+	//}
+
+	public bool Raycast(Vector2 pos, out List<Emoji> hitEmojis)
 	{
-		var emojis = Emojis
+		hitEmojis = Emojis
 			.Where(x => x.IsInteractable)
-			.Where(x => (x.Position - MousePos).LengthSquared < MathF.Pow(x.Radius, 2f))
+			.Where(x => (x.Position - pos).LengthSquared < MathF.Pow(x.Radius, 2f))
 			.OrderBy(x => x.ZIndex)
 			.ToList();
 
-		for(int i = emojis.Count - 1; i >= 0; i--)
-		{
-			var emoji = emojis[i];
-
-			if(down)
-				emoji.OnClickedDown(rightClick);
-			else
-				emoji.OnClickedUp(rightClick);
-
-			if(emoji.SwallowClicks)
-				break;
-		}
+		return hitEmojis.Count > 0;
 	}
 
 	//public Emoji AddEmoji(string text, Vector2 pos)

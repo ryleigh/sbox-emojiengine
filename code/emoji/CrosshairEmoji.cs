@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using Sandbox.UI.Construct;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -69,9 +70,19 @@ public partial class CrosshairEmoji : Emoji
 	{
 		float gap = MIN_GAP + _mouseDeltaGap + _recoilGap;
 		var pos = Hud.Instance.MousePos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
-		Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
-		var dust = Hud.Instance.AddEmoji(new DustEmoji(), pos);
-		dust.ZIndex = (int)(Hud.Instance.ScreenHeight - pos.y);
+
+		if(Hud.Instance.Raycast(pos, out List<Emoji> hitEmojis))
+		{
+			var emoji = hitEmojis[0];
+			if(emoji is FaceEmoji faceEmoji)
+				faceEmoji.Hit();
+		}
+		else
+		{
+			Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
+			var dust = Hud.Instance.AddEmoji(new DustEmoji(), pos);
+			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - pos.y);
+		}
 
 		_timeSinceShoot = 0f;
 		_recoilAmount += 120f;

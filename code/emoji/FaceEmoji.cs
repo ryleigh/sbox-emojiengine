@@ -166,48 +166,53 @@ public class FaceEmoji : Emoji
 		}
 	}
 
-	public override void OnClickedDown(bool rightClick)
+	//public override void OnClickedDown(bool rightClick)
+	//{
+	//	base.OnClickedDown(rightClick);
+
+	//	if(!rightClick)
+	//	{
+	//		IsBeingPressed = true;
+	//	}
+	//}
+
+	//public override void OnClickedUp(bool rightClick)
+	//{
+	//	base.OnClickedUp(rightClick);
+
+	//	if(IsBeingPressed && !rightClick)
+	//	{
+	//		Hit();
+	//	}
+	//}
+
+	public void Hit()
 	{
-		base.OnClickedDown(rightClick);
+		_isPoked = true;
+		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
+		_timeSincePoked = 0f;
 
-		if(!rightClick)
-		{
-			IsBeingPressed = true;
-		}
-	}
+		//Text = GetFaceText();
 
-	public override void OnClickedUp(bool rightClick)
-	{
-		base.OnClickedUp(rightClick);
+		//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));
 
-		if(IsBeingPressed && !rightClick)
-		{
-			_isPoked = true;
-			_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
-			_timeSincePoked = 0f;
+		//int numSegments = Game.Random.Int(14, 20);
+		//if(numSegments % 2 != 0)
+		//	numSegments++;
 
-			//Text = GetFaceText();
+		//Hud.Instance.AddRing(Position, color, Game.Random.Float(0.2f, 0.4f), Radius, Radius * Game.Random.Float(1.6f, 2f), 9f, 1f, numSegments, ZIndex - 1);
 
-			//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));
+		Hud.Instance.CursorEmoji?.BounceScale(1.2f, 0.15f);
 
-			//int numSegments = Game.Random.Int(14, 20);
-			//if(numSegments % 2 != 0)
-			//	numSegments++;
+		IsBeingPressed = false;
 
-			//Hud.Instance.AddRing(Position, color, Game.Random.Float(0.2f, 0.4f), Radius, Radius * Game.Random.Float(1.6f, 2f), 9f, 1f, numSegments, ZIndex - 1);
+		Degrees = 0f;
+		DetermineRotVars();
 
-			Hud.Instance.CursorEmoji?.BounceScale(1.2f, 0.15f);
-
-			IsBeingPressed = false;
-
-			Degrees = 0f;
-			DetermineRotVars();
-
-			ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), Position) as ExplosionEmoji;
-			explosion.SetFontSize(FontSize);
-			explosion.ZIndex = ZIndex - 1;
-			explosion.FaceEmoji = this;
-		}
+		ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), Position) as ExplosionEmoji;
+		explosion.SetFontSize(FontSize);
+		explosion.ZIndex = ZIndex - 1;
+		explosion.FaceEmoji = this;
 	}
 
 	void DetermineRotVars()
