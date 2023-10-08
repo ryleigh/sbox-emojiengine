@@ -14,8 +14,9 @@ public class Emoji
 	public Vector2 Position { get; set; }
 	public Vector2 SpriteOffset { get; set; }
 	public string Text { get; set; }
-	public float FontSize { get; set; } // warning - changing this is slow!
+	public float FontSize { get; private set; } // warning - changing this is slow!
 	public float PanelSize { get; set; }
+	public float PanelSizeFactor { get; set; }
 	public float Opacity { get; set; }
 	public float Degrees { get; set; }
 	public float StrokeWidth { get; set; }
@@ -54,7 +55,8 @@ public class Emoji
 	{
 		Text = "";
 		FontSize = 32f;
-		PanelSize = 64f;
+		PanelSizeFactor = 1.5f;
+		PanelSize = FontSize * PanelSizeFactor;
 		Opacity = 1f;
 		IsVisible = true;
 		IsInteractable = true;
@@ -73,8 +75,6 @@ public class Emoji
 	{
 		//if(Radius > 0f)
 		//	Utils.DrawCircle(Position, Radius, 12, Time.Now, Color.White, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
-
-		PanelSize = FontSize * 1.5f;
 	}
 
 	public virtual void OnMouseDown(bool rightClick) { }
@@ -88,5 +88,11 @@ public class Emoji
 			Children = new List<Emoji>();
 
 		Children.Add(emoji);
+	}
+
+	public void SetFontSize(float fontSize)
+	{
+		FontSize = fontSize;
+		PanelSize = FontSize * PanelSizeFactor;
 	}
 }

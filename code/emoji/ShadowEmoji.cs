@@ -14,7 +14,7 @@ public class ShadowEmoji : Emoji
 	{
 		Text = "⚫️";
 		IsInteractable = false;
-		ZIndex = -99;
+		ZIndex = -999;
 		Contrast = 2f;
 		Brightness = 0f;
 		//ScaleX = 1.2f;

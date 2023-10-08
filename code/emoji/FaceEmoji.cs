@@ -48,11 +48,11 @@ public class FaceEmoji : Emoji
 
 		DetermineRotVars();
 
-		FontSize = Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX);
+		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX));
 		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
 		ShadowEmoji = Hud.Instance.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
-		ShadowEmoji.FontSize = FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f);
+		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
 	}
@@ -186,7 +186,7 @@ public class FaceEmoji : Emoji
 			_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
 			_timeSincePoked = 0f;
 
-			Text = GetFaceText();
+			//Text = GetFaceText();
 
 			//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));
 
@@ -204,7 +204,7 @@ public class FaceEmoji : Emoji
 			DetermineRotVars();
 
 			ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), Position) as ExplosionEmoji;
-			explosion.FontSize = FontSize;
+			explosion.SetFontSize(FontSize);
 			explosion.ZIndex = ZIndex - 1;
 			explosion.FaceEmoji = this;
 		}

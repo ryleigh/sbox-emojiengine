@@ -22,7 +22,6 @@ public partial class CrosshairEmoji : Emoji
 	public CrosshairEmoji()
 	{
 		Text = "";
-		FontSize = 64f;
 		ZIndex = 9999;
 		IsInteractable = false;
 		IsVisible = false;
@@ -60,6 +59,17 @@ public partial class CrosshairEmoji : Emoji
 	public override void OnMouseDown(bool rightClick)
 	{
 		base.OnMouseDown(rightClick);
+
+		if(!rightClick)
+			Shoot();
+		
+	}
+
+	void Shoot()
+	{
+		float gap = MIN_GAP + _mouseDeltaGap + _recoilGap;
+		var pos = Hud.Instance.MousePos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
+		Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
 
 		_timeSinceShoot = 0f;
 		_recoilAmount += 120f;

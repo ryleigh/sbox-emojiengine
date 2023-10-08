@@ -25,7 +25,7 @@ public partial class CursorEmoji : Emoji
 	public CursorEmoji()
 	{
 		Text = "☝️";
-		FontSize = 64f;
+		SetFontSize(64f);
 		ZIndex = 9999;
 		IsInteractable = false;
 		_bounceScale = 1f;
