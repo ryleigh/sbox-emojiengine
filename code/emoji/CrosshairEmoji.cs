@@ -22,6 +22,9 @@ public partial class CrosshairEmoji : Emoji
 
 	private float _gap;
 
+	private Vector2 _recoilOffset;
+	private Vector2 _targetRecoilOffset;
+
 	public CrosshairEmoji()
 	{
 		Text = "";
@@ -36,9 +39,14 @@ public partial class CrosshairEmoji : Emoji
 	{
 		base.Update(dt);
 
+
+
 		_length = Utils.DynamicEaseTo(_length, Utils.Map(_recoilAmount, 0f, 300f, 50f, 160f, EasingType.Linear), 0.5f, dt);
 		_width = Utils.DynamicEaseTo(_width, Utils.Map(_timeSinceShoot, 0f, 0.3f, 8f, 15f), 0.6f, dt);
-		var centerPos = Hud.Instance.MousePos + new Vector2(0f, _width * 0.5f);
+		var centerPos = Hud.Instance.MousePos + new Vector2(0f, _width * 0.5f) + _recoilOffset;
+
+		_recoilOffset = Utils.DynamicEaseTo(_recoilOffset, _targetRecoilOffset, 0.1f, dt);
+		_targetRecoilOffset = Utils.DynamicEaseTo(_targetRecoilOffset, Vector2.Zero, 0.05f, dt);
 
 		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, Utils.Map(Hud.Instance.MouseDelta.Length, 0f, 20f, 0f, 100f, EasingType.SineIn), 0.28f, dt);
 		_recoilGap = Utils.DynamicEaseTo(_recoilGap, Utils.Map(_timeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut), 0.3f, dt);
@@ -74,8 +82,8 @@ public partial class CrosshairEmoji : Emoji
 
 	void Shoot()
 	{
+		var mousePos = Hud.Instance.MousePos + _recoilOffset;
 		float gap = _gap - 6f;
-		var mousePos = Hud.Instance.MousePos;
 		var pos = mousePos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
 
 		if(Hud.Instance.Raycast(pos, out List<Emoji> hitEmojis))
@@ -112,5 +120,6 @@ public partial class CrosshairEmoji : Emoji
 
 		_timeSinceShoot = 0f;
 		_recoilAmount += 160f;
+		_targetRecoilOffset += new Vector2(Game.Random.Float(-50f, 50f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 200f) : Game.Random.Float(-20f, -60f));
 	}
 }
