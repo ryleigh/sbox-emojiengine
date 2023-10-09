@@ -26,6 +26,11 @@ public partial class CrosshairEmoji : Emoji
 	private Vector2 _targetRecoilOffset;
 
 	private Vector2 _velocity;
+	private float _shakeAmount;
+	private float _shakeTime;
+	private float _blurAmount;
+	private float _blurTime;
+	private float _brightnessAmount;
 
 	public CrosshairEmoji()
 	{
@@ -70,10 +75,10 @@ public partial class CrosshairEmoji : Emoji
 		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.2f)
 			Shoot();
 
-		Hud.Instance.OverlayDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.125f, 3f, 1f, EasingType.QuadOut);
-		//Hud.Instance.EmojiDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.15f, 10f, 1f, EasingType.QuadOut);
+		Hud.Instance.OverlayDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.125f, _brightnessAmount, 1f, EasingType.QuadOut);
+		Hud.Instance.OverlayDisplay.Blur = Utils.Map(_timeSinceShoot, 0f, _blurTime, _blurAmount, 0f, EasingType.Linear);
 
-		Hud.Instance.CameraOffset = Utils.GetRandomVector() * Utils.Map(_timeSinceShoot, 0f, 0.1f, 15f, 0f, EasingType.QuadOut);
+		Hud.Instance.CameraOffset = Utils.GetRandomVector() * Utils.Map(_timeSinceShoot, 0f, _shakeTime, _shakeAmount, 0f, EasingType.QuadOut);
 	}
 
 	public override void OnMouseDown(bool rightClick)
@@ -114,16 +119,22 @@ public partial class CrosshairEmoji : Emoji
 		else
 		{
 			Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
+
 			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), pos) as DustEmoji;
 			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - pos.y);
-
 			float offsetX = pos.x - aimPos.x;
 			dust.Degrees = Utils.Map(offsetX, -200f, 200f, -120f, -60f);
-			dust.Velocity = Utils.DegreesToVector(-dust.Degrees) * Game.Random.Float(1500f, 3000f);
+			dust.Velocity = Utils.DegreesToVector(-dust.Degrees) * Game.Random.Float(1000f, 3000f);
 		}
 
 		_timeSinceShoot = 0f;
 		_recoilAmount += 160f;
 		_targetRecoilOffset += new Vector2(Game.Random.Float(-50f, 50f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 200f) : Game.Random.Float(-20f, -60f));
+		_shakeTime = Game.Random.Float(0.05f, 0.2f);
+		_shakeAmount = Game.Random.Float(5f, 30f);
+		_shakeTime = Game.Random.Float(0.05f, 0.2f);
+		_blurAmount = Game.Random.Float(0f, 20f);
+		_blurTime = Game.Random.Float(0f, 0.1f);
+		_brightnessAmount = Game.Random.Float(2f, 5f);
 	}
 }

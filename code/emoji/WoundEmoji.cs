@@ -67,7 +67,7 @@ public class WoundEmoji : Emoji
 		DropShadowBlur = 8f;
 		DropShadowColor = Color.Red;
 
-		_countdownToDrip = Game.Random.Float(0.3f, 1f);
+		_countdownToDrip = Game.Random.Float(0.075f, 1.1f);
 
 		TextStrokeColor = Color.Red;
 

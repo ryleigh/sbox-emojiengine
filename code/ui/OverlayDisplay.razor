@@ -24,7 +24,6 @@
 	public float HueRotateDegrees { get; set; }
 	public float Brightness { get; set; } = 1f;
 	public float Contrast { get; set; } = 1f;
-	public float Scale { get; set; } = 1f;
 	public float Sepia { get; set; }
 	public float Saturation { get; set; } = 1f;
 	public float Invert { get; set; }
@@ -33,8 +32,13 @@
 	{
 		base.Tick();
 
-		//StyleSheet.Parse($"backdrop-filter: brightness( {Brightness}% )");
 		Style.BackdropFilterBrightness = Length.Percent(Brightness * 100f);
+		Style.BackdropFilterInvert = Invert;
+		Style.BackdropFilterHueRotate = HueRotateDegrees;
+		Style.BackdropFilterContrast = Contrast;
+		Style.BackdropFilterBlur = Blur;
+		Style.BackdropFilterSaturate = Saturation;
+		Style.BackdropFilterSepia = Sepia;
 	}
 
 	protected override int BuildHash()
