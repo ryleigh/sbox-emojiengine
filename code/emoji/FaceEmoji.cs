@@ -194,7 +194,7 @@ public class FaceEmoji : Emoji
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
 		_timeSincePoked = 0f;
 
-		Text = "😲";
+		//Text = "😲";
 		//Text = GetFaceText();
 
 		//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));
@@ -216,6 +216,8 @@ public class FaceEmoji : Emoji
 		explosion.SetFontSize(FontSize * Game.Random.Float(0.6f, 0.8f));
 		explosion.ZIndex = ZIndex + 1;
 		explosion.FaceEmoji = this;
+
+		Velocity += new Vector2(0f, 1f) * Game.Random.Float(30f, 80f);
 	}
 
 	void DetermineRotVars()

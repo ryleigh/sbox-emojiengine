@@ -43,6 +43,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 	public const float BOUNDS_BUFFER = 40f;
 
+	public Vector2 CameraOffset { get; set; }
+	public float CameraScale { get; set; }
+
 	public Hud()
 	{
 		Instance = this;
@@ -77,6 +80,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(ScreenWidth / 2f, ScreenHeight / 2f));
 		}
+
+		CameraOffset = Vector2.Zero;
+		CameraScale = 1f;
 
 		//AddEmoji(new ShadowEmoji(), new Vector2(600f, 600f));
 	}
@@ -288,6 +294,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 	public void RemoveEmoji(Emoji emoji)
 	{
+		if(!Emojis.Contains(emoji))
+			return;
+
 		Emojis.Remove(emoji);
 
 		if(emoji is FaceEmoji faceEmoji)

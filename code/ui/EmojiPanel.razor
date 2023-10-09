@@ -17,12 +17,12 @@
 </style>
 
 <root style="
-		left: @(Emoji.Position.x - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.x)px;
-		bottom: @(Emoji.Position.y - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.y)px;
+		left: @(Emoji.Position.x - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.x - Hud.Instance.CameraOffset.x)px;
+		bottom: @(Emoji.Position.y - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.y - Hud.Instance.CameraOffset.y)px;
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);
-		transform: scale(@Emoji.Scale) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f))) scaleY(@(Emoji.ScaleY * (Emoji.FlipY ? -1f : 1f))) rotate(@(Emoji.Degrees)deg);
+		transform: scale(@(Emoji.Scale * Hud.Instance.CameraScale)) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f))) scaleY(@(Emoji.ScaleY * (Emoji.FlipY ? -1f : 1f))) rotate(@(Emoji.Degrees)deg);
 		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;

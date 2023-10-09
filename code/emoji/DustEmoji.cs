@@ -21,7 +21,6 @@ public class DustEmoji : Emoji
 		Text = "💨";
 
 		IsInteractable = false;
-		ZIndex = -50;
 		Saturation = Game.Random.Float(1f, 2f);
 
 		//ScaleX = Game.Random.Float(1.15f, 1.25f);

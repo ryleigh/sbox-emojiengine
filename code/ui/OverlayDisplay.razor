@@ -12,7 +12,6 @@
 		position: absolute;
 		pointer-events: none;
 		z-index: 1;
-		backdrop-filter: brightness(@Brightness);
     }
 </style>
 
@@ -29,6 +28,14 @@
 	public float Sepia { get; set; }
 	public float Saturation { get; set; } = 1f;
 	public float Invert { get; set; }
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		//StyleSheet.Parse($"backdrop-filter: brightness( {Brightness}% )");
+		Style.BackdropFilterBrightness = Length.Percent(Brightness * 100f);
+	}
 
 	protected override int BuildHash()
 	{
