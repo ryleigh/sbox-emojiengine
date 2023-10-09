@@ -18,7 +18,6 @@ public class WoundEmoji : Emoji
 	private float _startDegrees;
 
 	private bool _shouldSpawnBlood;
-	private bool _hasSpawnedBloodAgain;
 	private float _countdownToDrip;
 
 	public WoundEmoji()
@@ -29,7 +28,7 @@ public class WoundEmoji : Emoji
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
 		_timeSinceSpawn = 0f;
-		Lifetime = Game.Random.Float(4f, 4.5f);
+		Lifetime = Game.Random.Float(6f, 6.5f);
 		PanelSizeFactor = 2f;
 		Degrees = _startDegrees = Game.Random.Float(0, 360f);
 
@@ -97,16 +96,7 @@ public class WoundEmoji : Emoji
 		if(_shouldSpawnBlood)
 		{
 			SpawnBloodSpray();
-
 			_shouldSpawnBlood = false;
-		}
-		else
-		{
-			if(!_hasSpawnedBloodAgain && _timeSinceSpawn > 0.1f && Game.Random.Float(0f, 1f) < Utils.Map(_timeSinceSpawn, 0.1f, Lifetime * 0.3f, 0.0075f, 0f, EasingType.QuadOut))
-			{
-				_shouldSpawnBlood = true;
-				_hasSpawnedBloodAgain = true;
-			}
 		}
 
 		if(_timeSinceSpawn < Lifetime * 0.6f)
