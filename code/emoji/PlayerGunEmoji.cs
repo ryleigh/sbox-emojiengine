@@ -20,14 +20,14 @@ public class PlayerGunEmoji : Emoji
 
 	public PlayerGunEmoji()
 	{
-		BackgroundImage = "textures/gun.png";
+		BackgroundImage = "textures/gun4.png";
 
 		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 8f);
 
 		//ScaleX = Game.Random.Float(1.2f, 1.4f);
 		//ScaleY = Game.Random.Float(0.7f, 0.8f);
-		PanelSize = 500f;
+		PanelSize = 540f;
 
 		ZIndex = 9999;
 		Opacity = 0f;
@@ -77,7 +77,7 @@ public class PlayerGunEmoji : Emoji
 		var muzzleFlashPos = Position + toCrosshair * Game.Random.Float(150f, 240f) + Utils.GetPerpendicularVector(toCrosshair) * Game.Random.Float(-60f, -80f);
 		PlayerMuzzleFlashEmoji flash = Hud.Instance.AddEmoji(new PlayerMuzzleFlashEmoji(), muzzleFlashPos) as PlayerMuzzleFlashEmoji;
 
-		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair) + 45f + Game.Random.Float(-20f, 20f);
+		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair) + 45f + Game.Random.Float(-40f, 40f);
 		flash.ScaleX = Utils.Map(Math.Abs(toCrosshair.x), 0f, 1f, 0.8f, 1.3f);
 		flash.ScaleY = Utils.Map(Math.Abs(toCrosshair.y), 0f, 1f, 0.8f, 1.3f);
 		//muzzleFlashEmoji.Velocity = -toCrosshair * 200f;

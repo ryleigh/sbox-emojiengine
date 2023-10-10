@@ -20,6 +20,8 @@ public class WoundEmoji : Emoji
 	private bool _shouldSpawnBlood;
 	private float _countdownToDrip;
 
+	public ImpactEmoji ImpactEmoji { get; set; }
+ 
 	public WoundEmoji()
 	{
 		IsInteractable = false;
@@ -72,6 +74,10 @@ public class WoundEmoji : Emoji
 		TextStrokeColor = Color.Red;
 
 		_shouldSpawnBlood = true;
+
+		ImpactEmoji = Hud.Instance.AddEmoji(new ImpactEmoji(), Position) as ImpactEmoji;
+		ImpactEmoji.SetFontSize(Game.Random.Float(60f, 105f));
+		ImpactEmoji.ZIndex = ZIndex + 1;
 	}
 
 	public override void Update(float dt)
@@ -108,7 +114,13 @@ public class WoundEmoji : Emoji
 				_countdownToDrip = Game.Random.Float(0.4f, 1.8f) * Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.8f, 0.8f, 2.5f, EasingType.QuadIn);
 			}
 		}
-		
+
+		if(ImpactEmoji != null)
+		{
+			ImpactEmoji.Position = Position;
+			ImpactEmoji.ZIndex = ZIndex + 1;
+		}
+
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}

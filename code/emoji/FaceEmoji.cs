@@ -212,11 +212,6 @@ public class FaceEmoji : Emoji
 		Degrees = 0f;
 		DetermineRotVars();
 
-		ExplosionEmoji explosion = Hud.Instance.AddEmoji(new ExplosionEmoji(), hitPos) as ExplosionEmoji;
-		explosion.SetFontSize(FontSize * Game.Random.Float(0.6f, 0.8f));
-		explosion.ZIndex = ZIndex + 1;
-		explosion.FaceEmoji = this;
-
 		Velocity += new Vector2(0f, 1f) * Game.Random.Float(30f, 80f);
 	}
 
