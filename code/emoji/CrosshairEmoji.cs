@@ -41,7 +41,7 @@ public partial class CrosshairEmoji : Emoji
 	public CrosshairEmoji()
 	{
 		Text = "";
-		ZIndex = 9997;
+		ZIndex = 9996;
 		IsInteractable = false;
 		IsVisible = false;
 		_timeSinceShoot = 99f;
