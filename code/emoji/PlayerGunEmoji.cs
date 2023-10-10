@@ -12,6 +12,7 @@ public class PlayerGunEmoji : Emoji
 {
 	public CrosshairEmoji CrosshairEmoji { get; set; }
 
+	private TimeSince _timeSinceSpawn;
 	private TimeSince _timeSinceShoot;
 
 	private float _currKickbackAmount;
@@ -36,7 +37,8 @@ public class PlayerGunEmoji : Emoji
 		//DropShadowY = 0f;
 		//DropShadowBlur = 10f;
 		//DropShadowColor = Color.Black;
-
+		_timeSinceSpawn = 0f;
+		_timeSinceShoot = 999f;
 	}
 
 	public override void Update(float dt)
@@ -50,7 +52,8 @@ public class PlayerGunEmoji : Emoji
 		var targetPos = new Vector2(Hud.Instance.ScreenWidth, 0f)
 			+ new Vector2(-260f, 50f)
 			+ (Position - crosshairCenterPos).Normal * _currKickbackAmount
-			+ new Vector2(crosshairCenterPos.x > Hud.Instance.ScreenWidth - 350f ? Utils.Map(crosshairCenterPos.x, Hud.Instance.ScreenWidth - 350f, Hud.Instance.ScreenWidth, 0f, 250f, EasingType.SineIn) : 0f, crosshairCenterPos.y < 200f ? Utils.Map(crosshairCenterPos.y, 0f, 200f, -300f, 0f, EasingType.SineOut) : 0f);
+			+ new Vector2(crosshairCenterPos.x > Hud.Instance.ScreenWidth - 350f ? Utils.Map(crosshairCenterPos.x, Hud.Instance.ScreenWidth - 350f, Hud.Instance.ScreenWidth, 0f, 250f, EasingType.SineIn) : 0f, crosshairCenterPos.y < 200f ? Utils.Map(crosshairCenterPos.y, 0f, 200f, -300f, 0f, EasingType.SineOut) : 0f)
+			+ new Vector2(Utils.FastSin(_timeSinceSpawn * 2.5f) * 10f, Utils.FastSin(10f + _timeSinceSpawn * 2.8f) * 15f);
 
 		Position = Utils.DynamicEaseTo(Position, targetPos, 0.3f, dt);
 
@@ -59,11 +62,11 @@ public class PlayerGunEmoji : Emoji
 
 		_currKickbackAmount = Utils.DynamicEaseTo(_currKickbackAmount, Utils.Map(_timeSinceShoot, 0f, 0.5f, _kickbackDistance, 0f, EasingType.QuadOut), 0.6f, dt);
 
-		Blur = Utils.Map(_timeSinceShoot, 0f, 0.5f, 10f, 2f, EasingType.QuadOut);
-		Opacity = Utils.Map(_timeSinceShoot, 0f, 0.5f, 0.8f, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(_timeSinceShoot, 0f, 0.3f, 10f, 2f, EasingType.QuadOut);
+		Opacity = Utils.Map(_timeSinceShoot, 0f, 0.7f, 0.1f, 1f, EasingType.QuadOut);
 	}
 
-	public void Shoot()
+	public void Shoot(Vector2 hitPos)
 	{
 		_timeSinceShoot = 0f;
 		_kickbackDistance = Game.Random.Float(120f, 300f);
@@ -76,5 +79,24 @@ public class PlayerGunEmoji : Emoji
 		muzzleFlashEmoji.ScaleX = Utils.Map(Math.Abs(toCrosshair.x), 0f, 1f, 0.8f, 1.3f);
 		muzzleFlashEmoji.ScaleY = Utils.Map(Math.Abs(toCrosshair.y), 0f, 1f, 0.8f, 1.3f);
 		//muzzleFlashEmoji.Velocity = -toCrosshair * 200f;
+
+		float distPercent = Game.Random.Float(0.1f, 0.2f);
+		while(distPercent < 0.95f)
+		{
+			SpawnMuzzleLine(muzzleFlashPos, hitPos, distPercent);
+			distPercent += Game.Random.Float(0.1f, 0.3f);
+		}
+	}
+
+	void SpawnMuzzleLine(Vector2 startPos, Vector2 endPos, float distPercent)
+	{
+		var pos = startPos + (endPos - startPos) * distPercent;
+		var degrees = 228f - Utils.VectorToDegrees(endPos - startPos);
+		PlayerMuzzleLineEmoji muzzleLineEmoji = Hud.Instance.AddEmoji(new PlayerMuzzleLineEmoji(), pos) as PlayerMuzzleLineEmoji;
+		muzzleLineEmoji.Scale = Utils.Map(distPercent, 0f, 1f, 2f, 0.5f);
+		muzzleLineEmoji.Lifetime = Utils.Map(distPercent, 0f, 1f, 0.02f, 0.1f);
+		muzzleLineEmoji.Degrees = degrees;
+		muzzleLineEmoji.Blur = Utils.Map(distPercent, 0f, 1f, 8f, 3f);
+		muzzleLineEmoji.HueRotateDegrees = Utils.Map(distPercent, 0f, 1f, 200f, 140f);
 	}
 }

@@ -110,36 +110,36 @@ public partial class CrosshairEmoji : Emoji
 	{
 		var aimPos = Position + _recoilOffset;
 		float gap = _gap - 6f;
-		var pos = aimPos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
+		var hitPos = aimPos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
 
-		if(Hud.Instance.Raycast(pos, out List<Emoji> hitEmojis))
+		if(Hud.Instance.Raycast(hitPos, out List<Emoji> hitEmojis))
 		{
 			var emoji = hitEmojis[0];
 			if(emoji is FaceEmoji faceEmoji)
 			{
 				float HOLE_SIZE = 20f * faceEmoji.Scale;
-				if((pos - faceEmoji.Position).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
-					pos = faceEmoji.Position + (pos - faceEmoji.Position).Normal * (faceEmoji.Radius - HOLE_SIZE);
+				if((hitPos - faceEmoji.Position).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
+					hitPos = faceEmoji.Position + (hitPos - faceEmoji.Position).Normal * (faceEmoji.Radius - HOLE_SIZE);
 
-				faceEmoji.Hit(pos);
+				faceEmoji.Hit(hitPos);
 
-				WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), pos) as WoundEmoji;
+				WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
 				wound.ZIndex = faceEmoji.ZIndex + 1;
 				wound.Parent = faceEmoji;
 				Vector2 faceAnchorPos = faceEmoji.AnchorPos;
 
-				wound.ParentOffsetDistance = (pos - faceAnchorPos).Length / faceEmoji.Scale;
-				wound.ParentOffsetDegrees = Utils.VectorToDegrees(pos - faceAnchorPos);
+				wound.ParentOffsetDistance = (hitPos - faceAnchorPos).Length / faceEmoji.Scale;
+				wound.ParentOffsetDegrees = Utils.VectorToDegrees(hitPos - faceAnchorPos);
 				wound.ParentStartDegrees = faceEmoji.Degrees;
 			}
 		}
 		else
 		{
-			Hud.Instance.AddEmoji(new BulletHoleEmoji(), pos);
+			Hud.Instance.AddEmoji(new BulletHoleEmoji(), hitPos);
 
-			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), pos) as DustEmoji;
-			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - pos.y);
-			float offsetX = pos.x - aimPos.x;
+			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), hitPos) as DustEmoji;
+			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - hitPos.y);
+			float offsetX = hitPos.x - aimPos.x;
 			dust.Degrees = Utils.Map(offsetX, -200f, 200f, -120f, -60f);
 			dust.Velocity = Utils.DegreesToVector(-dust.Degrees) * Game.Random.Float(1000f, 3000f);
 		}
@@ -148,13 +148,13 @@ public partial class CrosshairEmoji : Emoji
 		_recoilAmount += 160f;
 		_targetRecoilOffset += new Vector2(Game.Random.Float(-70f, 70f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 350f) : Game.Random.Float(-20f, -70f));
 		//_velocity += Utils.GetRandomVector() * Game.Random.Float(50f, 500f);
-		_shakeTime = Game.Random.Float(0.05f, 0.2f);
-		_shakeAmount = Game.Random.Float(5f, 30f);
+		_shakeTime = Game.Random.Float(0.05f, 0.15f);
+		_shakeAmount = Game.Random.Float(10f, 30f);
 		_shakeTime = Game.Random.Float(0.05f, 0.2f);
 		_blurAmount = Game.Random.Float(0f, 20f);
 		_blurTime = Game.Random.Float(0f, 0.1f);
 		_brightnessAmount = Game.Random.Float(2f, 5f);
 
-		PlayerGunEmoji.Shoot();
+		PlayerGunEmoji.Shoot(hitPos);
 	}
 }
