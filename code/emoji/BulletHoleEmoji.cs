@@ -26,18 +26,18 @@ public class BulletHoleEmoji : Emoji
 		ScaleX = Game.Random.Float(1.2f, 1.3f);
 		ScaleY = Game.Random.Float(0.7f, 0.8f);
 		_timeSinceSpawn = 0f;
-		Lifetime = Game.Random.Float(1.4f, 1.8f);
+		Lifetime = Game.Random.Float(2.8f, 3.2f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(20f, 24f));
 		Degrees = Game.Random.Float(-25f, 25f);
 		_brightness = Game.Random.Float(1f, 4f);
 		_brightnessTime = Game.Random.Float(0.1f, 0.2f);
 
-		HasDropShadow = true;
-		DropShadowX = 0f;
-		DropShadowY = 5f;
-		DropShadowBlur = 12f;
-		DropShadowColor = Color.Black;
+		//HasDropShadow = true;
+		//DropShadowX = 0f;
+		//DropShadowY = 5f;
+		//DropShadowBlur = 12f;
+		//DropShadowColor = Color.Black;
 	}
 
 	public override void Update(float dt)

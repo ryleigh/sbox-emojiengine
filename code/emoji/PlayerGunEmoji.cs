@@ -98,5 +98,6 @@ public class PlayerGunEmoji : Emoji
 		muzzleLineEmoji.Degrees = degrees;
 		muzzleLineEmoji.Blur = Utils.Map(distPercent, 0f, 1f, 8f, 3f);
 		muzzleLineEmoji.HueRotateDegrees = Utils.Map(distPercent, 0f, 1f, 200f, 140f);
+		muzzleLineEmoji.Direction = (endPos - startPos).Normal;
 	}
 }

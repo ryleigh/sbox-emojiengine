@@ -15,6 +15,8 @@ public class PlayerMuzzleLineEmoji : Emoji
 
 	public Vector2 StartPos { get; set; }
 	public Vector2 EndPos { get; set; }
+	public Vector2 Direction { get; set; }
+	private float _speed;
 
 	public PlayerMuzzleLineEmoji()
 	{
@@ -29,6 +31,8 @@ public class PlayerMuzzleLineEmoji : Emoji
 		//ScaleY = 0.3f;
 
 		SetFontSize(60f);
+
+		_speed = Game.Random.Float(0f, 1000f);
 	}
 
 	public override void Update(float dt)
@@ -36,6 +40,8 @@ public class PlayerMuzzleLineEmoji : Emoji
 		base.Update(dt);
 
 		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadOut);
+
+		Position += Direction * _speed * dt;
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

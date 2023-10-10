@@ -28,7 +28,7 @@ public class WoundEmoji : Emoji
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
 		_timeSinceSpawn = 0f;
-		Lifetime = Game.Random.Float(6f, 6.5f);
+		Lifetime = Game.Random.Float(7f, 7.5f);
 		PanelSizeFactor = 2f;
 		Degrees = _startDegrees = Game.Random.Float(0, 360f);
 
@@ -61,11 +61,11 @@ public class WoundEmoji : Emoji
 
 		_brightnessTime = Game.Random.Float(0.2f, 0.35f);
 
-		HasDropShadow = true;
-		DropShadowX = Game.Random.Float(0f, 2f);
-		DropShadowY = Game.Random.Float(0f, 2f);
-		DropShadowBlur = 8f;
-		DropShadowColor = Color.Red;
+		//HasDropShadow = true;
+		//DropShadowX = Game.Random.Float(0f, 2f);
+		//DropShadowY = Game.Random.Float(0f, 2f);
+		//DropShadowBlur = 8f;
+		//DropShadowColor = Color.Red;
 
 		_countdownToDrip = Game.Random.Float(0.075f, 1.1f);
 
@@ -99,13 +99,13 @@ public class WoundEmoji : Emoji
 			_shouldSpawnBlood = false;
 		}
 
-		if(_timeSinceSpawn < Lifetime * 0.6f)
+		if(_timeSinceSpawn < Lifetime * 0.8f)
 		{
 			_countdownToDrip -= dt;
 			if(_countdownToDrip < 0f)
 			{
 				SpawnBloodDrip();
-				_countdownToDrip = Game.Random.Float(0.5f, 2.5f);
+				_countdownToDrip = Game.Random.Float(0.4f, 1.8f) * Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.8f, 0.8f, 2.5f, EasingType.QuadIn);
 			}
 		}
 		
