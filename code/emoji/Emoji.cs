@@ -58,6 +58,7 @@ public class Emoji
 	public float DropShadowBlur { get; set; }
 	public Color DropShadowColor { get; set; }
 	public bool HasDropShadow { get; set; }
+	public string BackgroundImage { get; set; }
 
 	public Emoji()
 	{

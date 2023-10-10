@@ -34,7 +34,7 @@
 ">
 	@foreach(var emoji in Hud.Instance.Emojis)
 	{
-		@if (!emoji.IsVisible || string.IsNullOrEmpty(emoji.Text))
+		@if (!emoji.IsVisible || (string.IsNullOrEmpty(emoji.Text) && string.IsNullOrEmpty(emoji.BackgroundImage)))
 			continue;
 
 		<EmojiPanel Emoji=@emoji></EmojiPanel>

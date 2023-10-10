@@ -13,6 +13,8 @@
 		text-align: center;
 		align-items: center;
 		justify-content: center;
+		background-repeat: no-repeat;
+		background-size: cover;
     }
 </style>
 
@@ -35,6 +37,7 @@
 		filter: sepia(@Emoji.Sepia);
 		filter: hue-rotate(@Emoji.HueRotateDegrees);
 		@(Emoji.HasDropShadow ? $"filter: drop-shadow({@Emoji.DropShadowX}px {@Emoji.DropShadowY}px {@Emoji.DropShadowBlur}px {@Emoji.DropShadowColor.Rgba});" : "")
+		@(!string.IsNullOrEmpty(Emoji.BackgroundImage) ? $"background-image: url('{@Emoji.BackgroundImage}');" : "")
 	">
 
 	@(Emoji.Text)

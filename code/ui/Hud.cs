@@ -292,6 +292,11 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		return emoji;
 	}
 
+	public Emoji AddEmoji(Emoji emoji)
+	{
+		return AddEmoji(emoji, Vector2.Zero);
+	}
+
 	public void RemoveEmoji(Emoji emoji)
 	{
 		if(!Emojis.Contains(emoji))

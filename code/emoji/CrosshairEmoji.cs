@@ -10,6 +10,8 @@ namespace EmojiEngine;
 
 public partial class CrosshairEmoji : Emoji
 {
+	public Vector2 CenterPos { get; set; }
+
 	private float _length;
 	private float _width;
 
@@ -32,32 +34,47 @@ public partial class CrosshairEmoji : Emoji
 	private float _blurTime;
 	private float _brightnessAmount;
 
+	private float _decelerationFactor;
+
+	public PlayerGunEmoji PlayerGunEmoji { get; private set; }
+
 	public CrosshairEmoji()
 	{
 		Text = "";
-		ZIndex = 9999;
+		ZIndex = 9997;
 		IsInteractable = false;
 		IsVisible = false;
 		_timeSinceShoot = 99f;
 		_length = 50f;
+		//_decelerationFactor = 4f;
+
+		PlayerGunEmoji = Hud.Instance.AddEmoji(new PlayerGunEmoji()) as PlayerGunEmoji;
+		PlayerGunEmoji.CrosshairEmoji = this;
 	}
 
 	public override void Update(float dt)
 	{
 		base.Update(dt);
 
-		_velocity += (Hud.Instance.MousePos - Position).Normal * Utils.Map((Hud.Instance.MousePos - Position).Length, 0f, 400f, 0f, 40000f, EasingType.QuadIn) * dt;
+		float mouseDeltaLength = Hud.Instance.MouseDelta.Length;
+		//_decelerationFactor = Utils.DynamicEaseTo(_decelerationFactor, Utils.Map(mouseDeltaLength, 0f, 30f, 4f, 1f) * Utils.Map(_timeSinceShoot, 0f, 1f, 0.1f, 1f, EasingType.QuadOut), 0.2f, dt);
+		//_decelerationFactor = 1.5f;
+
+		_velocity += (Hud.Instance.MousePos - Position).Normal * Utils.Map((Hud.Instance.MousePos - Position).Length, 0f, 400f, 0f, 40000f * _decelerationFactor, EasingType.Linear) * dt;
 		Position += _velocity * dt;
-		_velocity *= (1f - 8f * dt);
+
+		_velocity *= (1f - 10f * _decelerationFactor * dt);
+
+		Position = Hud.Instance.MousePos;
 
 		_length = Utils.DynamicEaseTo(_length, Utils.Map(_recoilAmount, 0f, 300f, 50f, 160f, EasingType.Linear), 0.5f, dt);
 		_width = Utils.DynamicEaseTo(_width, Utils.Map(_timeSinceShoot, 0f, 0.3f, 8f, 15f), 0.6f, dt);
-		var centerPos = Position + new Vector2(0f, _width * 0.5f) + _recoilOffset;
+		CenterPos = Position + new Vector2(0f, _width * 0.5f) + _recoilOffset;
 
 		_recoilOffset = Utils.DynamicEaseTo(_recoilOffset, _targetRecoilOffset, 0.1f, dt);
 		_targetRecoilOffset = Utils.DynamicEaseTo(_targetRecoilOffset, Vector2.Zero, 0.05f, dt);
 
-		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, Utils.Map(Hud.Instance.MouseDelta.Length, 0f, 20f, 0f, 100f, EasingType.SineIn), 0.28f, dt);
+		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, Utils.Map(mouseDeltaLength, 0f, 20f, 0f, 100f, EasingType.SineIn), 0.28f, dt);
 		_recoilGap = Utils.DynamicEaseTo(_recoilGap, Utils.Map(_timeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut), 0.3f, dt);
 		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
 
@@ -67,12 +84,12 @@ public partial class CrosshairEmoji : Emoji
 		float saturation = Utils.Map(_timeSinceShoot, 0f, 1f, 10f, 1f);
 		float blur = Utils.Map(_timeSinceShoot, 0f, 0.5f, 3f, 1f);
 
-		Hud.Instance.DrawLine(centerPos - new Vector2(_gap, 0f), centerPos - new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(centerPos + new Vector2(_gap, 0f), centerPos + new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(centerPos - new Vector2(0f, _gap), centerPos - new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(centerPos + new Vector2(0f, _gap), centerPos + new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Hud.Instance.DrawLine(CenterPos - new Vector2(_gap, 0f), CenterPos - new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Hud.Instance.DrawLine(CenterPos + new Vector2(_gap, 0f), CenterPos + new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Hud.Instance.DrawLine(CenterPos - new Vector2(0f, _gap), CenterPos - new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Hud.Instance.DrawLine(CenterPos + new Vector2(0f, _gap), CenterPos + new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
 
-		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.2f)
+		if(Hud.Instance.MouseDownLeft && _timeSinceShoot > 0.25f)
 			Shoot();
 
 		Hud.Instance.OverlayDisplay.Brightness = Utils.Map(_timeSinceShoot, 0f, 0.125f, _brightnessAmount, 1f, EasingType.QuadOut);
@@ -129,12 +146,15 @@ public partial class CrosshairEmoji : Emoji
 
 		_timeSinceShoot = 0f;
 		_recoilAmount += 160f;
-		_targetRecoilOffset += new Vector2(Game.Random.Float(-50f, 50f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 200f) : Game.Random.Float(-20f, -60f));
+		_targetRecoilOffset += new Vector2(Game.Random.Float(-70f, 70f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 350f) : Game.Random.Float(-20f, -70f));
+		//_velocity += Utils.GetRandomVector() * Game.Random.Float(50f, 500f);
 		_shakeTime = Game.Random.Float(0.05f, 0.2f);
 		_shakeAmount = Game.Random.Float(5f, 30f);
 		_shakeTime = Game.Random.Float(0.05f, 0.2f);
 		_blurAmount = Game.Random.Float(0f, 20f);
 		_blurTime = Game.Random.Float(0f, 0.1f);
 		_brightnessAmount = Game.Random.Float(2f, 5f);
+
+		PlayerGunEmoji.Shoot();
 	}
 }
