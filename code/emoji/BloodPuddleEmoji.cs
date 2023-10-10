@@ -31,7 +31,7 @@ public class BloodPuddleEmoji : Emoji
 		ScaleY = Game.Random.Float(0.7f, 0.8f);
 		_timeSinceSpawn = 0f;
 		//Lifetime = Game.Random.Float(3f, 4f);
-		PanelSizeFactor = 1.5f;
+		PanelSizeFactor = 2f;
 		Opacity = 0f;
 		//SetFontSize(Game.Random.Float(16f, 32f));
 		//_brightness = Game.Random.Float(1f, 4f);
@@ -48,6 +48,8 @@ public class BloodPuddleEmoji : Emoji
 		_startScale = Game.Random.Float(1.3f, 1.5f);
 		_endScale = Game.Random.Float(1.15f, 1.35f);
 		_scaleMidTime = Game.Random.Float(0.05f, 0.15f);
+
+		TextStrokeColor = Color.Black;
 	}
 
 	public override void Update(float dt)
@@ -57,7 +59,8 @@ public class BloodPuddleEmoji : Emoji
 		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn);
 		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 1f, EasingType.QuadOut);
 		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.Linear);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 12f, EasingType.Linear);
+		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 12f, EasingType.QuadIn);
+		TextStroke = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 7f, 0f, EasingType.Linear);
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(_timeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear);
 		//DropShadowColor = Color.Lerp(Color.Red, Color.Black, Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadOut));
 		ZIndex = -(int)Position.y - (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1000f);

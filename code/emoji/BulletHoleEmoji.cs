@@ -26,7 +26,7 @@ public class BulletHoleEmoji : Emoji
 		ScaleX = Game.Random.Float(1.2f, 1.3f);
 		ScaleY = Game.Random.Float(0.7f, 0.8f);
 		_timeSinceSpawn = 0f;
-		Lifetime = Game.Random.Float(2.8f, 3.2f);
+		Lifetime = Game.Random.Float(2f, 2.3f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(20f, 24f));
 		Degrees = Game.Random.Float(-25f, 25f);

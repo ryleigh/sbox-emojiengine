@@ -127,48 +127,50 @@ public class WoundEmoji : Emoji
 
 	void SpawnBloodSpray()
 	{
-		BloodSprayEmoji blood = Hud.Instance.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
-		blood.ZIndex = ZIndex + 2;
-		blood.Velocity = (Position - Parent.Position).Normal * Game.Random.Float(500f, 1200f);
-		blood.Gravity = Game.Random.Float(900f, 1400f);
+		BloodSprayEmoji spray = Hud.Instance.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
+		spray.ZIndex = ZIndex + 2;
+		spray.Velocity = (Position - Parent.Position).Normal * Game.Random.Float(500f, 1200f);
+		spray.Gravity = Game.Random.Float(900f, 1400f);
 
-		blood.FlipX = true;
+		spray.FlipX = true;
 		var angle = Utils.VectorToDegrees(Position - Parent.Position);
 		//Log.Info($"{angle}");
 
 		if(angle > 0f && angle < 90f) // top right
 		{
-			blood.FlipY = true;
-			blood.Degrees = angle + Utils.Map(angle, 0f, 90f, 180f, 0f);
-			blood.TargetDegrees = blood.Degrees + Utils.Map(angle, 0f, 90f, 90f, 0f);
-			blood.Velocity *= Utils.Map(angle, 0f, 90f, 1f, 1.5f);
+			spray.FlipY = true;
+			spray.Degrees = angle + Utils.Map(angle, 0f, 90f, 180f, 0f);
+			spray.TargetDegrees = spray.Degrees + Utils.Map(angle, 0f, 90f, 90f, 0f);
+			spray.Velocity *= Utils.Map(angle, 0f, 90f, 1f, 1.5f);
 		}
 		else if(angle < 0f && angle > -90f) // bottom right
 		{
-			blood.FlipY = true;
-			blood.Degrees = angle + Utils.Map(angle, 0f, -90f, -180f, 0f);
-			blood.TargetDegrees = blood.Degrees + Utils.Map(angle, 0f, -90f, 90f, 0f);
+			spray.FlipY = true;
+			spray.Degrees = angle + Utils.Map(angle, 0f, -90f, -180f, 0f);
+			spray.TargetDegrees = spray.Degrees + Utils.Map(angle, 0f, -90f, 90f, 0f);
 		}
 		else if(angle > 90f && angle < 180f) // top left
 		{
-			blood.Degrees = angle + 180f;
-			blood.TargetDegrees = blood.Degrees + Utils.Map(angle, 90f, 180f, 0f, 90f);
-			blood.Velocity *= Utils.Map(angle, 90f, 180f, 1.5f, 1f);
+			spray.Degrees = angle + 180f;
+			spray.TargetDegrees = spray.Degrees + Utils.Map(angle, 90f, 180f, 0f, 90f);
+			spray.Velocity *= Utils.Map(angle, 90f, 180f, 1.5f, 1f);
 		}
 		else // bottom left
 		{
-			blood.Degrees = angle + 180f;
-			blood.TargetDegrees = blood.Degrees + Utils.Map(angle, -90f, -180f, 0f, 90f);
+			spray.Degrees = angle + 180f;
+			spray.TargetDegrees = spray.Degrees + Utils.Map(angle, -90f, -180f, 0f, 90f);
 		}
+
+		spray.GroundYPos = Parent != null ? Parent.Position.y - Parent.Radius * 1.25f : -999f;
 	}
 
 	void SpawnBloodDrip()
 	{
-		BloodDripEmoji blood = Hud.Instance.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
-		blood.ZIndex = ZIndex + 1;
-		blood.Gravity = Game.Random.Float(900f, 1400f);
-		blood.WoundEmoji = this;
-		blood.WoundPosLast = Position;
-		blood.GroundYPos = Parent != null ? Parent.Position.y - Parent.Radius * 1.25f : -999f;
+		BloodDripEmoji drip = Hud.Instance.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
+		drip.ZIndex = ZIndex + 1;
+		drip.Gravity = Game.Random.Float(900f, 1400f);
+		drip.WoundEmoji = this;
+		drip.WoundPosLast = Position;
+		drip.GroundYPos = Parent != null ? Parent.Position.y - Parent.Radius * 1.25f : -999f;
 	}
 }

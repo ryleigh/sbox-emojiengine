@@ -71,9 +71,8 @@ public class BloodDripEmoji : Emoji
 		if(GroundYPos > 0f && Position.y < GroundYPos)
 		{
 			BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
-			//puddle.ZIndex = -(int)Position.y;
 			puddle.SetFontSize(Utils.Map(FontSize, 15f, 45f, 16f, 35f) * Game.Random.Float(0.95f, 1.05f));
-			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 2.5f, 4f) * Game.Random.Float(0.9f, 1.1f);
+			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 2.25f, 3f) * Game.Random.Float(0.9f, 1.1f);
 
 			Hud.Instance.RemoveEmoji(this);
 			return;
