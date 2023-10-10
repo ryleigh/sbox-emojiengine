@@ -212,7 +212,7 @@ public class FaceEmoji : Emoji
 		Degrees = 0f;
 		DetermineRotVars();
 
-		Velocity += new Vector2(0f, 1f) * Game.Random.Float(30f, 80f);
+		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
 	}
 
 	void DetermineRotVars()

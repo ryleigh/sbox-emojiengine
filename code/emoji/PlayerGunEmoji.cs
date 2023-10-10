@@ -23,11 +23,11 @@ public class PlayerGunEmoji : Emoji
 		BackgroundImage = "textures/gun4.png";
 
 		IsInteractable = false;
-		Saturation = Game.Random.Float(1f, 8f);
+		//Saturation = 10f;
 
 		//ScaleX = Game.Random.Float(1.2f, 1.4f);
 		//ScaleY = Game.Random.Float(0.7f, 0.8f);
-		PanelSize = 540f;
+		PanelSize = 600f;
 
 		ZIndex = 9999;
 		Opacity = 0f;

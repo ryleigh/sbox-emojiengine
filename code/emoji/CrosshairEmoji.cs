@@ -37,6 +37,7 @@ public partial class CrosshairEmoji : Emoji
 	private float _decelerationFactor;
 
 	public PlayerGunEmoji PlayerGunEmoji { get; private set; }
+	public PlayerHandEmoji PlayerHandEmoji { get; private set; }
 
 	public CrosshairEmoji()
 	{
@@ -50,6 +51,9 @@ public partial class CrosshairEmoji : Emoji
 
 		PlayerGunEmoji = Hud.Instance.AddEmoji(new PlayerGunEmoji()) as PlayerGunEmoji;
 		PlayerGunEmoji.CrosshairEmoji = this;
+
+		PlayerHandEmoji = Hud.Instance.AddEmoji(new PlayerHandEmoji()) as PlayerHandEmoji;
+		PlayerHandEmoji.CrosshairEmoji = this;
 	}
 
 	public override void Update(float dt)
@@ -156,5 +160,6 @@ public partial class CrosshairEmoji : Emoji
 		_brightnessAmount = Game.Random.Float(2f, 5f);
 
 		PlayerGunEmoji.Shoot(hitPos);
+		PlayerHandEmoji.Shoot(hitPos);
 	}
 }
