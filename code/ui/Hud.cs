@@ -98,9 +98,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	public override void Tick()
 	{
 		base.Tick();
+
 		float dt = Time.Delta * TimeScale;
 		float dtRaw = Time.Delta;
-
 		CurrentTime += dt;
 
 		HandleEmoji(dt);
@@ -140,7 +140,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			}
 		}
 
-		TimeScale = Utils.DynamicEaseTo(TimeScale, 1f, 0.1f, dtRaw);
+		TimeScale = Utils.DynamicEaseTo(TimeScale, 1f, Utils.Map(TimeScale, 0f, 1f, 0.01f, 0.1f), dtRaw);
 
 		//DebugDisplay.Text = $"{_faceEmojis.Count}";
 

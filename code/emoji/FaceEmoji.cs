@@ -86,7 +86,7 @@ public class FaceEmoji : Emoji
 		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
 		float depthScale = 1f;
 
-		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * (IsHovered ? 1f : 1f), 0.3f, dt);
+		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale, 0.3f, dt);
 
 		Degrees += Velocity.x * 0.1f * dt;
 

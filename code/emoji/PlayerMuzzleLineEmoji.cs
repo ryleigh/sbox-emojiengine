@@ -19,13 +19,17 @@ public class PlayerMuzzleLineEmoji : Emoji
 	{
 		Text = "☄️";
 		IsInteractable = false;
-		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_LINE;
 
 		Opacity = 0f;
 
 		//Brightness = 0f;
 
+		PanelSizeFactor = 2.5f;
 		SetFontSize(60f);
+
+		TextShadowColor = new Color(0f, 0f, 0f, 1f);
+		TextShadowY = -6f;
+		TextShadowBlur = 8f;
 	}
 
 	public override void Update(float dt)

@@ -34,9 +34,9 @@ public class PlayerHandLeftEmoji : Emoji
 		FlipX = true;
 		Degrees = 45f;
 
-		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
-		//TextShadowY = 10f;
-		//TextShadowBlur = 20f;
+		TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
+		TextShadowY = 4f;
+		TextShadowBlur = 15f;
 	}
 
 	public override void Update(float dt)

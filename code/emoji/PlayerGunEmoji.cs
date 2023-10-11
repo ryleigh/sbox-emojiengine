@@ -22,17 +22,13 @@ public class PlayerGunEmoji : Emoji
 
 	public PlayerGunEmoji()
 	{
-		BackgroundImage = "textures/gun4.png";
+		BackgroundImage = "textures/gun8.png";
 		IsInteractable = false;
-		PanelSize = 600f;
+		PanelSize = 700f;
 		ZIndex = Globals.DEPTH_PLAYER_GUN;
 		Opacity = 0f;
 
 		PlayerHandRightEmoji = Hud.Instance.AddEmoji(new PlayerHandRightEmoji(), new Vector2(0f, -999f)) as PlayerHandRightEmoji;
-
-		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
-		//TextShadowY = 10f;
-		//TextShadowBlur = 20f;
 	}
 
 	public override void Update(float dt)
@@ -92,25 +88,27 @@ public class PlayerGunEmoji : Emoji
 		int numLines = MathX.FloorToInt(Utils.Map((hitPos - muzzleFlashPos).Length, 0f, 1000f, 0f, 5f)) + Game.Random.Int(0, 1);
 		float increment = 1f / (numLines + 1f);
 		float distPercent = increment;
+		int counter = 0;
 		while(distPercent < 0.95f)
 		{
-			SpawnMuzzleLine(muzzleFlashPos, hitPos, distPercent + Game.Random.Float(-0.05f, 0.05f));
+			SpawnMuzzleLine(muzzleFlashPos, hitPos, distPercent + Game.Random.Float(-0.04f, 0.04f), counter++);
 			distPercent += increment;
 		}
 
 		PlayerHandRightEmoji.Shoot();
 	}
 
-	void SpawnMuzzleLine(Vector2 startPos, Vector2 endPos, float distPercent)
+	void SpawnMuzzleLine(Vector2 startPos, Vector2 endPos, float distPercent, int num)
 	{
 		var pos = startPos + (endPos - startPos) * distPercent;
 		var degrees = 228f - Utils.VectorToDegrees(endPos - startPos);
 		PlayerMuzzleLineEmoji muzzleLineEmoji = Hud.Instance.AddEmoji(new PlayerMuzzleLineEmoji(), pos) as PlayerMuzzleLineEmoji;
 		muzzleLineEmoji.Scale = Utils.Map(distPercent, 0f, 1f, 2f, 0.5f);
-		muzzleLineEmoji.Lifetime = Utils.Map(distPercent, 0f, 1f, 0.02f, 0.1f);
+		muzzleLineEmoji.Lifetime = Utils.Map(distPercent, 0f, 1f, 0.05f, 0.15f, EasingType.SineIn);
 		muzzleLineEmoji.Degrees = degrees;
 		muzzleLineEmoji.Blur = Utils.Map(distPercent, 0f, 1f, 12f, 3f);
 		muzzleLineEmoji.HueRotateDegrees = Utils.Map(distPercent, 0f, 1f, 200f, 140f);
 		muzzleLineEmoji.Direction = (endPos - startPos).Normal;
+		muzzleLineEmoji.ZIndex = Globals.DEPTH_PLAYER_MUZZLE_LINE - num;
 	}
 }

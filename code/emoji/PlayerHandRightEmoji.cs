@@ -28,9 +28,9 @@ public class PlayerHandRightEmoji : Emoji
 		ZIndex = Globals.DEPTH_PLAYER_HAND_RIGHT;
 		//Opacity = 1f;
 
-		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
-		//TextShadowY = 10f;
-		//TextShadowBlur = 20f;
+		TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
+		TextShadowY = 4f;
+		TextShadowBlur = 15f;
 	}
 
 	public override void Update(float dt)
