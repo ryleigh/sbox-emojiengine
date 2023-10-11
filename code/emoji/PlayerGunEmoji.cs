@@ -71,6 +71,8 @@ public class PlayerGunEmoji : Emoji
 
 		Blur = Utils.Map(_timeSinceShoot, 0f, 0.3f, 10f, 2f, EasingType.QuadOut);
 		Opacity = Utils.Map(_timeSinceShoot, 0f, 0.7f, 0.5f, 1f, EasingType.QuadOut);
+		ScaleX = Utils.Map(_timeSinceShoot, 0f, 0.25f, 0.75f, 1f, EasingType.QuadOut);
+		ScaleY = Utils.Map(_timeSinceShoot, 0f, 0.3f, 1.25f, 1f, EasingType.QuadOut);
 
 		PlayerHandRightEmoji.Position = Utils.DynamicEaseTo(PlayerHandRightEmoji.Position, Position + new Vector2(20f, -140f), 0.25f, dt);
 		PlayerHandRightEmoji.Degrees = Utils.DynamicEaseTo(PlayerHandRightEmoji.Degrees, Degrees - 90f, 0.15f, dt);
@@ -84,13 +86,15 @@ public class PlayerGunEmoji : Emoji
 		_kickbackDistance = Game.Random.Float(120f, 300f);
 
 		var toCrosshair = (CrosshairEmoji.CenterPos - Position).Normal;
-		var muzzleFlashPos = Position + toCrosshair * Game.Random.Float(150f, 240f) + Utils.GetPerpendicularVector(toCrosshair) * Game.Random.Float(-60f, -80f);
+		var muzzleFlashPos = Position + toCrosshair * Game.Random.Float(150f, 400f) + Utils.GetPerpendicularVector(toCrosshair) * -100f;
 		PlayerMuzzleFlashEmoji flash = Hud.Instance.AddEmoji(new PlayerMuzzleFlashEmoji(), muzzleFlashPos) as PlayerMuzzleFlashEmoji;
 
-		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair) + 45f + Game.Random.Float(-40f, 40f);
-		flash.ScaleX = Utils.Map(Math.Abs(toCrosshair.x), 0f, 1f, 0.8f, 1.3f);
-		flash.ScaleY = Utils.Map(Math.Abs(toCrosshair.y), 0f, 1f, 0.8f, 1.3f);
-		//muzzleFlashEmoji.Velocity = -toCrosshair * 200f;
+		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair);// + Game.Random.Float(-40f, 40f);
+		flash.PlayerGunEmoji = this;
+		flash.LastPlayerGunPos = Position;
+		//flash.ScaleX = Utils.Map(Math.Abs(toCrosshair.x), 0f, 1f, 0.8f, 1.3f);
+		//flash.ScaleY = Utils.Map(Math.Abs(toCrosshair.y), 0f, 1f, 0.8f, 1.3f);
+		//flash.Velocity = toCrosshair * 1000f;
 
 		PlayerMuzzleSmokeEmoji smoke = Hud.Instance.AddEmoji(new PlayerMuzzleSmokeEmoji(), muzzleFlashPos) as PlayerMuzzleSmokeEmoji;
 		smoke.Degrees = -Utils.VectorToDegrees(hitPos - muzzleFlashPos);

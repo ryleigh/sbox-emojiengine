@@ -133,11 +133,6 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			}
 		}
 
-		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(0f) * 300f, 4f, new Color(0f, 0f, 1f, 0.8f));
-		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(20f) * 300f, 4f, new Color(0.2f, 0.2f, 1f, 0.8f));
-		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(-20f) * 300f, 4f, new Color(1f, 0.2f, 0.2f, 0.8f));
-		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(-95f) * 300f, 4f, new Color(1f, 0.4f, 0.4f, 0.8f));
-
 		//DebugDisplay.Text = $"{_faceEmojis.Count}";
 
 		//Log.Info($"{Input.Pressed("Restart")}, {Input.Pressed("attack1")}");
@@ -225,29 +220,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 			Emojis[i].OnMouseDown(rightClick);
-
-		//ProcessMouseEvent(rightClick, down: true);
-
-		//float angle = 0f;
-		//while(angle <= 360f)
-		//{
-		//	TestSpray(Utils.DegreesToVector(angle));
-		//	angle += 15f;
-		//}
 	}
-
-	//void TestSpray(Vector2 vec)
-	//{
-	//	var pos = CenterPos + vec * 200f;
-	//	BloodSprayEmoji spray = Hud.Instance.AddEmoji(new BloodSprayEmoji(), pos) as BloodSprayEmoji;
-	//	spray.ZIndex = 9999;
-	//	spray.Velocity = vec * 500f;
-	//	spray.Lifetime = 3f;
-	//	//spray.Gravity = Game.Random.Float(900f, 1400f);
-
-	//	spray.FlipX = vec.x < 0f;
-	//	spray.Degrees = -Utils.VectorToDegrees(vec) + (spray.FlipX ? 180f : 0f);
-	//}
 
 	protected override void OnMouseUp(MousePanelEvent e)
 	{
@@ -262,30 +235,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 			Emojis[i].OnMouseUp(rightClick);
 
-		//ProcessMouseEvent(rightClick, down: false);
 	}
-
-	//void ProcessMouseEvent(bool rightClick, bool down)
-	//{
-	//	var emojis = Emojis
-	//		.Where(x => x.IsInteractable)
-	//		.Where(x => (x.Position - MousePos).LengthSquared < MathF.Pow(x.Radius, 2f))
-	//		.OrderBy(x => x.ZIndex)
-	//		.ToList();
-
-	//	for(int i = emojis.Count - 1; i >= 0; i--)
-	//	{
-	//		var emoji = emojis[i];
-
-	//		if(down)
-	//			emoji.OnClickedDown(rightClick);
-	//		else
-	//			emoji.OnClickedUp(rightClick);
-
-	//		if(emoji.SwallowClicks)
-	//			break;
-	//	}
-	//}
 
 	public bool Raycast(Vector2 pos, out List<Emoji> hitEmojis)
 	{
@@ -297,16 +247,6 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		return hitEmojis.Count > 0;
 	}
-
-	//public Emoji AddEmoji(string text, Vector2 pos)
-	//{
-	//	Emoji emoji = new Emoji();
-	//	emoji.Text = text;
-	//	emoji.Position = pos;
-	//	Emojis.Add(emoji);
-
-	//	return emoji;
-	//}
 
 	public Emoji AddEmoji(Emoji emoji, Vector2 pos)
 	{
