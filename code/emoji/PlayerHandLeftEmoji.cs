@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace EmojiEngine;
 
-public class PlayerHandEmoji : Emoji
+public class PlayerHandLeftEmoji : Emoji
 {
 	public CrosshairEmoji CrosshairEmoji { get; set; }
 
@@ -18,19 +18,17 @@ public class PlayerHandEmoji : Emoji
 	private float _currKickbackAmount;
 	private float _kickbackDistance;
 
-	private List<string> _handEmojis = new() { "✋", "🤘", "🤟", "🖖", "☝️", "✊", "🖕", };
+	private List<string> _handEmojis = new() { "✋", "✋", "🤘", "🤘", "🤟", "🖖", "☝️", "☝️", "☝️", "✊", "✊", };
 
-	public PlayerHandEmoji()
+	public PlayerHandLeftEmoji()
 	{
 		Text = "✋";
 
 		IsInteractable = false;
 
-		//ScaleX = Game.Random.Float(1.2f, 1.4f);
-		//ScaleY = Game.Random.Float(0.7f, 0.8f);
 		SetFontSize(350f);
 
-		ZIndex = 9999;
+		ZIndex = Globals.DEPTH_PLAYER_HAND_LEFT;
 		Opacity = 0f;
 
 		//HasDropShadow = true;
@@ -42,6 +40,7 @@ public class PlayerHandEmoji : Emoji
 		_timeSinceShoot = 999f;
 
 		FlipX = true;
+		Degrees = 45f;
 	}
 
 	public override void Update(float dt)
@@ -51,30 +50,30 @@ public class PlayerHandEmoji : Emoji
 		if(CrosshairEmoji == null)
 			return;
 
-		float screenWidth = Hud.Instance.ScreenWidth;
-		float screenHeight = Hud.Instance.ScreenHeight;
-
-		var crosshairCenterPos = CrosshairEmoji.CenterPos;
+		var aimPos = CrosshairEmoji.CenterPos;
+		float width = Hud.Instance.ScreenWidth;
+		float height = Hud.Instance.ScreenHeight;
+		
 		var targetPos = 
-			new Vector2(260f, 70f)
-			+ (Position - crosshairCenterPos).Normal * _currKickbackAmount
-			+ new Vector2(0f, crosshairCenterPos.x < screenWidth * 0.5f && crosshairCenterPos.y < screenHeight * 0.4f ? Utils.Map(crosshairCenterPos.y, 0f, screenHeight * 0.4f, -500f, 0f, EasingType.SineOut) * Utils.Map(crosshairCenterPos.x, 0f, screenWidth * 0.5f, 1f, 0f, EasingType.Linear) : 0f)
+			new Vector2(Utils.Map(aimPos.x, 0f, width, 120f, 700f, EasingType.QuadIn), Utils.Map(aimPos.y, 0f, height, 70f, 220f, EasingType.QuadIn))
+			+ (Position - aimPos).Normal * _currKickbackAmount
+			+ new Vector2(0f, aimPos.x < width * 0.5f && aimPos.y < height * 0.4f ? Utils.Map(aimPos.y, 0f, height * 0.4f, -500f, 0f, EasingType.SineOut) * Utils.Map(aimPos.x, 0f, width * 0.5f, 1f, 0f, EasingType.Linear) : 0f)
 			+ new Vector2(Utils.FastSin(_timeSinceSpawn * 2.75f) * 15f, Utils.FastSin(8f + _timeSinceSpawn * 2.1f) * 12f);
 
 		Position = Utils.DynamicEaseTo(Position, targetPos, 0.3f, dt);
 
-		if(crosshairCenterPos.y > Position.y)
+		if(aimPos.y > Position.y)
 		{
-			float targetDegrees = Utils.VectorToDegrees(crosshairCenterPos - Position) - 90f;
+			float targetDegrees = 90f - Utils.VectorToDegrees(aimPos - Position);
 			if(targetDegrees < -40f)
 				targetDegrees = Utils.Map(targetDegrees, -40f, -100f, -40f, -50f, EasingType.QuadIn);
 
 			Degrees = Utils.DynamicEaseTo(Degrees, targetDegrees, 0.05f, dt);
 		}
-			
+
 		_currKickbackAmount = Utils.DynamicEaseTo(_currKickbackAmount, Utils.Map(_timeSinceShoot, 0f, 0.5f, _kickbackDistance, 0f, EasingType.QuadOut), 0.6f, dt);
 
-		Blur = Utils.Map(_timeSinceShoot, 0f, 0.3f, 10f, 2f, EasingType.QuadOut);
+		Blur = Utils.Map(_timeSinceShoot, 0f, 0.3f, 15f, 3f, EasingType.QuadOut);
 		Opacity = Utils.Map(_timeSinceShoot, 0f, 0.7f, 0.5f, 1f, EasingType.QuadOut);
 	}
 

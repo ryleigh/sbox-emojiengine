@@ -21,7 +21,7 @@ public class PlayerMuzzleFlashEmoji : Emoji
 		IsInteractable = false;
 		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.1f, 0.15f);
-		ZIndex = 9998;
+		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_FLASH;
 
 		SetFontSize(Game.Random.Float(140f, 260f));
 	}

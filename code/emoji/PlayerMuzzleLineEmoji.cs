@@ -24,7 +24,7 @@ public class PlayerMuzzleLineEmoji : Emoji
 		IsInteractable = false;
 		_timeSinceSpawn = 0f;
 		//Lifetime = Game.Random.Float(0.1f, 0.1f);
-		ZIndex = 9995;
+		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_LINE;
 
 		Opacity = 0f;
 		//ScaleX = 10f;

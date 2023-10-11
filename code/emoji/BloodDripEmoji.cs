@@ -72,7 +72,7 @@ public class BloodDripEmoji : Emoji
 		{
 			BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
 			puddle.SetFontSize(Utils.Map(FontSize, 15f, 45f, 16f, 35f) * Game.Random.Float(0.95f, 1.05f));
-			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 2.25f, 3f) * Game.Random.Float(0.9f, 1.1f);
+			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 1.5f, 2.5f) * Game.Random.Float(0.9f, 1.1f);
 
 			Hud.Instance.RemoveEmoji(this);
 			return;

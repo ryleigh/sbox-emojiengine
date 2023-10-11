@@ -43,7 +43,6 @@ public class Emoji
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
 	public bool FlipX { get; set; }
-	public bool FlipY { get; set; }
 	public float Blur { get; set; }
 	public float Contrast { get; set; }
 	public float Brightness { get; set; }

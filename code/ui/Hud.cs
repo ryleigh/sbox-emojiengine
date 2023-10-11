@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 
 namespace EmojiEngine;
 
@@ -22,6 +23,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 	public float ScreenWidth => Screen.Width * ScaleFromScreen;
 	public float ScreenHeight => Screen.Height * ScaleFromScreen;
+	public Vector2 CenterPos => new Vector2(ScreenWidth / 2f, ScreenHeight / 2f);
 	public Vector2 MousePos => new Vector2(MousePosition.x, Screen.Height - MousePosition.y) * ScaleFromScreen;
 	public Vector2 LastMousePos { get; private set; }
 	public Vector2 MouseDelta => MousePos - LastMousePos;
@@ -131,6 +133,11 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			}
 		}
 
+		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(0f) * 300f, 4f, new Color(0f, 0f, 1f, 0.8f));
+		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(20f) * 300f, 4f, new Color(0.2f, 0.2f, 1f, 0.8f));
+		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(-20f) * 300f, 4f, new Color(1f, 0.2f, 0.2f, 0.8f));
+		//DrawLine(CenterPos, CenterPos + Utils.DegreesToVector(-95f) * 300f, 4f, new Color(1f, 0.4f, 0.4f, 0.8f));
+
 		//DebugDisplay.Text = $"{_faceEmojis.Count}";
 
 		//Log.Info($"{Input.Pressed("Restart")}, {Input.Pressed("attack1")}");
@@ -220,7 +227,27 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			Emojis[i].OnMouseDown(rightClick);
 
 		//ProcessMouseEvent(rightClick, down: true);
+
+		//float angle = 0f;
+		//while(angle <= 360f)
+		//{
+		//	TestSpray(Utils.DegreesToVector(angle));
+		//	angle += 15f;
+		//}
 	}
+
+	//void TestSpray(Vector2 vec)
+	//{
+	//	var pos = CenterPos + vec * 200f;
+	//	BloodSprayEmoji spray = Hud.Instance.AddEmoji(new BloodSprayEmoji(), pos) as BloodSprayEmoji;
+	//	spray.ZIndex = 9999;
+	//	spray.Velocity = vec * 500f;
+	//	spray.Lifetime = 3f;
+	//	//spray.Gravity = Game.Random.Float(900f, 1400f);
+
+	//	spray.FlipX = vec.x < 0f;
+	//	spray.Degrees = -Utils.VectorToDegrees(vec) + (spray.FlipX ? 180f : 0f);
+	//}
 
 	protected override void OnMouseUp(MousePanelEvent e)
 	{

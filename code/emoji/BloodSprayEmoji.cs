@@ -17,12 +17,12 @@ public class BloodSprayEmoji : Emoji
 	public Vector2 Velocity { get; set; }
 	private Vector2 _gravityVelocity;
 
-	public float TargetDegrees { get; set; }
 	private float _scale;
 
 	public float Gravity { get; set; }
 
 	public float GroundYPos { get; set; }
+	public float RotateSpeed { get; set; }
 
 	public BloodSprayEmoji()
 	{
@@ -35,7 +35,7 @@ public class BloodSprayEmoji : Emoji
 		Lifetime = Game.Random.Float(0.25f, 0.5f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(45f, 52f));
-		Brightness = Game.Random.Float(0.7f, 1.3f);
+		Brightness = Game.Random.Float(0.7f, 1.2f);
 		Opacity = 0f;
 		_scale = Game.Random.Float(1.1f, 1.4f);
 
@@ -54,7 +54,7 @@ public class BloodSprayEmoji : Emoji
 		Position += (Velocity + _gravityVelocity) * dt;
 		Velocity *= (1f - 7f * dt);
 
-		Degrees = Utils.DynamicEaseTo(Degrees, TargetDegrees, 0.075f, dt);
+		Degrees += RotateSpeed * dt;
 
 		if(GroundYPos > 0f && Position.y < GroundYPos && _timeSinceSpawn > 0.25f)
 		{
@@ -64,7 +64,7 @@ public class BloodSprayEmoji : Emoji
 				var puddlePos = Position + Utils.GetRandomVector() * (Game.Random.Float(0f, 5f) + Game.Random.Float(5f, 20f) * i);
 				BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), puddlePos) as BloodPuddleEmoji;
 				puddle.SetFontSize(Game.Random.Float(10f, 15f));
-				puddle.Lifetime = Game.Random.Float(0.8f, 1.3f);
+				puddle.Lifetime = Game.Random.Float(0.7f, 0.9f);
 			}
 
 			Hud.Instance.RemoveEmoji(this);

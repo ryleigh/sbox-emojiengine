@@ -24,7 +24,7 @@
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);
-		transform: scale(@(Emoji.Scale * Hud.Instance.CameraScale)) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f))) scaleY(@(Emoji.ScaleY * (Emoji.FlipY ? -1f : 1f))) rotate(@(Emoji.Degrees)deg);
+		transform: rotate(@(Emoji.Degrees)deg) scale(@(Emoji.Scale * Hud.Instance.CameraScale)) scaleY(@(Emoji.ScaleY)) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f)));
 		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;

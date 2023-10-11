@@ -37,22 +37,22 @@ public partial class CrosshairEmoji : Emoji
 	private float _decelerationFactor;
 
 	public PlayerGunEmoji PlayerGunEmoji { get; private set; }
-	public PlayerHandEmoji PlayerHandEmoji { get; private set; }
+	public PlayerHandLeftEmoji PlayerHandEmoji { get; private set; }
 
 	public CrosshairEmoji()
 	{
 		Text = "";
-		ZIndex = 9996;
+		ZIndex = Globals.DEPTH_CROSSHAIR;
 		IsInteractable = false;
 		IsVisible = false;
 		_timeSinceShoot = 99f;
 		_length = 50f;
 		//_decelerationFactor = 4f;
 
-		PlayerGunEmoji = Hud.Instance.AddEmoji(new PlayerGunEmoji()) as PlayerGunEmoji;
+		PlayerGunEmoji = Hud.Instance.AddEmoji(new PlayerGunEmoji(), new Vector2(0f, -999f)) as PlayerGunEmoji;
 		PlayerGunEmoji.CrosshairEmoji = this;
 
-		PlayerHandEmoji = Hud.Instance.AddEmoji(new PlayerHandEmoji()) as PlayerHandEmoji;
+		PlayerHandEmoji = Hud.Instance.AddEmoji(new PlayerHandLeftEmoji(), new Vector2(0f, -999f)) as PlayerHandLeftEmoji;
 		PlayerHandEmoji.CrosshairEmoji = this;
 	}
 
@@ -62,7 +62,7 @@ public partial class CrosshairEmoji : Emoji
 
 		float mouseDeltaLength = Hud.Instance.MouseDelta.Length;
 		//_decelerationFactor = Utils.DynamicEaseTo(_decelerationFactor, Utils.Map(mouseDeltaLength, 0f, 30f, 4f, 1f) * Utils.Map(_timeSinceShoot, 0f, 1f, 0.1f, 1f, EasingType.QuadOut), 0.2f, dt);
-		//_decelerationFactor = 1.5f;
+		_decelerationFactor = 1.2f;
 
 		_velocity += (Hud.Instance.MousePos - Position).Normal * Utils.Map((Hud.Instance.MousePos - Position).Length, 0f, 400f, 0f, 40000f * _decelerationFactor, EasingType.Linear) * dt;
 		Position += _velocity * dt;

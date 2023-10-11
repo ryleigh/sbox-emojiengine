@@ -26,7 +26,7 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 		IsInteractable = false;
 		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.125f, 0.15f);
-		ZIndex = 9997;
+		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_SMOKE;
 		Opacity = 0f;
 
 		_opacity = Game.Random.Float(0.4f, 0.9f);
