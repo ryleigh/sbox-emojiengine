@@ -23,9 +23,6 @@ public class FaceEmoji : Emoji
 	private float _rotSpeed;
 	private float _rotAmount;
 
-	public bool IsBeingDragged { get; set; }
-	public bool IsBeingPressed { get; set; }
-
 	public Emoji ShadowEmoji { get; set; }
 	private float _shadowHeight;
 
@@ -81,9 +78,6 @@ public class FaceEmoji : Emoji
 			}
 		}
 
-		if(IsBeingPressed && !IsHovered)
-			IsBeingPressed = false;
-
 		float height = Hud.Instance.ScreenHeight;
 		float y = Position.y;
 		//float centerY = height / 2f;
@@ -92,39 +86,33 @@ public class FaceEmoji : Emoji
 		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
 		float depthScale = 1f;
 
-		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * (IsHovered ? 1.1f : 1f) * (IsBeingPressed ? 0.9f : 1f), 0.3f, dt);
+		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * (IsHovered ? 1f : 1f), 0.3f, dt);
 
-		//FontSize = _fontSize * _scale * (IsHovered ? 1.05f : 1f) * (IsBeingPressed ? 0.9f : 1f);
-		//Radius = _fontSize * RADIUS_SIZE_FACTOR * _scale;
+		Degrees += Velocity.x * 0.1f * dt;
 
-		if(!IsBeingDragged)
-		{
-			Degrees += Velocity.x * 0.1f * dt;
+		Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
+		ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.1f, dt);
+		ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.1f, dt);
 
-			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
-			ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.1f, dt);
-			ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.1f, dt);
+		Velocity += Utils.GetRandomVector() * 1200f * dt;
 
-			Velocity += Utils.GetRandomVector() * 1200f * dt;
+		Position += Velocity * dt;
+		float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
+		Velocity *= (1f - deceleration * dt);
 
-			Position += Velocity * dt;
-			float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
-			Velocity *= (1f - deceleration * dt);
-
-			CheckBounds();
-		}
+		CheckBounds();
 		
 		ZIndex = (int)(height - y);
 
 		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
 
-		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, IsBeingDragged ? -65f : -40f, 0.2f, dt);
+		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, -40f, 0.2f, dt);
 		ShadowEmoji.Text = Text;
-		ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f * (IsBeingDragged ? -4f : 1f), _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+		ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 		ShadowEmoji.ScaleX = ScaleX * 1.25f;
 		ShadowEmoji.ScaleY = ScaleY * 0.8f;
-		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, IsBeingDragged ? 8f : 6f, 0.2f, dt);
-		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale * (IsBeingDragged ? 0.8f : 1f), 0.2f, dt);
+		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
+		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
 		ShadowEmoji.Degrees = Degrees * 0.3f;
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
@@ -156,26 +144,6 @@ public class FaceEmoji : Emoji
 		}
 	}
 
-	//public override void OnClickedDown(bool rightClick)
-	//{
-	//	base.OnClickedDown(rightClick);
-
-	//	if(!rightClick)
-	//	{
-	//		IsBeingPressed = true;
-	//	}
-	//}
-
-	//public override void OnClickedUp(bool rightClick)
-	//{
-	//	base.OnClickedUp(rightClick);
-
-	//	if(IsBeingPressed && !rightClick)
-	//	{
-	//		Hit();
-	//	}
-	//}
-
 	public void Hit(Vector2 hitPos)
 	{
 		_isPoked = true;
@@ -196,8 +164,6 @@ public class FaceEmoji : Emoji
 		//Hud.Instance.AddRing(Position, color, Game.Random.Float(0.2f, 0.4f), Radius, Radius * Game.Random.Float(1.6f, 2f), 9f, 1f, numSegments, ZIndex - 1);
 
 		Hud.Instance.CursorEmoji?.BounceScale(1.2f, 0.15f);
-
-		IsBeingPressed = false;
 
 		Degrees = 0f;
 		DetermineRotVars();

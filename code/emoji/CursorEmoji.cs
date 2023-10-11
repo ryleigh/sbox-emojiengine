@@ -92,8 +92,6 @@ public partial class CursorEmoji : Emoji
 	{
 		base.OnMouseDown(rightClick);
 
-		if(rightClick && Hud.Instance.HoveredEmoji != null && Hud.Instance.HoveredEmoji is FaceEmoji faceEmoji)
-			StartDragging(faceEmoji);
 	}
 
 	public override void OnMouseUp(bool rightClick)
@@ -102,37 +100,6 @@ public partial class CursorEmoji : Emoji
 
 		BounceScale(1.1f, 0.1f);
 
-		if(rightClick && IsDragging)
-			StopDragging();
-	}
-
-	public void StartDragging(FaceEmoji faceEmoji)
-	{
-		Text = "🤏";
-		CurrSpriteOffset = new Vector2(34f, 16f);
-		IsDragging = true;
-		DraggedEmoji = faceEmoji;
-		DraggedEmoji.TransformOriginY = 0.1f;
-		DraggedEmoji.IsBeingDragged = true;
-		DraggedEmoji.Velocity = 0f;
-
-		Hud.Instance.CursorEmoji.BounceScale(1.2f, 0.1f);
-	}
-
-	public void StopDragging()
-	{
-		Text = IsHoveringSomething ? "👆" : "☝️";
-		CurrSpriteOffset = IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
-
-		IsDragging = false;
-		DraggedEmoji.TransformOriginY = DraggedEmoji.BaseTransformOriginY;
-		DraggedEmoji.Position += new Vector2(-DraggedEmoji.Degrees, 0f);
-		DraggedEmoji.IsBeingDragged = false;
-		DraggedEmoji.Velocity = Hud.Instance.MouseDelta * 100f;
-
-		DraggedEmoji = null;
-
-		Hud.Instance.CursorEmoji.BounceScale(0.9f, 0.15f);
 	}
 
 	public void BounceScale(float scale, float time)

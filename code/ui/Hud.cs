@@ -115,8 +115,6 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		for(int i = _faceEmojis.Count - 1; i >= 0; i--)
 		{
 			var face = _faceEmojis[i];
-			if(face.IsBeingDragged)
-				continue;
 
 			float faceRadius = face.Radius * HITBOX_RADIUS;
 
