@@ -35,7 +35,9 @@ public class FaceEmoji : Emoji
 
 	public const float RADIUS_SIZE_FACTOR = 0.56f;
 
-	float _pokedScale;
+	private float _pokedScale;
+	private float _pokedScaleX;
+	private float _pokedScaleY;
 
 	private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 			"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
@@ -74,8 +76,8 @@ public class FaceEmoji : Emoji
 			else
 			{
 				_pokedScale = Utils.Map(TimeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
-				ScaleX = Utils.Map(TimeSincePoked, 0f, _pokeTime, 1.25f, 1f, EasingType.BounceInOut);
-				ScaleY = Utils.Map(TimeSincePoked, 0f, _pokeTime, 0.75f, 1f, EasingType.BounceInOut);
+				ScaleX = Utils.Map(TimeSincePoked, 0f, _pokeTime, _pokedScaleX, 1f, EasingType.BounceInOut);
+				ScaleY = Utils.Map(TimeSincePoked, 0f, _pokeTime, _pokedScaleY, 1f, EasingType.BounceInOut);
 			}
 		}
 
@@ -178,6 +180,8 @@ public class FaceEmoji : Emoji
 	{
 		_isPoked = true;
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
+		_pokedScaleX = Game.Random.Float(1.15f, 1.3f);
+		_pokedScaleY = Game.Random.Float(0.7f, 0.85f);
 		LastPokedTime = Hud.Instance.CurrentTime;
 
 		//Text = "😲";
@@ -199,6 +203,8 @@ public class FaceEmoji : Emoji
 		DetermineRotVars();
 
 		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+
+		Hud.Instance.TimeScale = Game.Random.Float(0.1f, 0.5f);
 	}
 
 	void DetermineRotVars()

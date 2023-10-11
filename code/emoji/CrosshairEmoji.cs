@@ -139,8 +139,8 @@ public partial class CrosshairEmoji : Emoji
 		}
 		else
 		{
-			Hud.Instance.AddEmoji(new BulletHoleEmoji(), hitPos);
-
+			var bulletHole = Hud.Instance.AddEmoji(new BulletHoleEmoji(), hitPos);
+			bulletHole.Degrees = Utils.Map(hitPos.x, 0f, Hud.Instance.ScreenWidth, -8f, 8f);
 			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), hitPos) as DustEmoji;
 			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - hitPos.y);
 			float offsetX = hitPos.x - aimPos.x;

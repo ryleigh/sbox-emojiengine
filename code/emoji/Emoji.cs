@@ -52,11 +52,10 @@ public class Emoji
 	public float HueRotateDegrees { get; set; }
 	public float TextStroke { get; set; }
 	public Color TextStrokeColor { get; set; }
-	public float DropShadowX { get; set; }
-	public float DropShadowY { get; set; }
-	public float DropShadowBlur { get; set; }
-	public Color DropShadowColor { get; set; }
-	public bool HasDropShadow { get; set; }
+	public float TextShadowX { get; set; }
+	public float TextShadowY { get; set; }
+	public float TextShadowBlur { get; set; }
+	public Color TextShadowColor { get; set; }
 	public string BackgroundImage { get; set; }
 
 	public float SpawnTime { get; set; }

@@ -28,7 +28,7 @@ public class BloodSprayEmoji : Emoji
 		Text = "💦";
 
 		IsInteractable = false;
-		Saturation = Game.Random.Float(1f, 3f);
+		Saturation = 4f;
 
 		Lifetime = Game.Random.Float(0.25f, 0.5f);
 		PanelSizeFactor = 2f;
@@ -38,6 +38,10 @@ public class BloodSprayEmoji : Emoji
 		_scale = Game.Random.Float(1.1f, 1.4f);
 
 		HueRotateDegrees = 170f;
+
+		TextShadowColor = new Color(0f, 0f, 0f, 0.7f);
+		TextShadowY = -2f;
+		TextShadowBlur = 3f;
 	}
 
 	public override void Update(float dt)

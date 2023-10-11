@@ -31,12 +31,6 @@ public class ImpactEmoji : Emoji
 		_startScale = Game.Random.Float(0.4f, 0.65f);
 		_endScale = Game.Random.Float(1.3f, 1.8f);
 
-		//HasDropShadow = true;
-		//DropShadowX = 0f;
-		//DropShadowY = 0f;
-		//DropShadowBlur = 8f;
-		//DropShadowColor = Color.Red;
-
 		HueRotateDegrees = Game.Random.Float(0f, 40f);
 	}
 

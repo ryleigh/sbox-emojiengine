@@ -27,11 +27,18 @@ public class PlayerHandRightEmoji : Emoji
 
 		ZIndex = Globals.DEPTH_PLAYER_HAND_RIGHT;
 		//Opacity = 1f;
+
+		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
+		//TextShadowY = 10f;
+		//TextShadowBlur = 20f;
 	}
 
 	public override void Update(float dt)
 	{
 		base.Update(dt);
+
+		ScaleX = Utils.Map(TimeSinceShoot, 0f, 0.3f, 1.2f, 1f, EasingType.QuadOut);
+		ScaleY = Utils.Map(TimeSinceShoot, 0f, 0.5f, 1.2f, 1f, EasingType.QuadOut);
 	}
 
 	public void Shoot()

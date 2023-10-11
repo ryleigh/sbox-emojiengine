@@ -23,24 +23,16 @@ public class PlayerGunEmoji : Emoji
 	public PlayerGunEmoji()
 	{
 		BackgroundImage = "textures/gun4.png";
-
 		IsInteractable = false;
-		//Saturation = 10f;
-
-		//ScaleX = Game.Random.Float(1.2f, 1.4f);
-		//ScaleY = Game.Random.Float(0.7f, 0.8f);
 		PanelSize = 600f;
-
 		ZIndex = Globals.DEPTH_PLAYER_GUN;
 		Opacity = 0f;
 
-		//HasDropShadow = true;
-		//DropShadowX = 0f;
-		//DropShadowY = 0f;
-		//DropShadowBlur = 10f;
-		//DropShadowColor = Color.Black;
-
 		PlayerHandRightEmoji = Hud.Instance.AddEmoji(new PlayerHandRightEmoji(), new Vector2(0f, -999f)) as PlayerHandRightEmoji;
+
+		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
+		//TextShadowY = 10f;
+		//TextShadowBlur = 20f;
 	}
 
 	public override void Update(float dt)
@@ -51,6 +43,7 @@ public class PlayerGunEmoji : Emoji
 			return;
 
 		var aimPos = CrosshairEmoji.CenterPos;
+		var aimDir = (aimPos - Position).Normal;
 		var width = Hud.Instance.ScreenWidth;
 		float height = Hud.Instance.ScreenHeight;
 
@@ -72,8 +65,9 @@ public class PlayerGunEmoji : Emoji
 		ScaleX = Utils.Map(TimeSinceShoot, 0f, 0.25f, 0.75f, 1f, EasingType.QuadOut);
 		ScaleY = Utils.Map(TimeSinceShoot, 0f, 0.3f, 1.25f, 1f, EasingType.QuadOut);
 
-		PlayerHandRightEmoji.Position = Utils.DynamicEaseTo(PlayerHandRightEmoji.Position, Position + new Vector2(20f, -140f), 0.25f, dt);
-		PlayerHandRightEmoji.Degrees = Utils.DynamicEaseTo(PlayerHandRightEmoji.Degrees, Degrees - 90f, 0.15f, dt);
+		//PlayerHandRightEmoji.Position = Utils.DynamicEaseTo(PlayerHandRightEmoji.Position, Position + new Vector2(20f, -140f), 0.25f, dt);
+		PlayerHandRightEmoji.Position = Utils.DynamicEaseTo(PlayerHandRightEmoji.Position, Position + aimDir * Utils.Map(TimeSinceShoot, 0f, 0.3f, -250f, -100f) + Utils.GetPerpendicularVector(aimDir) * 100f, 0.25f, dt);
+		PlayerHandRightEmoji.Degrees = Utils.DynamicEaseTo(PlayerHandRightEmoji.Degrees, Degrees - 90f, 0.25f, dt);
 		PlayerHandRightEmoji.Opacity = Opacity;
 		PlayerHandRightEmoji.Blur = Blur;
 	}

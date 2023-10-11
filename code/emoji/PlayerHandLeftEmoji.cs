@@ -31,14 +31,12 @@ public class PlayerHandLeftEmoji : Emoji
 		ZIndex = Globals.DEPTH_PLAYER_HAND_LEFT;
 		Opacity = 0f;
 
-		//HasDropShadow = true;
-		//DropShadowX = 0f;
-		//DropShadowY = 0f;
-		//DropShadowBlur = 10f;
-		//DropShadowColor = Color.Black;
-
 		FlipX = true;
 		Degrees = 45f;
+
+		//TextShadowColor = new Color(0f, 0f, 0f, 0.6f);
+		//TextShadowY = 10f;
+		//TextShadowBlur = 20f;
 	}
 
 	public override void Update(float dt)

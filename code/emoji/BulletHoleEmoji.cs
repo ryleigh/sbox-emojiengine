@@ -23,19 +23,16 @@ public class BulletHoleEmoji : Emoji
 		Saturation = Game.Random.Float(1f, 2f);
 
 		Lifetime = Game.Random.Float(2f, 2.3f);
-		PanelSizeFactor = 2f;
+		PanelSizeFactor = 2.5f;
 		SetFontSize(Game.Random.Float(19f, 25f));
 		ScaleX = Game.Random.Float(1.2f, 1.4f);
 		ScaleY = Game.Random.Float(0.6f, 0.8f);
-		Degrees = Game.Random.Float(-6f, 6f);
 		_brightness = Game.Random.Float(1f, 4f);
 		_brightnessTime = Game.Random.Float(0.1f, 0.2f);
 
-		//HasDropShadow = true;
-		//DropShadowX = 0f;
-		//DropShadowY = 5f;
-		//DropShadowBlur = 12f;
-		//DropShadowColor = Color.Black;
+		TextShadowColor = Color.Black;
+		TextShadowY = Game.Random.Float(-2f, -5f);
+		TextShadowBlur = Game.Random.Float(3f, 5f);
 	}
 
 	public override void Update(float dt)

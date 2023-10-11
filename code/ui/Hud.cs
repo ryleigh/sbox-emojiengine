@@ -90,7 +90,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		CameraScale = 1f;
 
 		CurrentTime = 0f;
-		TimeScale = 0.1f;
+		TimeScale = 1f;
 
 		//AddEmoji(new ShadowEmoji(), new Vector2(600f, 600f));
 	}
@@ -99,6 +99,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	{
 		base.Tick();
 		float dt = Time.Delta * TimeScale;
+		float dtRaw = Time.Delta;
 
 		CurrentTime += dt;
 
@@ -140,6 +141,8 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 				}
 			}
 		}
+
+		TimeScale = Utils.DynamicEaseTo(TimeScale, 1f, 0.1f, dtRaw);
 
 		//DebugDisplay.Text = $"{_faceEmojis.Count}";
 

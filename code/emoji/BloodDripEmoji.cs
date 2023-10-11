@@ -38,6 +38,10 @@ public class BloodDripEmoji : Emoji
 		Brightness = Game.Random.Float(0.7f, 1.3f);
 		Opacity = 0f;
 		_scale = Game.Random.Float(1.1f, 1.3f);
+
+		TextShadowColor = new Color(0f, 0f, 0f, 0.9f);
+		TextShadowY = -1f;
+		TextShadowBlur = 3f;
 	}
 
 	public override void Update(float dt)

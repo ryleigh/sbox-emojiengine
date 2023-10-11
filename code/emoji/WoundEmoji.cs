@@ -62,12 +62,6 @@ public class WoundEmoji : Emoji
 
 		_brightnessTime = Game.Random.Float(0.2f, 0.35f);
 
-		//HasDropShadow = true;
-		//DropShadowX = Game.Random.Float(0f, 2f);
-		//DropShadowY = Game.Random.Float(0f, 2f);
-		//DropShadowBlur = 8f;
-		//DropShadowColor = Color.Red;
-
 		_countdownToDrip = Game.Random.Float(0.075f, 1.1f);
 
 		TextStrokeColor = Color.Red;
