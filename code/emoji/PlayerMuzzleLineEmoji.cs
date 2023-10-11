@@ -16,32 +16,26 @@ public class PlayerMuzzleLineEmoji : Emoji
 	public Vector2 StartPos { get; set; }
 	public Vector2 EndPos { get; set; }
 	public Vector2 Direction { get; set; }
-	private float _speed;
 
 	public PlayerMuzzleLineEmoji()
 	{
 		Text = "☄️";
 		IsInteractable = false;
 		_timeSinceSpawn = 0f;
-		//Lifetime = Game.Random.Float(0.1f, 0.1f);
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_LINE;
 
 		Opacity = 0f;
-		//ScaleX = 10f;
-		//ScaleY = 0.3f;
+
+		//Brightness = 0f;
 
 		SetFontSize(60f);
-
-		_speed = Game.Random.Float(0f, 1000f);
 	}
 
 	public override void Update(float dt)
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadOut);
-
-		Position += Direction * _speed * dt;
+		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear);
 
 		if(_timeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);

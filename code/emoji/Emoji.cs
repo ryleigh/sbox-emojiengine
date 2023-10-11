@@ -82,7 +82,7 @@ public class Emoji
 	public virtual void Update(float dt)
 	{
 		//if(Radius > 0f)
-		//	Utils.DrawCircle(Position, Radius, 12, Time.Now, Color.White, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+		//	Utils.DrawCircle(Position, Radius, 12, Hud.Instance.ElapsedTime, Color.White, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
 	}
 
 	public virtual void OnMouseDown(bool rightClick) { }

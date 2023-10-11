@@ -55,6 +55,7 @@ public class FaceEmoji : Emoji
 		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
+		_timeSincePoked = 999f;
 	}
 
 	public override void Update(float dt)
@@ -66,16 +67,17 @@ public class FaceEmoji : Emoji
 			if(_timeSincePoked > _pokeTime)
 			{
 				_pokedScale = 1f;
+				ScaleX = 1f;
+				ScaleY = 1f;
 				_isPoked = false;
 			}
 			else
 			{
 				_pokedScale = Utils.Map(_timeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
+				ScaleX = Utils.Map(_timeSincePoked, 0f, _pokeTime, 1.25f, 1f, EasingType.BounceInOut);
+				ScaleY = Utils.Map(_timeSincePoked, 0f, _pokeTime, 0.75f, 1f, EasingType.BounceInOut);
 			}
 		}
-
-		//Position = new Vector2(900f + Utils.FastSin(Time.Now * 3f) * 10f, 600f + Utils.FastSin(Time.Now * 2f) * 10f);
-		//Opacity = 0.5f + Utils.FastSin(Time.Now * 1.37f) * 0.5f;
 
 		if(IsBeingPressed && !IsHovered)
 			IsBeingPressed = false;
@@ -97,7 +99,7 @@ public class FaceEmoji : Emoji
 		{
 			Degrees += Velocity.x * 0.1f * dt;
 
-			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Time.Now * _rotSpeed) * _rotAmount, 0.2f, dt);
+			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.ElapsedTime * _rotSpeed) * _rotAmount, 0.2f, dt);
 			ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.1f, dt);
 			ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.1f, dt);
 
@@ -124,23 +126,7 @@ public class FaceEmoji : Emoji
 		ShadowEmoji.Degrees = Degrees * 0.3f;
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
-
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
-
-		//Text = IsHovered ? "😲" : "😘";
-
-		//opacity: @(0.5f + Utils.FastSin(Time.Now * 1.37f) * 0.5f);
-		//text - shadow: 0 0 @(8f + Utils.FastSin(Time.Now * 2.55f) * 8f)px #000000;
-		//text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
-		//font - size: @(64f + Utils.FastSin(Time.Now * 1.5f) * 12f)px;
-		//left: @(600f + Utils.FastSin(Time.Now * 3f) * 10f)px;
-		//bottom: @(300f + Utils.FastSin(Time.Now * 2f) * 10f)px;
-		//transform: scaleX(@((0.9f + Utils.FastSin(Time.Now * 4.5f) * 0.1f) * (Utils.FastSin(Time.Now * 1.1f) < 0f ? -1f : 1f)))
-		//scaleY(@(0.95f + Utils.FastSin(Time.Now * 4.25f) * 0.05f));
-		//transform: rotate(@(Utils.FastSin(Time.Now * 4.25f) * 10f)deg);
-
-		//if(Radius > 0f)
-		//	Utils.DrawCircle(Position, Radius, 12, Time.Now, Color.White, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
 	}
 
 	void CheckBounds()

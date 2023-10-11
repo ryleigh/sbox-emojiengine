@@ -75,6 +75,8 @@ public class PlayerHandLeftEmoji : Emoji
 
 		Blur = Utils.Map(_timeSinceShoot, 0f, 0.3f, 15f, 3f, EasingType.QuadOut);
 		Opacity = Utils.Map(_timeSinceShoot, 0f, 0.7f, 0.5f, 1f, EasingType.QuadOut);
+		ScaleX = Utils.Map(_timeSinceShoot, 0f, 0.3f, 0.8f, 1f, EasingType.QuadOut);
+		ScaleY = Utils.Map(_timeSinceShoot, 0f, 0.5f, 1.2f, 1f, EasingType.QuadOut);
 	}
 
 	public void Shoot(Vector2 hitPos)

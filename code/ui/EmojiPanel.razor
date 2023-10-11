@@ -41,33 +41,24 @@
 
 	@(Emoji.Text)
 
+	<!-- TEXT SHADOW ? -->
+
 	<!-- @(Emoji.HasDropShadow ? $"filter: drop-shadow({@Emoji.DropShadowX}px {@Emoji.DropShadowY}px {@Emoji.DropShadowBlur}px {@Emoji.DropShadowColor.Rgba});" : "") -->
 
 	<!-- chancing "font-size" is very slow!!!!!  -->
 
 	<!-- <panel class="emoji" style="
 		text-shadow: @Emoji.TextShadowX @Emoji.TextShadowY @Emoji.TextShadowBlur @Emoji.TextShadowColor.Rgba
-		text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
 	">
 		😘
 	</panel> -->
 
 	<!-- <panel class="emoji" style="
-		filter: drop-shadow( -5px -5px 10px rgba( red, 0.5 ), 5px 5px 10px rgba( blue, 0.5 ), 5px -5px 10px rgba( yellow, 0.5 ), -5px 5px 10px rgba( green, 0.5 ) );
 		filter: border-wrap(1px white);
-		text-stroke: @(8f + Utils.FastSin(Time.Now * 3.6f) * 8f)px @((Color.Lerp(new Color(1f, 0f, 0f), new Color(0f, 0f, 1f), 0.5f + Utils.FastSin(Time.Now * 3.33f) * 0.5f)).Rgba);
 		onclick="@(e => OnClick(e))"
 	>
 		😘
 	</panel> -->
-
-
-	<!-- <panel class="emoji" style="
-		font-size: @(64f + Utils.FastSin(Time.Now * 12f) * 12f)px;
-		left: @(600f + Utils.FastSin(Time.Now * 3.15f) * 10f - 32f)px; bottom: @(200f + Utils.FastSin(Time.Now * 3.7f) * 10f - 32f)px;
-	">
-		@(GetClockIcon())
-	</panel>-->
 
 </root>
 
@@ -76,26 +67,26 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine(Time.Now);
+		return HashCode.Combine(Hud.Instance.ElapsedTime);
 	}
 
-	string GetClockIcon()
-	{
-		TimeSpan t = TimeSpan.FromSeconds(Time.Now);
-		int ticks = (int)t.Milliseconds;
-		int interval = 83;
+	//string GetClockIcon()
+	//{
+	//	TimeSpan t = TimeSpan.FromSeconds(Hud.Instance.ElapsedTime);
+	//	int ticks = (int)t.Milliseconds;
+	//	int interval = 83;
 
-		if(ticks < interval * 1)		return "🕛";
-		else if(ticks < interval * 2)	return "🕐";
-		else if(ticks < interval * 3)	return "🕑";
-		else if(ticks < interval * 4)	return "🕒";
-		else if(ticks < interval * 5)	return "🕓";
-		else if(ticks < interval * 6)	return "🕔";
-		else if(ticks < interval * 7)	return "🕕";
-		else if(ticks < interval * 8)	return "🕖";
-		else if(ticks < interval * 9)	return "🕗";
-		else if(ticks < interval * 10)	return "🕘";
-		else if(ticks < interval * 11)	return "🕙";
-		else							return "🕚";
-	}
+	//	if(ticks < interval * 1)		return "🕛";
+	//	else if(ticks < interval * 2)	return "🕐";
+	//	else if(ticks < interval * 3)	return "🕑";
+	//	else if(ticks < interval * 4)	return "🕒";
+	//	else if(ticks < interval * 5)	return "🕓";
+	//	else if(ticks < interval * 6)	return "🕔";
+	//	else if(ticks < interval * 7)	return "🕕";
+	//	else if(ticks < interval * 8)	return "🕖";
+	//	else if(ticks < interval * 9)	return "🕗";
+	//	else if(ticks < interval * 10)	return "🕘";
+	//	else if(ticks < interval * 11)	return "🕙";
+	//	else							return "🕚";
+	//}
 }

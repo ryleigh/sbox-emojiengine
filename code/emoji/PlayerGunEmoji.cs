@@ -92,19 +92,18 @@ public class PlayerGunEmoji : Emoji
 		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair);// + Game.Random.Float(-40f, 40f);
 		flash.PlayerGunEmoji = this;
 		flash.LastPlayerGunPos = Position;
-		//flash.ScaleX = Utils.Map(Math.Abs(toCrosshair.x), 0f, 1f, 0.8f, 1.3f);
-		//flash.ScaleY = Utils.Map(Math.Abs(toCrosshair.y), 0f, 1f, 0.8f, 1.3f);
-		//flash.Velocity = toCrosshair * 1000f;
 
 		PlayerMuzzleSmokeEmoji smoke = Hud.Instance.AddEmoji(new PlayerMuzzleSmokeEmoji(), muzzleFlashPos) as PlayerMuzzleSmokeEmoji;
 		smoke.Degrees = -Utils.VectorToDegrees(hitPos - muzzleFlashPos);
 		smoke.Velocity = (hitPos - muzzleFlashPos).Normal * Game.Random.Float(3000f, 4500f);
 
-		float distPercent = Game.Random.Float(0.1f, 0.2f);
+		int numLines = MathX.FloorToInt(Utils.Map((hitPos - muzzleFlashPos).Length, 0f, 1000f, 0f, 5f)) + Game.Random.Int(0, 1);
+		float increment = 1f / (numLines + 1f);
+		float distPercent = increment;
 		while(distPercent < 0.95f)
 		{
-			SpawnMuzzleLine(muzzleFlashPos, hitPos, distPercent);
-			distPercent += Game.Random.Float(0.1f, 0.3f);
+			SpawnMuzzleLine(muzzleFlashPos, hitPos, distPercent + Game.Random.Float(-0.05f, 0.05f));
+			distPercent += increment;
 		}
 
 		PlayerHandRightEmoji.Shoot();

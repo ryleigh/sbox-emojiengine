@@ -63,7 +63,7 @@ public class BloodDripEmoji : Emoji
 		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
 		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 8f, 0f, EasingType.QuadOut);
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.2f, _scale, EasingType.QuadOut);
-		ScaleY = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 1.2f, EasingType.QuadIn);
+		ScaleY = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.5f, 1f, 1.2f, EasingType.QuadIn);
 
 		Position += (Velocity + _gravityVelocity) * dt;
 		Velocity *= (1f - 7f * dt);
@@ -72,7 +72,7 @@ public class BloodDripEmoji : Emoji
 		{
 			BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
 			puddle.SetFontSize(Utils.Map(FontSize, 15f, 45f, 16f, 35f) * Game.Random.Float(0.95f, 1.05f));
-			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 1.5f, 2.5f) * Game.Random.Float(0.9f, 1.1f);
+			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 1.5f, 2f) * Game.Random.Float(0.9f, 1.1f);
 
 			Hud.Instance.RemoveEmoji(this);
 			return;

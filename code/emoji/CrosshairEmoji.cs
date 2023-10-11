@@ -83,7 +83,7 @@ public partial class CrosshairEmoji : Emoji
 		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
 
 		_gap = Utils.DynamicEaseTo(_gap, MIN_GAP + _mouseDeltaGap + _recoilGap, 0.25f, dt);
-		Color color = Color.Lerp(Color.White, Color.Black, 0.5f + Utils.FastSin(Time.Now * 24f) * 0.5f).WithAlpha(0.5f);
+		Color color = Color.Lerp(Color.White, Color.Black, 0.5f + Utils.FastSin(Hud.Instance.ElapsedTime * 24f) * 0.5f).WithAlpha(0.5f);
 		float invert = 1f;
 		float saturation = Utils.Map(_timeSinceShoot, 0f, 1f, 10f, 1f);
 		float blur = Utils.Map(_timeSinceShoot, 0f, 0.5f, 3f, 1f);

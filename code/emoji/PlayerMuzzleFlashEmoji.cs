@@ -13,8 +13,6 @@ public class PlayerMuzzleFlashEmoji : Emoji
 	public float Lifetime { get; set; }
 	private TimeSince _timeSinceSpawn;
 
-	public Vector2 Velocity { get; set; }
-
 	public PlayerGunEmoji PlayerGunEmoji { get; set; }
 	public Vector2 LastPlayerGunPos { get; set; }
 
@@ -38,11 +36,7 @@ public class PlayerMuzzleFlashEmoji : Emoji
 
 		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.7f, 1.5f, EasingType.QuadOut);
 		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear) * Utils.Map(_timeSinceSpawn, 0f, 0.05f, 0f, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 2f, 10f, EasingType.Linear);
-		//Invert = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadIn);
-
-		Position += Velocity * dt;
-		Velocity *= (1f - 3f * dt);
+		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 3f, 10f, EasingType.Linear);
 
 		if(PlayerGunEmoji != null)
 		{

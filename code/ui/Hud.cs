@@ -48,6 +48,8 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	public Vector2 CameraOffset { get; set; }
 	public float CameraScale { get; set; }
 
+	public float ElapsedTime { get; private set; }
+
 	public Hud()
 	{
 		Instance = this;
@@ -86,6 +88,8 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		CameraOffset = Vector2.Zero;
 		CameraScale = 1f;
 
+		ElapsedTime = 0f;
+
 		//AddEmoji(new ShadowEmoji(), new Vector2(600f, 600f));
 	}
 
@@ -93,7 +97,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	{
 		base.Tick();
 		float dt = Time.Delta;
-		
+
+		ElapsedTime += dt;
+
 		HandleEmoji(dt);
 		HandleLines(dt);
 		HandleRings(dt);
@@ -147,8 +153,8 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		LastMousePos = MousePos;
 
-		BgColorBottom = new Color(0.05f + Utils.FastSin(Time.Now * 0.15f) * 0.05f, 0.05f + Utils.FastSin(20f + Time.Now * 0.13f) * 0.05f, 0.05f + Utils.FastSin(10f + Time.Now * 0.17f) * 0.05f);
-		BgColorTop = new Color(0.35f + Utils.FastSin(30f + Time.Now * 0.12f) * 0.15f, 0.35f + Utils.FastSin(Time.Now * 0.11f) * 0.1f, 0.35f + Utils.FastSin(5f + Time.Now * 0.09f) * 0.2f);
+		BgColorBottom = new Color(0.05f + Utils.FastSin(ElapsedTime * 0.15f) * 0.05f, 0.05f + Utils.FastSin(20f + ElapsedTime * 0.13f) * 0.05f, 0.05f + Utils.FastSin(10f + ElapsedTime * 0.17f) * 0.05f);
+		BgColorTop = new Color(0.35f + Utils.FastSin(30f + ElapsedTime * 0.12f) * 0.15f, 0.35f + Utils.FastSin(ElapsedTime * 0.11f) * 0.1f, 0.35f + Utils.FastSin(5f + ElapsedTime * 0.09f) * 0.2f);
 		//Style.BackgroundColor = BgColor;
 	}
 
@@ -182,7 +188,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		{
 			var line = Lines[i];
 
-			if(Time.Now > line.spawnTime + line.lifetime)
+			if(ElapsedTime > line.spawnTime + line.lifetime)
 				Lines.RemoveAt(i);
 		}
 	}
@@ -193,17 +199,17 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 		{
 			var ring = Rings[i];
 
-			float progress = Utils.Map(Time.Now, ring.spawnTime, ring.spawnTime + ring.lifetime, 0f, 1f);
+			float progress = Utils.Map(ElapsedTime, ring.spawnTime, ring.spawnTime + ring.lifetime, 0f, 1f);
 			float radius = Utils.Map(progress, 0f, 1f, ring.startRadius, ring.endRadius, EasingType.QuadOut);
 			float width = Utils.Map(progress, 0f, 1f, ring.startWidth, ring.endWidth, EasingType.QuadOut);
 			Color baseColor = Color.Lerp(Color.Black, ring.color, Utils.Map(progress, 0f, 0.5f, 0f, 1f, EasingType.QuadOut));
 			Color color = baseColor.WithAlpha(Utils.Map(progress, 0.5f, 1f, ring.color.a, 0f, EasingType.QuadOut));
 			var circleProgress = Utils.Map(progress, 0f, 1f, 0f, 1f, EasingType.SineIn);
-			float startingAngle = Utils.FastSin(Time.Now * 2f);
+			float startingAngle = Utils.FastSin(ElapsedTime * 2f);
 
 			Utils.DrawCircle(ring.pos, radius, ring.numSegments, startingAngle, color, width, 0f, ring.zIndex, circleProgress);
 
-			if(Time.Now > ring.spawnTime + ring.lifetime)
+			if(ElapsedTime > ring.spawnTime + ring.lifetime)
 				Rings.RemoveAt(i);
 		}
 	}
@@ -280,11 +286,11 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 0, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
-		Lines.Add(new LineData(posA, posB, thickness, color, Time.Now, lifetime, zIndex, invert, saturation, blur));
+		Lines.Add(new LineData(posA, posB, thickness, color, ElapsedTime, lifetime, zIndex, invert, saturation, blur));
 	}
 
 	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = 0)
 	{
-		Rings.Add(new RingData(pos, color, Time.Now, lifetime, zIndex, startRadius, endRadius, startWidth, endWidth, numSegments));
+		Rings.Add(new RingData(pos, color, ElapsedTime, lifetime, zIndex, startRadius, endRadius, startWidth, endWidth, numSegments));
 	}
 }

@@ -23,13 +23,13 @@ public class BulletHoleEmoji : Emoji
 		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 2f);
 
-		ScaleX = Game.Random.Float(1.2f, 1.3f);
-		ScaleY = Game.Random.Float(0.7f, 0.8f);
 		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(2f, 2.3f);
 		PanelSizeFactor = 2f;
-		SetFontSize(Game.Random.Float(20f, 24f));
-		Degrees = Game.Random.Float(-25f, 25f);
+		SetFontSize(Game.Random.Float(19f, 25f));
+		ScaleX = Game.Random.Float(1.2f, 1.4f);
+		ScaleY = Game.Random.Float(0.6f, 0.8f);
+		Degrees = Game.Random.Float(-6f, 6f);
 		_brightness = Game.Random.Float(1f, 4f);
 		_brightnessTime = Game.Random.Float(0.1f, 0.2f);
 
@@ -48,7 +48,7 @@ public class BulletHoleEmoji : Emoji
 		Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 0f, EasingType.QuadOut);
 		ZIndex = (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, -4000f, -4500f, EasingType.QuadOut);
 		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 3f, EasingType.QuadOut);
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.25f, 0.75f));
 
 		TextStroke = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.1f, 8f, 0f, EasingType.ExpoOut);
 		TextStrokeColor = new Color(1f, Game.Random.Float(0f, 1f), 0f);
