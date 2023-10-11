@@ -11,7 +11,6 @@ namespace EmojiEngine;
 public class ImpactEmoji : Emoji
 {
 	public float Lifetime { get; set; }
-	private TimeSince _timeSinceSpawn;
 
 	private float _startScale;
 	private float _endScale;
@@ -20,7 +19,6 @@ public class ImpactEmoji : Emoji
 	{
 		Text = "💥";
 		IsInteractable = false;
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.15f, 0.2f);
 		Degrees = Game.Random.Float(0f, 360f);
 		ScaleX = Game.Random.Float(0.7f, 1.3f);
@@ -46,12 +44,12 @@ public class ImpactEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, _startScale, _endScale, EasingType.QuadOut);
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn) * Utils.Map(_timeSinceSpawn, 0f, 0.1f, 0f, 1f, EasingType.Linear);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 6f, 12f, EasingType.QuadOut);
-		//Invert = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.Linear);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, _startScale, _endScale, EasingType.QuadOut);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn) * Utils.Map(TimeSinceSpawn, 0f, 0.1f, 0f, 1f, EasingType.Linear);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 6f, 12f, EasingType.QuadOut);
+		//Invert = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.Linear);
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

@@ -59,6 +59,9 @@ public class Emoji
 	public bool HasDropShadow { get; set; }
 	public string BackgroundImage { get; set; }
 
+	public float SpawnTime { get; set; }
+	public float TimeSinceSpawn => Hud.Instance.CurrentTime - SpawnTime;
+
 	public Emoji()
 	{
 		Text = "";
@@ -77,6 +80,7 @@ public class Emoji
 		Contrast = 1f;
 		Brightness = 1f;
 		Saturation = 1f;
+		SpawnTime = Hud.Instance.CurrentTime;
 	}
 
 	public virtual void Update(float dt)

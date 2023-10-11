@@ -10,7 +10,6 @@ namespace EmojiEngine;
 
 public class BloodPuddleEmoji : Emoji
 {
-	private TimeSince _timeSinceSpawn;
 	public float Lifetime { get; set; }
 
 	private float _brightness;
@@ -29,7 +28,6 @@ public class BloodPuddleEmoji : Emoji
 
 		ScaleX = Game.Random.Float(1.2f, 1.4f);
 		ScaleY = Game.Random.Float(0.7f, 0.8f);
-		_timeSinceSpawn = 0f;
 		//Lifetime = Game.Random.Float(3f, 4f);
 		PanelSizeFactor = 2f;
 		Opacity = 0f;
@@ -56,16 +54,16 @@ public class BloodPuddleEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn);
-		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 1f, EasingType.QuadOut);
-		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.Linear);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 12f, EasingType.QuadIn);
-		TextStroke = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 7f, 0f, EasingType.Linear);
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(_timeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear);
-		//DropShadowColor = Color.Lerp(Color.Red, Color.Black, Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadOut));
-		ZIndex = -(int)Position.y - (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0f, 1000f);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.QuadIn);
+		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 1f, EasingType.QuadOut);
+		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.Linear);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 12f, EasingType.QuadIn);
+		TextStroke = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 7f, 0f, EasingType.Linear);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(TimeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear);
+		//DropShadowColor = Color.Lerp(Color.Red, Color.Black, Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.QuadOut));
+		ZIndex = -(int)Position.y - (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1000f);
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

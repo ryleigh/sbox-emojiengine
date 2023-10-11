@@ -11,8 +11,6 @@ namespace EmojiEngine;
 public class PlayerMuzzleFlashEmoji : Emoji
 {
 	public float Lifetime { get; set; }
-	private TimeSince _timeSinceSpawn;
-
 	public PlayerGunEmoji PlayerGunEmoji { get; set; }
 	public Vector2 LastPlayerGunPos { get; set; }
 
@@ -20,7 +18,6 @@ public class PlayerMuzzleFlashEmoji : Emoji
 	{
 		Text = "💥";
 		IsInteractable = false;
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.1f, 0.15f);
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_FLASH;
 
@@ -34,9 +31,9 @@ public class PlayerMuzzleFlashEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.7f, 1.5f, EasingType.QuadOut);
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear) * Utils.Map(_timeSinceSpawn, 0f, 0.05f, 0f, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 3f, 10f, EasingType.Linear);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.7f, 1.5f, EasingType.QuadOut);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear) * Utils.Map(TimeSinceSpawn, 0f, 0.05f, 0f, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 3f, 10f, EasingType.Linear);
 
 		if(PlayerGunEmoji != null)
 		{
@@ -46,7 +43,7 @@ public class PlayerMuzzleFlashEmoji : Emoji
 			Position += gunPosDelta;
 		}
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

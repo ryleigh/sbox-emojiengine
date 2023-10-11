@@ -12,7 +12,8 @@ public class PlayerHandRightEmoji : Emoji
 {
 	public CrosshairEmoji CrosshairEmoji { get; set; }
 
-	private TimeSince _timeSinceShoot;
+	public float LastShootTime { get; private set; }
+	public float TimeSinceShoot => Hud.Instance.CurrentTime - LastShootTime;
 
 	public PlayerHandRightEmoji()
 	{
@@ -35,6 +36,6 @@ public class PlayerHandRightEmoji : Emoji
 
 	public void Shoot()
 	{
-		_timeSinceShoot = 0f;
+		LastShootTime = Hud.Instance.CurrentTime;
 	}
 }

@@ -10,7 +10,6 @@ public class WoundEmoji : Emoji
 	public float ParentOffsetDegrees { get; set; }
 	public float ParentStartDegrees { get; set; }
 
-	private TimeSince _timeSinceSpawn;
 	public float Lifetime { get; set; }
 
 	private float _brightness;
@@ -30,7 +29,6 @@ public class WoundEmoji : Emoji
 
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(5f, 5.5f);
 		PanelSizeFactor = 2f;
 		Degrees = _startDegrees = Game.Random.Float(0, 360f);
@@ -87,18 +85,18 @@ public class WoundEmoji : Emoji
 
 		if(Parent != null)
 		{
-			ZIndex = Parent.ZIndex + (int)Utils.Map(_timeSinceSpawn, 0f, Lifetime, 5f, 2f, EasingType.Linear);
+			ZIndex = Parent.ZIndex + (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 5f, 2f, EasingType.Linear);
 			float parentDegreesDiff = (Parent.Degrees - ParentStartDegrees);
 			Position = Parent.AnchorPos + Utils.DegreesToVector(ParentOffsetDegrees - parentDegreesDiff) * ParentOffsetDistance * Parent.Scale;
 			Degrees = _startDegrees + parentDegreesDiff;
 		}
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
-		Brightness = Utils.Map(_timeSinceSpawn, 0f, _brightnessTime, _brightness, 0f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 5f, EasingType.QuadOut);
-		Scale = (Parent?.Scale ?? 1f) * Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
+		Brightness = Utils.Map(TimeSinceSpawn, 0f, _brightnessTime, _brightness, 0f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 5f, EasingType.QuadOut);
+		Scale = (Parent?.Scale ?? 1f) * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut);
 
-		TextStroke = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.2f, 6f, 0f, EasingType.Linear);
+		TextStroke = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.2f, 6f, 0f, EasingType.Linear);
 
 		if(_shouldSpawnBlood)
 		{
@@ -106,13 +104,13 @@ public class WoundEmoji : Emoji
 			_shouldSpawnBlood = false;
 		}
 
-		if(_timeSinceSpawn < Lifetime * 0.8f)
+		if(TimeSinceSpawn < Lifetime * 0.8f)
 		{
 			_countdownToDrip -= dt;
 			if(_countdownToDrip < 0f)
 			{
 				SpawnBloodDrip();
-				_countdownToDrip = Game.Random.Float(0.5f, 2f) * Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.8f, 0.8f, 3f, EasingType.QuadIn);
+				_countdownToDrip = Game.Random.Float(0.5f, 2f) * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.8f, 0.8f, 3f, EasingType.QuadIn);
 			}
 		}
 
@@ -122,7 +120,7 @@ public class WoundEmoji : Emoji
 			ImpactEmoji.ZIndex = ZIndex + 1;
 		}
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 

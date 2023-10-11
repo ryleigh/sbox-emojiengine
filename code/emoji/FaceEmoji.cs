@@ -12,7 +12,8 @@ namespace EmojiEngine;
 public class FaceEmoji : Emoji
 {
 	private bool _isPoked;
-	private TimeSince _timeSincePoked;
+	public float LastPokedTime { get; private set; }
+	public float TimeSincePoked => Hud.Instance.CurrentTime - LastPokedTime;
 	private float _pokeTime;
 	private const float POKE_TIME_MIN = 0.15f;
 	private const float POKE_TIME_MAX = 0.2f;
@@ -55,7 +56,6 @@ public class FaceEmoji : Emoji
 		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
-		_timeSincePoked = 999f;
 	}
 
 	public override void Update(float dt)
@@ -64,7 +64,7 @@ public class FaceEmoji : Emoji
 
 		if(_isPoked)
 		{
-			if(_timeSincePoked > _pokeTime)
+			if(TimeSincePoked > _pokeTime)
 			{
 				_pokedScale = 1f;
 				ScaleX = 1f;
@@ -73,9 +73,9 @@ public class FaceEmoji : Emoji
 			}
 			else
 			{
-				_pokedScale = Utils.Map(_timeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
-				ScaleX = Utils.Map(_timeSincePoked, 0f, _pokeTime, 1.25f, 1f, EasingType.BounceInOut);
-				ScaleY = Utils.Map(_timeSincePoked, 0f, _pokeTime, 0.75f, 1f, EasingType.BounceInOut);
+				_pokedScale = Utils.Map(TimeSincePoked, 0f, _pokeTime, POKE_SCALE, 1f, EasingType.BounceInOut);
+				ScaleX = Utils.Map(TimeSincePoked, 0f, _pokeTime, 1.25f, 1f, EasingType.BounceInOut);
+				ScaleY = Utils.Map(TimeSincePoked, 0f, _pokeTime, 0.75f, 1f, EasingType.BounceInOut);
 			}
 		}
 
@@ -99,7 +99,7 @@ public class FaceEmoji : Emoji
 		{
 			Degrees += Velocity.x * 0.1f * dt;
 
-			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.ElapsedTime * _rotSpeed) * _rotAmount, 0.2f, dt);
+			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
 			ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.1f, dt);
 			ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.1f, dt);
 
@@ -178,7 +178,7 @@ public class FaceEmoji : Emoji
 	{
 		_isPoked = true;
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
-		_timeSincePoked = 0f;
+		LastPokedTime = Hud.Instance.CurrentTime;
 
 		//Text = "😲";
 		//Text = GetFaceText();

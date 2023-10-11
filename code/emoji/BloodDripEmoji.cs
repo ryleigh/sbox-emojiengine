@@ -10,7 +10,6 @@ namespace EmojiEngine;
 
 public class BloodDripEmoji : Emoji
 {
-	private TimeSince _timeSinceSpawn;
 	public float Lifetime { get; set; }
 
 	//private float _brightness;
@@ -34,7 +33,6 @@ public class BloodDripEmoji : Emoji
 		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 3f);
 
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.55f, 0.65f);
 		SetFontSize(Game.Random.Float(15f, 45f));
 		Brightness = Game.Random.Float(0.7f, 1.3f);
@@ -50,20 +48,20 @@ public class BloodDripEmoji : Emoji
 		{
 			ZIndex = WoundEmoji.ZIndex + 1;
 			
-			if(_timeSinceSpawn < Lifetime * 0.6f)
+			if(TimeSinceSpawn < Lifetime * 0.6f)
 			{
 				Vector2 woundPosDelta = WoundEmoji.Position - WoundPosLast;
-				Position += woundPosDelta * Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.6f, 1f, 0f);
+				Position += woundPosDelta * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.6f, 1f, 0f);
 
 				WoundPosLast = WoundEmoji.Position;
 			}
 		}
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
-		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 8f, 0f, EasingType.QuadOut);
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.2f, _scale, EasingType.QuadOut);
-		ScaleY = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.5f, 1f, 1.2f, EasingType.QuadIn);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
+		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 8f, 0f, EasingType.QuadOut);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.2f, _scale, EasingType.QuadOut);
+		ScaleY = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.5f, 1f, 1.2f, EasingType.QuadIn);
 
 		Position += (Velocity + _gravityVelocity) * dt;
 		Velocity *= (1f - 7f * dt);
@@ -80,7 +78,7 @@ public class BloodDripEmoji : Emoji
 
 		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

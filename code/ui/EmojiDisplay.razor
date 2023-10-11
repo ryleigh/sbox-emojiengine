@@ -30,7 +30,7 @@
 </style>
 
 <root style="
-	background: linear-gradient(@(90f + Utils.FastSin(Hud.Instance.ElapsedTime * 0.1f) * 10f)deg, @(Hud.Instance.BgColorBottom.Rgba), @(Hud.Instance.BgColorTop.Rgba));
+	background: linear-gradient(@(90f + Utils.FastSin(Hud.Instance.CurrentTime * 0.1f) * 10f)deg, @(Hud.Instance.BgColorBottom.Rgba), @(Hud.Instance.BgColorTop.Rgba));
 ">
 	@foreach(var emoji in Hud.Instance.Emojis)
 	{
@@ -46,7 +46,7 @@
 		var b = new Vector2(line.posB.x, (Screen.Height * ScaleFromScreen) - line.posB.y);
 		var length = (b - a).Length;
 		var angle = MathF.Atan2(b.y - a.y, b.x - a.x) * 180f / Math.PI;
-		var opacity = line.lifetime > 0f ? Utils.Map(Hud.Instance.ElapsedTime, line.spawnTime, line.spawnTime + line.lifetime, 1f, 0f) : 1f;
+		var opacity = line.lifetime > 0f ? Utils.Map(Hud.Instance.CurrentTime, line.spawnTime, line.spawnTime + line.lifetime, 1f, 0f) : 1f;
 
 		<panel class="line" style="
 			background-color: @(line.color.Rgba);
@@ -78,6 +78,6 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine(Hud.Instance.ElapsedTime); // todo
+		return HashCode.Combine(Hud.Instance.CurrentTime); // todo
 	}
 }

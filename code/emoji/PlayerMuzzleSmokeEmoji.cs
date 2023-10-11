@@ -11,7 +11,6 @@ namespace EmojiEngine;
 public class PlayerMuzzleSmokeEmoji : Emoji
 {
 	public float Lifetime { get; set; }
-	private TimeSince _timeSinceSpawn;
 
 	public Vector2 Velocity { get; set; }
 
@@ -24,7 +23,6 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 	{
 		Text = "💨";
 		IsInteractable = false;
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.125f, 0.15f);
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_SMOKE;
 		Opacity = 0f;
@@ -41,14 +39,14 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, _scaleStart, _scaleEnd, EasingType.QuadOut);
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, _opacity, 0f, EasingType.Linear) * Utils.Map(_timeSinceSpawn, 0f, 0.05f, 0f, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 4f, 10f, EasingType.Linear);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, _scaleStart, _scaleEnd, EasingType.QuadOut);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, _opacity, 0f, EasingType.Linear) * Utils.Map(TimeSinceSpawn, 0f, 0.05f, 0f, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 4f, 10f, EasingType.Linear);
 
 		Position += Velocity * dt;
 		Velocity *= (1f - _deceleration * dt);
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

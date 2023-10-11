@@ -14,7 +14,8 @@ public partial class CursorEmoji : Emoji
 	public Vector2 CurrSpriteOffset { get; private set; }
 
 	private bool _isScaling;
-	private TimeSince _timeSinceScale;
+	public float LastScaleTime { get; private set; }
+	public float TimeSinceScale => Hud.Instance.CurrentTime - LastScaleTime;
 	private float _scaleTime;
 	private float _scaleAmount;
 
@@ -40,14 +41,14 @@ public partial class CursorEmoji : Emoji
 
 		if(_isScaling)
 		{
-			if(_timeSinceScale > _scaleTime)
+			if(TimeSinceScale > _scaleTime)
 			{
 				_isScaling = false;
 				_bounceScale = 1f;
 			}
 			else
 			{
-				_bounceScale = Utils.Map(_timeSinceScale, 0f, _scaleTime, _scaleAmount, 1f, EasingType.QuadOut);
+				_bounceScale = Utils.Map(TimeSinceScale, 0f, _scaleTime, _scaleAmount, 1f, EasingType.QuadOut);
 			}
 		}
 
@@ -137,7 +138,7 @@ public partial class CursorEmoji : Emoji
 	public void BounceScale(float scale, float time)
 	{
 		_scaleAmount = scale;
-		_timeSinceScale = 0f;
+		LastScaleTime = Hud.Instance.CurrentTime;
 		_isScaling = true;
 		_scaleTime = time;
 	}

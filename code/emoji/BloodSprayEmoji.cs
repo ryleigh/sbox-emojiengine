@@ -10,7 +10,6 @@ namespace EmojiEngine;
 
 public class BloodSprayEmoji : Emoji
 {
-	private TimeSince _timeSinceSpawn;
 	public float Lifetime { get; set; }
 
 	//private float _brightness;
@@ -31,7 +30,6 @@ public class BloodSprayEmoji : Emoji
 		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 3f);
 
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.25f, 0.5f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(45f, 52f));
@@ -46,17 +44,17 @@ public class BloodSprayEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
-		//Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.QuadIn);
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 0.5f, _scale, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
+		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.QuadIn);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.5f, _scale, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
 
 		Position += (Velocity + _gravityVelocity) * dt;
 		Velocity *= (1f - 7f * dt);
 
 		Degrees += RotateSpeed * dt;
 
-		if(GroundYPos > 0f && Position.y < GroundYPos && _timeSinceSpawn > 0.25f)
+		if(GroundYPos > 0f && Position.y < GroundYPos && TimeSinceSpawn > 0.25f)
 		{
 			int numPuddles = Game.Random.Int(2, 3);
 			for(int i = 0; i < numPuddles; i++)
@@ -73,7 +71,7 @@ public class BloodSprayEmoji : Emoji
 
 		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

@@ -11,8 +11,6 @@ namespace EmojiEngine;
 public class PlayerMuzzleLineEmoji : Emoji
 {
 	public float Lifetime { get; set; }
-	private TimeSince _timeSinceSpawn;
-
 	public Vector2 StartPos { get; set; }
 	public Vector2 EndPos { get; set; }
 	public Vector2 Direction { get; set; }
@@ -21,7 +19,6 @@ public class PlayerMuzzleLineEmoji : Emoji
 	{
 		Text = "☄️";
 		IsInteractable = false;
-		_timeSinceSpawn = 0f;
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_LINE;
 
 		Opacity = 0f;
@@ -35,9 +32,9 @@ public class PlayerMuzzleLineEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear);
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }

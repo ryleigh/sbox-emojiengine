@@ -10,7 +10,6 @@ namespace EmojiEngine;
 
 public class DustEmoji : Emoji
 {
-	private TimeSince _timeSinceSpawn;
 	public float Lifetime { get; set; }
 
 	private float _brightness;
@@ -34,7 +33,6 @@ public class DustEmoji : Emoji
 
 		//ScaleX = Game.Random.Float(1.15f, 1.25f);
 		//ScaleY = Game.Random.Float(0.75f, 0.85f);
-		_timeSinceSpawn = 0f;
 		Lifetime = Game.Random.Float(0.075f, 0.55f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(25f, 32f));
@@ -54,16 +52,16 @@ public class DustEmoji : Emoji
 	{
 		base.Update(dt);
 
-		Opacity = Utils.Map(_timeSinceSpawn, 0f, Lifetime, _opacity, 0f, EasingType.QuadOut);
-		Brightness = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
-		Blur = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.25f, _blurStart, _blurEnd, EasingType.QuadOut);
-		Scale = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.15f, _scaleStart, _scaleEnd, EasingType.QuadOut);
-		ScaleX = Utils.Map(_timeSinceSpawn, 0f, Lifetime * 0.4f, _scaleXStart, _scaleXEnd, EasingType.Linear);
+		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, _opacity, 0f, EasingType.QuadOut);
+		Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
+		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, _blurStart, _blurEnd, EasingType.QuadOut);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, _scaleStart, _scaleEnd, EasingType.QuadOut);
+		ScaleX = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.4f, _scaleXStart, _scaleXEnd, EasingType.Linear);
 
 		Position += Velocity * dt;
 		Velocity *= (1f - _deceleration * dt);
 
-		if(_timeSinceSpawn > Lifetime)
+		if(TimeSinceSpawn > Lifetime)
 			Hud.Instance.RemoveEmoji(this);
 	}
 }
