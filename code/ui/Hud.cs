@@ -12,6 +12,9 @@ namespace EmojiEngine;
 public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 {
 	public static Hud Instance { get; private set; }
+	public Stage CurrentStage { get; private set; }
+	public Dictionary<string, Stage> Stages = new();
+
 	public DebugDisplay DebugDisplay { get; private set; }
 
 	public List<Emoji> Emojis { get; private set; }
@@ -80,7 +83,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		DebugDisplay.Text = "";
 
-		for(int i = 0; i < 30; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(ScreenWidth / 2f, ScreenHeight / 2f));
@@ -174,7 +177,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 			if(emoji.IsInteractable && emoji.Radius > 0f)
 			{
-				var distSqr = (mousePos - emoji.Position).LengthSquared;
+				var distSqr = (mousePos - emoji.GetRotatedPos()).LengthSquared;
 				if(distSqr < MathF.Pow(emoji.Radius, 2f))
 					AllHoveredEmojis.Add(emoji);
 			}
@@ -250,7 +253,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 	{
 		hitEmojis = Emojis
 			.Where(x => x.IsInteractable)
-			.Where(x => (x.Position - pos).LengthSquared < MathF.Pow(x.Radius, 2f))
+			.Where(x => (x.GetRotatedPos() - pos).LengthSquared < MathF.Pow(x.Radius, 2f))
 			.OrderByDescending(x => x.ZIndex)
 			.ToList();
 
@@ -287,7 +290,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 			HoveredEmoji = null;
 	}
 
-	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 0, float invert = 0f, float saturation = 1f, float blur = 0f)
+	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
 		Lines.Add(new LineData(posA, posB, thickness, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}

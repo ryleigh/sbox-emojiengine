@@ -36,6 +36,12 @@ public class FaceEmoji : Emoji
 	private float _pokedScaleX;
 	private float _pokedScaleY;
 
+	public bool IsDead { get; private set; }
+	private float _targetDeathDegrees;
+	private float _deathRotateSpeed;
+
+	public int BloodAmountLeft { get; set; }
+
 	private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 			"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
 			"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
@@ -44,17 +50,19 @@ public class FaceEmoji : Emoji
 	public FaceEmoji()
 	{
 		Text = GetFaceText();
-		TransformOriginY = BaseTransformOriginY = 0.75f;
+		TransformOriginY = 0.75f;
 
 		DetermineRotVars();
 
-		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX));
+		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX) + 60f);
 		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
 		ShadowEmoji = Hud.Instance.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
 		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
+
+		BloodAmountLeft = 11;
 	}
 
 	public override void Update(float dt)
@@ -90,11 +98,33 @@ public class FaceEmoji : Emoji
 
 		Degrees += Velocity.x * 0.1f * dt;
 
-		Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
 		ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.1f, dt);
 		ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.1f, dt);
 
-		Velocity += Utils.GetRandomVector() * 1200f * dt;
+		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, -40f, 0.2f, dt);
+		ShadowEmoji.Text = Text;
+		//ShadowEmoji.ScaleX = ScaleX * (1f + 0.25f * (IsDead ? -1f : 1f));
+		//ShadowEmoji.ScaleY = ScaleY * (1f - 0.2f * (IsDead ? -1f : 1f));
+		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
+
+		if(IsDead)
+		{
+			Degrees = Utils.DynamicEaseTo(Degrees, _targetDeathDegrees, _deathRotateSpeed, dt);
+			ShadowEmoji.ScaleX = 0.75f;
+			ShadowEmoji.ScaleY = 1.2f;
+			ShadowEmoji.Degrees = _targetDeathDegrees;
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+		}
+		else
+		{
+			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
+			Velocity += Utils.GetRandomVector() * 1200f * dt;
+			ShadowEmoji.ScaleX = ScaleX * 1.25f;
+			ShadowEmoji.ScaleY = ScaleY * 0.8f;
+			ShadowEmoji.Degrees = Degrees * 0.3f;
+			ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
+			ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+		}
 
 		Position += Velocity * dt;
 		float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
@@ -105,15 +135,6 @@ public class FaceEmoji : Emoji
 		ZIndex = (int)(height - y);
 
 		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
-
-		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, -40f, 0.2f, dt);
-		ShadowEmoji.Text = Text;
-		ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
-		ShadowEmoji.ScaleX = ScaleX * 1.25f;
-		ShadowEmoji.ScaleY = ScaleY * 0.8f;
-		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
-		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
-		ShadowEmoji.Degrees = Degrees * 0.3f;
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
@@ -146,31 +167,42 @@ public class FaceEmoji : Emoji
 
 	public void Hit(Vector2 hitPos)
 	{
+		WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
+		wound.ZIndex = ZIndex + 1;
+		wound.ParentFace = this;
+
+		wound.ParentOffsetDistance = (hitPos - AnchorPos).Length / Scale;
+		wound.ParentOffsetDegrees = Utils.VectorToDegrees(hitPos - AnchorPos);
+		wound.ParentStartDegrees = Degrees;
+
 		_isPoked = true;
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
-		_pokedScaleX = Game.Random.Float(1.15f, 1.3f);
-		_pokedScaleY = Game.Random.Float(0.7f, 0.85f);
+		_pokedScaleX = 1f + Game.Random.Float(0.1f, 0.2f) * (IsDead ? -1f : 1f);
+		_pokedScaleY = 1f + Game.Random.Float(-0.2f, -0.1f) * (IsDead ? -1f : 1f);
 		LastPokedTime = Hud.Instance.CurrentTime;
 
 		//Text = "😲";
 		//Text = GetFaceText();
 
-		//var color = new Color(Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f), Game.Random.Float(0.5f, 1f));
-
-		//int numSegments = Game.Random.Int(14, 20);
-		//if(numSegments % 2 != 0)
-		//	numSegments++;
-
-		//Hud.Instance.AddRing(Position, color, Game.Random.Float(0.2f, 0.4f), Radius, Radius * Game.Random.Float(1.6f, 2f), 9f, 1f, numSegments, ZIndex - 1);
-
-		Hud.Instance.CursorEmoji?.BounceScale(1.2f, 0.15f);
-
-		Degrees = 0f;
-		DetermineRotVars();
-
 		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
 
-		Hud.Instance.TimeScale = Game.Random.Float(0.1f, 0.5f);
+		if(!IsDead)
+		{
+			Degrees = 0f;
+			DetermineRotVars();
+			Hud.Instance.TimeScale = Game.Random.Float(0.1f, 0.5f);
+			Die();
+		}
+	}
+
+	public void Die()
+	{
+		if(IsDead)
+			return;
+
+		IsDead = true;
+		_targetDeathDegrees = 90f * (Game.Random.Float(0f, 1f) < 0.5f ? -1f : 1f);
+		_deathRotateSpeed = Game.Random.Float(0.01f, 0.1f);
 	}
 
 	void DetermineRotVars()

@@ -15,7 +15,7 @@ public partial class CrosshairEmoji : Emoji
 	private float _length;
 	private float _width;
 
-	private const float MIN_GAP = 30f;
+	private const float MIN_GAP = 24f;
 	public float LastShootTime { get; private set; }
 	private float TimeSinceShoot => Hud.Instance.CurrentTime - LastShootTime;
 	private float _recoilAmount;
@@ -78,7 +78,8 @@ public partial class CrosshairEmoji : Emoji
 		_recoilOffset = Utils.DynamicEaseTo(_recoilOffset, _targetRecoilOffset, 0.1f, dt);
 		_targetRecoilOffset = Utils.DynamicEaseTo(_targetRecoilOffset, Vector2.Zero, 0.05f, dt);
 
-		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, Utils.Map(mouseDeltaLength, 0f, 20f, 0f, 100f, EasingType.SineIn), 0.28f, dt);
+		float targetMouseDeltaGap = Utils.Map(mouseDeltaLength, 0f, 20f, 0f, 120f, EasingType.SineIn);
+		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, targetMouseDeltaGap, targetMouseDeltaGap > _mouseDeltaGap ? 0.3f : 0.15f, dt);
 		_recoilGap = Utils.DynamicEaseTo(_recoilGap, Utils.Map(TimeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut), 0.3f, dt);
 		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
 
@@ -113,8 +114,7 @@ public partial class CrosshairEmoji : Emoji
 	void Shoot()
 	{
 		var aimPos = Position + _recoilOffset;
-		float gap = _gap - 6f;
-		var hitPos = aimPos + Game.Random.Float(0f, gap) * Utils.GetRandomVector();
+		var hitPos = aimPos + Game.Random.Float(0f, _gap) * Utils.GetRandomVector();
 
 		if(Hud.Instance.Raycast(hitPos, out List<Emoji> hitEmojis))
 		{
@@ -122,19 +122,11 @@ public partial class CrosshairEmoji : Emoji
 			if(emoji is FaceEmoji faceEmoji)
 			{
 				float HOLE_SIZE = 20f * faceEmoji.Scale;
-				if((hitPos - faceEmoji.Position).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
-					hitPos = faceEmoji.Position + (hitPos - faceEmoji.Position).Normal * (faceEmoji.Radius - HOLE_SIZE);
+				var facePos = faceEmoji.GetRotatedPos();
+				if((hitPos - facePos).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
+					hitPos = facePos + (hitPos - facePos).Normal * (faceEmoji.Radius - HOLE_SIZE);
 
 				faceEmoji.Hit(hitPos);
-
-				WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
-				wound.ZIndex = faceEmoji.ZIndex + 1;
-				wound.Parent = faceEmoji;
-				Vector2 faceAnchorPos = faceEmoji.AnchorPos;
-
-				wound.ParentOffsetDistance = (hitPos - faceAnchorPos).Length / faceEmoji.Scale;
-				wound.ParentOffsetDegrees = Utils.VectorToDegrees(hitPos - faceAnchorPos);
-				wound.ParentStartDegrees = faceEmoji.Degrees;
 			}
 		}
 		else

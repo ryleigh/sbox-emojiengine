@@ -15,6 +15,12 @@
 		justify-content: center;
 		background-repeat: no-repeat;
 		background-size: cover;
+
+		.debug_text {
+			font-size: 32px;
+			position: absolute;
+			text-stroke: 8px black;
+		}
     }
 </style>
 
@@ -41,6 +47,15 @@
 	">
 
 	@(Emoji.Text)
+
+	@if(!string.IsNullOrEmpty(Emoji.DebugText))
+	{
+		<label class="debug_text" style="
+			transform: rotate(@(-Emoji.Degrees)deg); 
+		">
+			@(Emoji.DebugText)
+		</label>
+	}
 
 	<!-- TEXT SHADOW ? -->
 

@@ -36,9 +36,14 @@ public class Emoji
 	public bool IsHovered { get; set; }
 	public float TransformOriginX { get; set; }
 	public float TransformOriginY { get; set; }
-	public float BaseTransformOriginX { get; set; }
-	public float BaseTransformOriginY { get; set; }
 	public Vector2 AnchorPos => Position + new Vector2((TransformOriginX - 0.5f) * PanelSize, -(TransformOriginY - 0.5f) * PanelSize);
+	public Vector2 GetRotatedPos()
+	{
+		if(TransformOriginX == 0.5f && TransformOriginY == 0.5f)
+			return Position;
+
+		return AnchorPos + Utils.RotateVector(Position - AnchorPos, -Degrees);
+	}
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
@@ -60,6 +65,9 @@ public class Emoji
 
 	public float SpawnTime { get; set; }
 	public float TimeSinceSpawn => Hud.Instance.CurrentTime - SpawnTime;
+	public bool IsFirstUpdate { get; set; }
+	private bool _firstUpdateFinished;
+	public string DebugText { get; set; }
 
 	public Emoji()
 	{
@@ -71,8 +79,8 @@ public class Emoji
 		IsVisible = true;
 		IsInteractable = true;
 		SwallowClicks = true;
-		TransformOriginX = BaseTransformOriginX = 0.5f;
-		TransformOriginY = BaseTransformOriginY = 0.5f;
+		TransformOriginX = 0.5f;
+		TransformOriginY = 0.5f;
 		Scale = 1f;
 		ScaleX = 1f;
 		ScaleY = 1f;
@@ -80,12 +88,29 @@ public class Emoji
 		Brightness = 1f;
 		Saturation = 1f;
 		SpawnTime = Hud.Instance.CurrentTime;
+		IsFirstUpdate = true;
 	}
 
 	public virtual void Update(float dt)
 	{
-		//if(Radius > 0f)
-		//	Utils.DrawCircle(Position, Radius, 12, Hud.Instance.ElapsedTime, Color.White, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+		//DrawDebug();
+
+		if(IsFirstUpdate)
+		{
+			if(_firstUpdateFinished)
+				IsFirstUpdate = false;
+			else
+				_firstUpdateFinished = true;
+		}
+	}
+
+	void DrawDebug()
+	{
+		if(IsInteractable && Radius > 0f)
+		{
+			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Hud.Instance.CurrentTime, Color.Blue, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(Position, Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.4f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+		}
 	}
 
 	public virtual void OnMouseDown(bool rightClick) { }

@@ -16,5 +16,6 @@ public static class Globals
 	public const int DEPTH_PLAYER_MUZZLE_FLASH = 9997;
 	public const int DEPTH_PLAYER_MUZZLE_SMOKE = 9996;
 	public const int DEPTH_CROSSHAIR = 9995;
-	public const int DEPTH_PLAYER_MUZZLE_LINE = 9994;
+
+	public const int DEPTH_PLAYER_MUZZLE_LINE = 9989;
 }
