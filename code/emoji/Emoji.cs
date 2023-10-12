@@ -108,8 +108,8 @@ public class Emoji
 	{
 		if(IsInteractable && Radius > 0f)
 		{
-			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Hud.Instance.CurrentTime, Color.Blue, width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
-			Utils.DrawCircle(Position, Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.4f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(Position, Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
 		}
 	}
 

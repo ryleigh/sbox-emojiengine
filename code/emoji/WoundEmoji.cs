@@ -28,7 +28,7 @@ public class WoundEmoji : Emoji
 
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
-		Lifetime = Game.Random.Float(5f, 5.5f);
+		Lifetime = Game.Random.Float(6f, 6.5f);
 		PanelSizeFactor = 2f;
 		Degrees = _startDegrees = Game.Random.Float(0, 360f);
 
