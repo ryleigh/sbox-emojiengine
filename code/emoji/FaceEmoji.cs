@@ -13,7 +13,7 @@ public class FaceEmoji : Emoji
 {
 	private bool _isPoked;
 	public float LastPokedTime { get; private set; }
-	public float TimeSincePoked => Hud.Instance.CurrentTime - LastPokedTime;
+	public float TimeSincePoked => Stage.CurrentTime - LastPokedTime;
 	private float _pokeTime;
 	private const float POKE_TIME_MIN = 0.15f;
 	private const float POKE_TIME_MAX = 0.2f;
@@ -42,7 +42,7 @@ public class FaceEmoji : Emoji
 	private float _deathBrightness;
 	private float _deathSepia;
 	public float DeathTime { get; private set; }
-	public float TimeSinceDeath => Hud.Instance.CurrentTime - DeathTime;
+	public float TimeSinceDeath => Stage.CurrentTime - DeathTime;
 
 	public int BloodAmountLeft { get; set; }
 	
@@ -55,8 +55,10 @@ public class FaceEmoji : Emoji
 	//		"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
 	//		"👹", "😷", "🤑", "🌞", "👽", "🤖", "👨‍🦲", "🎃", "🟡", "😺", "😸", "👸", "🎅", "👻", "👶", "👲", "👴", "🌎️", "🐞", };
 
-	public FaceEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = _faces[Game.Random.Int(0, _faces.Count - 1)];
 		TransformOriginY = 0.75f;
 
@@ -65,7 +67,7 @@ public class FaceEmoji : Emoji
 		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX) + 60f);
 		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
-		ShadowEmoji = Hud.Instance.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
+		ShadowEmoji = Stage.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
 		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
@@ -131,7 +133,7 @@ public class FaceEmoji : Emoji
 			ScaleX = Utils.DynamicEaseTo(ScaleX, 1f, 0.15f, dt);
 			ScaleY = Utils.DynamicEaseTo(ScaleY, 1f, 0.15f, dt);
 
-			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Hud.Instance.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
+			Degrees = Utils.DynamicEaseTo(Degrees, Utils.FastSin(_rotTimeOffset + Stage.CurrentTime * _rotSpeed) * _rotAmount, 0.2f, dt);
 			Velocity += Utils.GetRandomVector() * 1200f * dt;
 			ShadowEmoji.ScaleX = ScaleX * 1.25f;
 			ShadowEmoji.ScaleY = ScaleY * 0.8f;
@@ -182,7 +184,7 @@ public class FaceEmoji : Emoji
 	{
 		//Hud.Instance.DrawLine(new Vector2(5f, 5f), hitPos, 4f, Color.Red, 0.5f);
 
-		WoundEmoji wound = Hud.Instance.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
+		WoundEmoji wound = Stage.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
 		wound.ZIndex = ZIndex + 1;
 		wound.ParentFace = this;
 
@@ -194,7 +196,7 @@ public class FaceEmoji : Emoji
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
 		_pokedScaleX = 1f + Game.Random.Float(0.1f, 0.2f) * (IsDead ? -1f : 1f);
 		_pokedScaleY = 1f + Game.Random.Float(-0.2f, -0.1f) * (IsDead ? -1f : 1f);
-		LastPokedTime = Hud.Instance.CurrentTime;
+		LastPokedTime = Stage.CurrentTime;
 
 		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
 
@@ -202,7 +204,7 @@ public class FaceEmoji : Emoji
 		{
 			Degrees = 0f;
 			DetermineRotVars();
-			Hud.Instance.TimeScale = Game.Random.Float(0.1f, 0.5f);
+			Stage.TimeScale = Game.Random.Float(0.1f, 0.5f);
 			Die();
 		}
 	}
@@ -213,7 +215,7 @@ public class FaceEmoji : Emoji
 			return;
 
 		IsDead = true;
-		DeathTime = Hud.Instance.CurrentTime;
+		DeathTime = Stage.CurrentTime;
 		//TransformOriginY = 0.5f;
 		_targetDeathDegrees = 90f * (Game.Random.Float(0f, 1f) < 0.5f ? -1f : 1f);
 		_deathRotateSpeed = Game.Random.Float(0.01f, 0.25f);

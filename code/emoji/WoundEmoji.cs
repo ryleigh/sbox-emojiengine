@@ -20,9 +20,11 @@ public class WoundEmoji : Emoji
 	private float _countdownToDrip;
 
 	public ImpactEmoji ImpactEmoji { get; set; }
- 
-	public WoundEmoji()
+
+	public override void Init()
 	{
+		base.Init();
+
 		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 2f);
 
@@ -65,7 +67,7 @@ public class WoundEmoji : Emoji
 
 		TextStrokeColor = Color.Red;
 
-		ImpactEmoji = Hud.Instance.AddEmoji(new ImpactEmoji(), Position) as ImpactEmoji;
+		ImpactEmoji = Stage.AddEmoji(new ImpactEmoji(), Position) as ImpactEmoji;
 		ImpactEmoji.SetFontSize(Game.Random.Float(60f, 105f));
 		ImpactEmoji.ZIndex = ZIndex + 1;
 	}
@@ -109,7 +111,7 @@ public class WoundEmoji : Emoji
 		}
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 
 	void SpawnBloodSpray()
@@ -121,7 +123,7 @@ public class WoundEmoji : Emoji
 
 		var parentPos = ParentFace.GetRotatedPos();
 
-		BloodSprayEmoji spray = Hud.Instance.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
+		BloodSprayEmoji spray = Stage.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
 		spray.ZIndex = ZIndex + 2;
 		spray.Velocity = (Position - parentPos).Normal * Game.Random.Float(500f, 1200f);
 
@@ -140,7 +142,7 @@ public class WoundEmoji : Emoji
 
 		ParentFace.BloodAmountLeft -= 2;
 
-		BloodDripEmoji drip = Hud.Instance.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
+		BloodDripEmoji drip = Stage.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
 		drip.ZIndex = ZIndex + 1;
 		drip.Gravity = Game.Random.Float(900f, 1400f);
 		drip.WoundEmoji = this;

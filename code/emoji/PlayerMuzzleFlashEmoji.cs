@@ -14,8 +14,10 @@ public class PlayerMuzzleFlashEmoji : Emoji
 	public PlayerGunEmoji PlayerGunEmoji { get; set; }
 	public Vector2 LastPlayerGunPos { get; set; }
 
-	public PlayerMuzzleFlashEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💥";
 		IsInteractable = false;
 		Lifetime = Game.Random.Float(0.1f, 0.15f);
@@ -44,6 +46,6 @@ public class PlayerMuzzleFlashEmoji : Emoji
 		}
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

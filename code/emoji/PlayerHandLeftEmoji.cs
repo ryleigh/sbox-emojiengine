@@ -13,15 +13,17 @@ public class PlayerHandLeftEmoji : Emoji
 	public CrosshairEmoji CrosshairEmoji { get; set; }
 
 	public float LastShootTime { get; private set; }
-	public float TimeSinceShoot => Hud.Instance.CurrentTime - LastShootTime;
+	public float TimeSinceShoot => Stage.CurrentTime - LastShootTime;
 
 	private float _currKickbackAmount;
 	private float _kickbackDistance;
 
 	private List<string> _handEmojis = new() { "✋", "✋", "🤘", "🤘", "🤟", "🖖", "☝️", "☝️", "☝️", "✊", "✊", };
 
-	public PlayerHandLeftEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "✋";
 
 		IsInteractable = false;
@@ -77,7 +79,7 @@ public class PlayerHandLeftEmoji : Emoji
 
 	public void Shoot(Vector2 hitPos)
 	{
-		LastShootTime = Hud.Instance.CurrentTime;
+		LastShootTime = Stage.CurrentTime;
 		_kickbackDistance = Game.Random.Float(-30f, -80f);
 
 		Text = _handEmojis[Game.Random.Int(0, _handEmojis.Count - 1)];

@@ -10,8 +10,10 @@ namespace EmojiEngine;
 
 public class ShadowEmoji : Emoji
 {
-	public ShadowEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "⚫️";
 		IsInteractable = false;
 		ZIndex = -9999;

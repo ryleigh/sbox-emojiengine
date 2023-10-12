@@ -15,8 +15,10 @@ public class ImpactEmoji : Emoji
 	private float _startScale;
 	private float _endScale;
 
-	public ImpactEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💥";
 		IsInteractable = false;
 		Lifetime = Game.Random.Float(0.15f, 0.2f);
@@ -44,6 +46,6 @@ public class ImpactEmoji : Emoji
 		//Invert = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1f, EasingType.Linear);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

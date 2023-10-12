@@ -15,8 +15,10 @@ public class BulletHoleEmoji : Emoji
 	private float _brightness;
 	private float _brightnessTime;
 
-	public BulletHoleEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💥";
 
 		IsInteractable = false;
@@ -49,6 +51,6 @@ public class BulletHoleEmoji : Emoji
 		TextStrokeColor = new Color(1f, Game.Random.Float(0f, 1f), 0f);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

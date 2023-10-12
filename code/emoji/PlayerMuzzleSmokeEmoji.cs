@@ -19,8 +19,10 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 	private float _scaleEnd;
 	private float _deceleration;
 
-	public PlayerMuzzleSmokeEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💨";
 		IsInteractable = false;
 		Lifetime = Game.Random.Float(0.125f, 0.15f);
@@ -47,6 +49,6 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 		Velocity *= (1f - _deceleration * dt);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

@@ -24,8 +24,10 @@ public class DustEmoji : Emoji
 	private float _scaleXEnd;
 	private float _deceleration;
 
-	public DustEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💨";
 
 		IsInteractable = false;
@@ -62,6 +64,6 @@ public class DustEmoji : Emoji
 		Velocity *= (1f - _deceleration * dt);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

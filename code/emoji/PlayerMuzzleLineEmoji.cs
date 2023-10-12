@@ -15,8 +15,10 @@ public class PlayerMuzzleLineEmoji : Emoji
 	public Vector2 EndPos { get; set; }
 	public Vector2 Direction { get; set; }
 
-	public PlayerMuzzleLineEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "☄️";
 		IsInteractable = false;
 
@@ -39,6 +41,6 @@ public class PlayerMuzzleLineEmoji : Emoji
 		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.Linear);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

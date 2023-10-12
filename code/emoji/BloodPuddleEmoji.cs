@@ -19,8 +19,10 @@ public class BloodPuddleEmoji : Emoji
 	private float _endScale;
 	private float _scaleMidTime;
 
-	public BloodPuddleEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "🔴";
 
 		IsInteractable = false;
@@ -61,6 +63,6 @@ public class BloodPuddleEmoji : Emoji
 		ZIndex = -(int)Position.y - (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1000f);
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

@@ -17,7 +17,7 @@ public partial class CrosshairEmoji : Emoji
 
 	private const float MIN_GAP = 24f;
 	public float LastShootTime { get; private set; }
-	private float TimeSinceShoot => Hud.Instance.CurrentTime - LastShootTime;
+	private float TimeSinceShoot => Stage.CurrentTime - LastShootTime;
 	private float _recoilAmount;
 
 	private float _mouseDeltaGap;
@@ -40,8 +40,10 @@ public partial class CrosshairEmoji : Emoji
 	public PlayerGunEmoji PlayerGunEmoji { get; private set; }
 	public PlayerHandLeftEmoji PlayerHandEmoji { get; private set; }
 
-	public CrosshairEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "";
 		ZIndex = Globals.DEPTH_CROSSHAIR;
 		IsInteractable = false;
@@ -49,10 +51,10 @@ public partial class CrosshairEmoji : Emoji
 		_length = 50f;
 		//_decelerationFactor = 4f;
 
-		PlayerGunEmoji = Hud.Instance.AddEmoji(new PlayerGunEmoji(), new Vector2(0f, -999f)) as PlayerGunEmoji;
+		PlayerGunEmoji = Stage.AddEmoji(new PlayerGunEmoji(), new Vector2(0f, -999f)) as PlayerGunEmoji;
 		PlayerGunEmoji.CrosshairEmoji = this;
 
-		PlayerHandEmoji = Hud.Instance.AddEmoji(new PlayerHandLeftEmoji(), new Vector2(0f, -999f)) as PlayerHandLeftEmoji;
+		PlayerHandEmoji = Stage.AddEmoji(new PlayerHandLeftEmoji(), new Vector2(0f, -999f)) as PlayerHandLeftEmoji;
 		PlayerHandEmoji.CrosshairEmoji = this;
 	}
 
@@ -84,15 +86,15 @@ public partial class CrosshairEmoji : Emoji
 		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
 
 		_gap = Utils.DynamicEaseTo(_gap, MIN_GAP + _mouseDeltaGap + _recoilGap, 0.25f, dt);
-		Color color = Color.Lerp(Color.White, Color.Black, 0.5f + Utils.FastSin(Hud.Instance.CurrentTime * 24f) * 0.5f).WithAlpha(0.5f);
+		Color color = Color.Lerp(Color.White, Color.Black, 0.5f + Utils.FastSin(Stage.CurrentTime * 24f) * 0.5f).WithAlpha(0.5f);
 		float invert = 1f;
 		float saturation = Utils.Map(TimeSinceShoot, 0f, 1f, 10f, 1f);
 		float blur = Utils.Map(TimeSinceShoot, 0f, 0.5f, 3f, 1f);
 
-		Hud.Instance.DrawLine(CenterPos - new Vector2(_gap, 0f), CenterPos - new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(CenterPos + new Vector2(_gap, 0f), CenterPos + new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(CenterPos - new Vector2(0f, _gap), CenterPos - new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
-		Hud.Instance.DrawLine(CenterPos + new Vector2(0f, _gap), CenterPos + new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Stage.DrawLine(CenterPos - new Vector2(_gap, 0f), CenterPos - new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Stage.DrawLine(CenterPos + new Vector2(_gap, 0f), CenterPos + new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Stage.DrawLine(CenterPos - new Vector2(0f, _gap), CenterPos - new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
+		Stage.DrawLine(CenterPos + new Vector2(0f, _gap), CenterPos + new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
 
 		if(Hud.Instance.MouseDownLeft && TimeSinceShoot > 0.25f)
 			Shoot();
@@ -116,7 +118,7 @@ public partial class CrosshairEmoji : Emoji
 		var aimPos = Position + _recoilOffset;
 		var hitPos = aimPos + Game.Random.Float(0f, _gap) * Utils.GetRandomVector();
 
-		if(Hud.Instance.Raycast(hitPos, out List<Emoji> hitEmojis))
+		if(Stage.Raycast(hitPos, out List<Emoji> hitEmojis))
 		{
 			var emoji = hitEmojis[0];
 			if(emoji is FaceEmoji faceEmoji)
@@ -131,16 +133,16 @@ public partial class CrosshairEmoji : Emoji
 		}
 		else
 		{
-			var bulletHole = Hud.Instance.AddEmoji(new BulletHoleEmoji(), hitPos);
+			var bulletHole = Stage.AddEmoji(new BulletHoleEmoji(), hitPos);
 			bulletHole.Degrees = Utils.Map(hitPos.x, 0f, Hud.Instance.ScreenWidth, -8f, 8f);
-			DustEmoji dust = Hud.Instance.AddEmoji(new DustEmoji(), hitPos) as DustEmoji;
+			DustEmoji dust = Stage.AddEmoji(new DustEmoji(), hitPos) as DustEmoji;
 			dust.ZIndex = (int)(Hud.Instance.ScreenHeight - hitPos.y);
 			float offsetX = hitPos.x - aimPos.x;
 			dust.Degrees = Utils.Map(offsetX, -200f, 200f, -120f, -60f);
 			dust.Velocity = Utils.DegreesToVector(-dust.Degrees) * Game.Random.Float(1000f, 3000f);
 		}
 
-		LastShootTime = Hud.Instance.CurrentTime;
+		LastShootTime = Stage.CurrentTime;
 		_recoilAmount += 160f;
 		_targetRecoilOffset += new Vector2(Game.Random.Float(-70f, 70f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 350f) : Game.Random.Float(-20f, -70f));
 		//_velocity += Utils.GetRandomVector() * Game.Random.Float(50f, 500f);

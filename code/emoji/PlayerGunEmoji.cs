@@ -13,22 +13,24 @@ public class PlayerGunEmoji : Emoji
 	public CrosshairEmoji CrosshairEmoji { get; set; }
 
 	public float LastShootTime { get; private set; }
-	public float TimeSinceShoot => Hud.Instance.CurrentTime - LastShootTime;
+	public float TimeSinceShoot => Stage.CurrentTime - LastShootTime;
 
 	private float _currKickbackAmount;
 	private float _kickbackDistance;
 
 	public PlayerHandRightEmoji PlayerHandRightEmoji { get; set; }
 
-	public PlayerGunEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		BackgroundImage = "textures/gun8.png";
 		IsInteractable = false;
 		PanelSize = 700f;
 		ZIndex = Globals.DEPTH_PLAYER_GUN;
 		Opacity = 0f;
 
-		PlayerHandRightEmoji = Hud.Instance.AddEmoji(new PlayerHandRightEmoji(), new Vector2(0f, -999f)) as PlayerHandRightEmoji;
+		PlayerHandRightEmoji = Stage.AddEmoji(new PlayerHandRightEmoji(), new Vector2(0f, -999f)) as PlayerHandRightEmoji;
 	}
 
 	public override void Update(float dt)
@@ -70,18 +72,18 @@ public class PlayerGunEmoji : Emoji
 
 	public void Shoot(Vector2 hitPos)
 	{
-		LastShootTime = Hud.Instance.CurrentTime;
+		LastShootTime = Stage.CurrentTime;
 		_kickbackDistance = Game.Random.Float(120f, 300f);
 
 		var toCrosshair = (CrosshairEmoji.CenterPos - Position).Normal;
 		var muzzleFlashPos = Position + toCrosshair * Game.Random.Float(150f, 400f) + Utils.GetPerpendicularVector(toCrosshair) * -100f;
-		PlayerMuzzleFlashEmoji flash = Hud.Instance.AddEmoji(new PlayerMuzzleFlashEmoji(), muzzleFlashPos) as PlayerMuzzleFlashEmoji;
+		PlayerMuzzleFlashEmoji flash = Stage.AddEmoji(new PlayerMuzzleFlashEmoji(), muzzleFlashPos) as PlayerMuzzleFlashEmoji;
 
 		flash.Degrees = 172f - Utils.VectorToDegrees(toCrosshair);// + Game.Random.Float(-40f, 40f);
 		flash.PlayerGunEmoji = this;
 		flash.LastPlayerGunPos = Position;
 
-		PlayerMuzzleSmokeEmoji smoke = Hud.Instance.AddEmoji(new PlayerMuzzleSmokeEmoji(), muzzleFlashPos) as PlayerMuzzleSmokeEmoji;
+		PlayerMuzzleSmokeEmoji smoke = Stage.AddEmoji(new PlayerMuzzleSmokeEmoji(), muzzleFlashPos) as PlayerMuzzleSmokeEmoji;
 		smoke.Degrees = -Utils.VectorToDegrees(hitPos - muzzleFlashPos);
 		smoke.Velocity = (hitPos - muzzleFlashPos).Normal * Game.Random.Float(3000f, 4500f);
 
@@ -102,7 +104,7 @@ public class PlayerGunEmoji : Emoji
 	{
 		var pos = startPos + (endPos - startPos) * distPercent;
 		var degrees = 228f - Utils.VectorToDegrees(endPos - startPos);
-		PlayerMuzzleLineEmoji muzzleLineEmoji = Hud.Instance.AddEmoji(new PlayerMuzzleLineEmoji(), pos) as PlayerMuzzleLineEmoji;
+		PlayerMuzzleLineEmoji muzzleLineEmoji = Stage.AddEmoji(new PlayerMuzzleLineEmoji(), pos) as PlayerMuzzleLineEmoji;
 		muzzleLineEmoji.Scale = Utils.Map(distPercent, 0f, 1f, 2f, 0.5f);
 		muzzleLineEmoji.Lifetime = Utils.Map(distPercent, 0f, 1f, 0.05f, 0.15f, EasingType.SineIn);
 		muzzleLineEmoji.Degrees = degrees;

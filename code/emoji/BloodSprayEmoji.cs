@@ -23,8 +23,10 @@ public class BloodSprayEmoji : Emoji
 	public float GroundYPos { get; set; }
 	public float RotateSpeed { get; set; }
 
-	public BloodSprayEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "💦";
 
 		IsInteractable = false;
@@ -64,18 +66,18 @@ public class BloodSprayEmoji : Emoji
 			for(int i = 0; i < numPuddles; i++)
 			{
 				var puddlePos = Position + Utils.GetRandomVector() * (Game.Random.Float(0f, 5f) + Game.Random.Float(5f, 20f) * i);
-				BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), puddlePos) as BloodPuddleEmoji;
+				BloodPuddleEmoji puddle = Stage.AddEmoji(new BloodPuddleEmoji(), puddlePos) as BloodPuddleEmoji;
 				puddle.SetFontSize(Game.Random.Float(10f, 15f));
 				puddle.Lifetime = Game.Random.Float(0.7f, 0.9f);
 			}
 
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 			return;
 		}
 
 		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }

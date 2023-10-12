@@ -16,7 +16,7 @@
 		background-repeat: no-repeat;
 		background-size: cover;
 		.debug_text {
-			font-size: 18px;
+			font-size: 32px;
 			position: absolute;
 			text-stroke: 8px black;
 		}
@@ -78,7 +78,7 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine(Hud.Instance.CurrentTime);
+		return HashCode.Combine(Hud.Instance.CurrentStage.CurrentTime);
 	}
 
 	//string GetClockIcon()

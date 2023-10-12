@@ -15,16 +15,18 @@ public partial class CursorEmoji : Emoji
 
 	private bool _isScaling;
 	public float LastScaleTime { get; private set; }
-	public float TimeSinceScale => Hud.Instance.CurrentTime - LastScaleTime;
+	public float TimeSinceScale => Stage.CurrentTime - LastScaleTime;
 	private float _scaleTime;
 	private float _scaleAmount;
 
 	private float _bounceScale;
 
-	public bool IsHoveringSomething => Hud.Instance.AllHoveredEmojis.Count() > 0;
+	public bool IsHoveringSomething => Stage.AllHoveredEmojis.Count() > 0;
 
-	public CursorEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "☝️";
 		SetFontSize(64f);
 		ZIndex = 9999;
@@ -105,7 +107,7 @@ public partial class CursorEmoji : Emoji
 	public void BounceScale(float scale, float time)
 	{
 		_scaleAmount = scale;
-		LastScaleTime = Hud.Instance.CurrentTime;
+		LastScaleTime = Stage.CurrentTime;
 		_isScaling = true;
 		_scaleTime = time;
 	}

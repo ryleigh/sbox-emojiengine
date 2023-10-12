@@ -30,9 +30,9 @@
 </style>
 
 <root style="
-	background: linear-gradient(@(90f + Utils.FastSin(Hud.Instance.CurrentTime * 0.1f) * 10f)deg, @(Hud.Instance.BgColorBottom.Rgba), @(Hud.Instance.BgColorTop.Rgba));
+	background: linear-gradient(@(90f + Utils.FastSin(Hud.Instance.CurrentStage.CurrentTime * 0.1f) * 10f)deg, @(Hud.Instance.CurrentStage.BgColorBottom.Rgba), @(Hud.Instance.CurrentStage.BgColorTop.Rgba));
 ">
-	@foreach(var emoji in Hud.Instance.Emojis)
+	@foreach(var emoji in Hud.Instance.CurrentStage.Emojis)
 	{
 		@if (!emoji.IsVisible || (string.IsNullOrEmpty(emoji.Text) && string.IsNullOrEmpty(emoji.BackgroundImage)))
 			continue;
@@ -40,13 +40,13 @@
 		<EmojiPanel Emoji=@emoji></EmojiPanel>
 	}
 
-	@foreach(var line in Hud.Instance.Lines)
+	@foreach(var line in Hud.Instance.CurrentStage.Lines)
 	{
 		var a = new Vector2(line.posA.x, (Screen.Height * ScaleFromScreen) - line.posA.y);
 		var b = new Vector2(line.posB.x, (Screen.Height * ScaleFromScreen) - line.posB.y);
 		var length = (b - a).Length;
 		var angle = MathF.Atan2(b.y - a.y, b.x - a.x) * 180f / Math.PI;
-		var opacity = line.lifetime > 0f ? Utils.Map(Hud.Instance.CurrentTime, line.spawnTime, line.spawnTime + line.lifetime, 1f, 0f) : 1f;
+		var opacity = line.lifetime > 0f ? Utils.Map(Hud.Instance.CurrentStage.CurrentTime, line.spawnTime, line.spawnTime + line.lifetime, 1f, 0f) : 1f;
 
 		<panel class="line" style="
 			background-color: @(line.color.Rgba);
@@ -78,6 +78,6 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine(Hud.Instance.CurrentTime); // todo
+		return HashCode.Combine(Hud.Instance.CurrentStage.CurrentTime); // todo
 	}
 }

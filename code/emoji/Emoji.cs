@@ -11,6 +11,7 @@ namespace EmojiEngine;
 
 public class Emoji
 {
+	public Stage Stage { get; set; }
 	public Vector2 Position { get; set; }
 	public Vector2 SpriteOffset { get; set; }
 	public string Text { get; set; }
@@ -64,7 +65,7 @@ public class Emoji
 	public string BackgroundImage { get; set; }
 
 	public float SpawnTime { get; set; }
-	public float TimeSinceSpawn => Hud.Instance.CurrentTime - SpawnTime;
+	public float TimeSinceSpawn => Stage.CurrentTime - SpawnTime;
 	public bool IsFirstUpdate { get; set; }
 	private bool _firstUpdateFinished;
 	public string DebugText { get; set; }
@@ -87,8 +88,13 @@ public class Emoji
 		Contrast = 1f;
 		Brightness = 1f;
 		Saturation = 1f;
-		SpawnTime = Hud.Instance.CurrentTime;
+		SpawnTime = Hud.Instance.CurrentStage.CurrentTime;
 		IsFirstUpdate = true;
+	}
+
+	public virtual void Init()
+	{
+		
 	}
 
 	public virtual void Update(float dt)
@@ -108,8 +114,8 @@ public class Emoji
 	{
 		if(IsInteractable && Radius > 0f)
 		{
-			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
-			Utils.DrawCircle(Position, Radius, 12, Hud.Instance.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(Position, Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
 		}
 	}
 

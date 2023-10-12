@@ -78,7 +78,7 @@ public static class Utils
 			float zz_from = 1f + zigzagFactor * (i % 2 != 0 ? 0f : 1f);
 			var from_point = new Vector2(pos.x + radius * zz_from * MathF.Cos(from_angle), pos.y + radius * zz_from * MathF.Sin(from_angle));
 
-			Hud.Instance.DrawLine(from_point, to_point, width, color, lifetime, zIndex);
+			Hud.Instance.CurrentStage.DrawLine(from_point, to_point, width, color, lifetime, zIndex);
 		}
 	}
 

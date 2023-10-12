@@ -26,8 +26,10 @@ public class BloodDripEmoji : Emoji
 
 	public float GroundYPos { get; set; }
 
-	public BloodDripEmoji()
+	public override void Init()
 	{
+		base.Init();
+
 		Text = "🩸";
 
 		IsInteractable = false;
@@ -72,17 +74,17 @@ public class BloodDripEmoji : Emoji
 
 		if(GroundYPos > 0f && Position.y < GroundYPos)
 		{
-			BloodPuddleEmoji puddle = Hud.Instance.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
+			BloodPuddleEmoji puddle = Stage.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
 			puddle.SetFontSize(Utils.Map(FontSize, 15f, 45f, 16f, 35f) * Game.Random.Float(0.95f, 1.05f));
 			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 1.5f, 2f) * Game.Random.Float(0.9f, 1.1f);
 
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 			return;
 		}
 
 		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
 
 		if(TimeSinceSpawn > Lifetime)
-			Hud.Instance.RemoveEmoji(this);
+			Stage.RemoveEmoji(this);
 	}
 }
