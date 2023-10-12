@@ -47,7 +47,7 @@ public class FaceEmoji : Emoji
 	public int BloodAmountLeft { get; set; }
 	
 	private static List<string> _faces = new() { "🙂", "😀", "😄", "🙁", "😕", "😐", "🙁", "🙄", "🤨", "😌", "🤤", "😴", "😛", "😗", "😊", "😉", };
-	private static List<string> _deadFaces = new() { "😲", "😑", "😖", "😣", "😫", "😩", "😯", "😦", "😧", "😵", "😔", "😞", "😟", "☹️", };
+	private static List<string> _deadFaces = new() { "😲", "😑", "😖", "😣", "😫", "😩", "😯", "😵", "😔", "😞", };
 
 
 	//private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
@@ -93,10 +93,6 @@ public class FaceEmoji : Emoji
 				ScaleY = Utils.Map(TimeSincePoked, 0f, _pokeTime, _pokedScaleY, 1f, EasingType.BounceInOut);
 			}
 		}
-
-		float height = Hud.Instance.ScreenHeight;
-		float y = Position.y;
-		//float centerY = height / 2f;
 
 		//float depthScale = Utils.Map(MathX.CeilToInt(Position.y / 100f) * 100f, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
 		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
@@ -149,7 +145,7 @@ public class FaceEmoji : Emoji
 
 		CheckBounds();
 		
-		ZIndex = (int)(height - y);
+		ZIndex = (int)(Hud.Instance.ScreenHeight - GetRotatedPos().y);
 
 		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
 
@@ -220,7 +216,7 @@ public class FaceEmoji : Emoji
 		DeathTime = Hud.Instance.CurrentTime;
 		//TransformOriginY = 0.5f;
 		_targetDeathDegrees = 90f * (Game.Random.Float(0f, 1f) < 0.5f ? -1f : 1f);
-		_deathRotateSpeed = Game.Random.Float(0.01f, 0.1f);
+		_deathRotateSpeed = Game.Random.Float(0.01f, 0.25f);
 		_deathBrightness = Game.Random.Float(0.45f, 0.55f);
 		_deathSepia = Game.Random.Float(0.1f, 0.25f);
 		Text = _deadFaces[Game.Random.Int(0, _deadFaces.Count - 1)];

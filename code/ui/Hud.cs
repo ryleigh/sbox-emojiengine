@@ -83,7 +83,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		DebugDisplay.Text = "";
 
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 25; i++)
 		{
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(ScreenWidth / 2f, ScreenHeight / 2f));
@@ -128,17 +128,19 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 				if(other == face)
 					continue;
 
+				var facePos = face.GetRotatedPos();
+				var otherPos = other.GetRotatedPos();
 				float otherRadius = other.Radius * HITBOX_RADIUS;
 
-				float distSqr = (face.Position - other.Position).LengthSquared;
+				float distSqr = (facePos - otherPos).LengthSquared;
 				float reqDistSqr = MathF.Pow(faceRadius + otherRadius, 2f);
 				if(distSqr < reqDistSqr)
 				{
 					float percent = Utils.Map(distSqr, reqDistSqr, 0f, 0f, 1f);
 					float repelStrength = REPEL_STRENGTH * Utils.Map(other.FontSize, FaceEmoji.FONT_SIZE_MIN, FaceEmoji.FONT_SIZE_MAX, 10f, 50f);
-					face.Velocity += (face.Position == other.Position)
+					face.Velocity += (facePos == otherPos)
 						? Utils.GetRandomVector() * repelStrength * dt
-						: (face.Position - other.Position).Normal * percent * repelStrength * dt;
+						: (facePos - otherPos).Normal * percent * repelStrength * dt;
 				}
 			}
 		}
