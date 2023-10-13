@@ -46,7 +46,6 @@ public partial class CrosshairEmoji : Emoji
 
 		Text = "";
 		ZIndex = Globals.DEPTH_CROSSHAIR;
-		IsInteractable = false;
 		IsVisible = false;
 		_length = 50f;
 		//_decelerationFactor = 4f;
@@ -121,15 +120,13 @@ public partial class CrosshairEmoji : Emoji
 		if(Stage.Raycast(hitPos, out List<Emoji> hitEmojis))
 		{
 			var emoji = hitEmojis[0];
-			if(emoji is FaceEmoji faceEmoji)
-			{
-				float HOLE_SIZE = 20f * faceEmoji.Scale;
-				var facePos = faceEmoji.GetRotatedPos();
-				if((hitPos - facePos).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
-					hitPos = facePos + (hitPos - facePos).Normal * (faceEmoji.Radius - HOLE_SIZE);
 
-				faceEmoji.Hit(hitPos);
-			}
+			float HOLE_SIZE = 20f * emoji.Scale;
+			var facePos = emoji.GetRotatedPos();
+			if((hitPos - facePos).LengthSquared > MathF.Pow(emoji.Radius - HOLE_SIZE, 2f))
+				hitPos = facePos + (hitPos - facePos).Normal * (emoji.Radius - HOLE_SIZE);
+
+			emoji.Hit(hitPos);
 		}
 		else
 		{

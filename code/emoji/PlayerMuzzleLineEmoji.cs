@@ -20,12 +20,9 @@ public class PlayerMuzzleLineEmoji : Emoji
 		base.Init();
 
 		Text = "☄️";
-		IsInteractable = false;
 
 		Opacity = 0f;
-
 		//Brightness = 0f;
-
 		PanelSizeFactor = 2.5f;
 		SetFontSize(60f);
 

@@ -24,7 +24,7 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 		base.Init();
 
 		Text = "💨";
-		IsInteractable = false;
+
 		Lifetime = Game.Random.Float(0.125f, 0.15f);
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_SMOKE;
 		Opacity = 0f;

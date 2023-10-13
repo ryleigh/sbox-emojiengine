@@ -20,7 +20,6 @@ public class ImpactEmoji : Emoji
 		base.Init();
 
 		Text = "💥";
-		IsInteractable = false;
 		Lifetime = Game.Random.Float(0.15f, 0.2f);
 		Degrees = Game.Random.Float(0f, 360f);
 		ScaleX = Game.Random.Float(0.7f, 1.3f);

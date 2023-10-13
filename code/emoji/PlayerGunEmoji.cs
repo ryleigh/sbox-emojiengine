@@ -25,7 +25,6 @@ public class PlayerGunEmoji : Emoji
 		base.Init();
 
 		BackgroundImage = "textures/gun8.png";
-		IsInteractable = false;
 		PanelSize = 700f;
 		ZIndex = Globals.DEPTH_PLAYER_GUN;
 		Opacity = 0f;

@@ -10,7 +10,8 @@ namespace EmojiEngine;
 public class Stage
 {
 	public List<Emoji> Emojis { get; private set; }
-	public List<Emoji> AllHoveredEmojis = new();
+	public List<Emoji> InteractableEmojis { get; private set; }
+	public List<Emoji> AllHoveredEmojis { get; private set; }
 	public Emoji HoveredEmoji { get; private set; }
 
 	public Color BgColorBottom { get; set; }
@@ -19,7 +20,6 @@ public class Stage
 	public List<RingData> Rings { get; private set; }
 	public List<LineData> Lines { get; private set; }
 
-	private List<FaceEmoji> _faceEmojis = new();
 	public CursorEmoji CursorEmoji { get; private set; }
 	public CrosshairEmoji CrosshairEmoji { get; private set; }
 
@@ -29,6 +29,8 @@ public class Stage
 	public Stage()
 	{
 		Emojis = new();
+		InteractableEmojis = new();
+		AllHoveredEmojis = new();
 		Lines = new();
 		Rings = new();
 	}
@@ -36,11 +38,10 @@ public class Stage
 	public void Restart()
 	{
 		Emojis.Clear();
-
+		InteractableEmojis.Clear();
+		AllHoveredEmojis.Clear();
 		Lines.Clear();
 		Rings.Clear();
-		AllHoveredEmojis.Clear();
-		_faceEmojis.Clear();
 
 		CurrentTime = 0f;
 		TimeScale = 1f;
@@ -53,6 +54,8 @@ public class Stage
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
 			var emoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f));
 		}
+
+		AddEmoji(new KnifeEmoji(), new Vector2(400f, 400f));
 	}
 
 	public void Update(float dt)
@@ -72,38 +75,6 @@ public class Stage
 			return;
 		}
 
-		float HITBOX_RADIUS = 0.7f;
-		float REPEL_STRENGTH = 125f;
-		for(int i = _faceEmojis.Count - 1; i >= 0; i--)
-		{
-			var face = _faceEmojis[i];
-
-			float faceRadius = face.Radius * HITBOX_RADIUS;
-
-			for(int j = _faceEmojis.Count - 1; j >= 0; j--)
-			{
-				var other = _faceEmojis[j];
-
-				if(other == face)
-					continue;
-
-				var facePos = face.GetRotatedPos();
-				var otherPos = other.GetRotatedPos();
-				float otherRadius = other.Radius * HITBOX_RADIUS;
-
-				float distSqr = (facePos - otherPos).LengthSquared;
-				float reqDistSqr = MathF.Pow(faceRadius + otherRadius, 2f);
-				if(distSqr < reqDistSqr)
-				{
-					float percent = Utils.Map(distSqr, reqDistSqr, 0f, 0f, 1f);
-					float repelStrength = REPEL_STRENGTH * Utils.Map(other.FontSize, FaceEmoji.FONT_SIZE_MIN, FaceEmoji.FONT_SIZE_MAX, 10f, 50f);
-					face.Velocity += (facePos == otherPos)
-						? Utils.GetRandomVector() * repelStrength * dt
-						: (facePos - otherPos).Normal * percent * repelStrength * dt;
-				}
-			}
-		}
-
 		TimeScale = Utils.DynamicEaseTo(TimeScale, 1f, Utils.Map(TimeScale, 0f, 1f, 0.01f, 0.1f), dtRaw);
 
 		BgColorBottom = new Color(0.05f + Utils.FastSin(CurrentTime * 0.15f) * 0.05f, 0.05f + Utils.FastSin(20f + CurrentTime * 0.13f) * 0.05f, 0.05f + Utils.FastSin(10f + CurrentTime * 0.17f) * 0.05f);
@@ -112,20 +83,54 @@ public class Stage
 
 	void HandleEmoji(float dt)
 	{
-		var mousePos = Hud.Instance.MousePos;
-		AllHoveredEmojis.Clear();
+		// ALL EMOJI
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 		{
 			var emoji = Emojis[i];
 			emoji.Update(dt);
+		}
 
+		// INTERACTABLE EMOJI ONLY
+		var mousePos = Hud.Instance.MousePos;
+		AllHoveredEmojis.Clear();
+
+		float RADIUS_REPEL_SCALE = 0.8f;
+		float REPEL_STRENGTH = 220f;
+
+		for(int i = InteractableEmojis.Count - 1; i >= 0; i--)
+		{
+			var emoji = InteractableEmojis[i];
 			emoji.IsHovered = false;
+			var radius = emoji.Radius * RADIUS_REPEL_SCALE;
 
-			if(emoji.IsInteractable && emoji.Radius > 0f)
+			if(emoji.Radius > 0f)
 			{
 				var distSqr = (mousePos - emoji.GetRotatedPos()).LengthSquared;
 				if(distSqr < MathF.Pow(emoji.Radius, 2f))
 					AllHoveredEmojis.Add(emoji);
+			}
+
+			for(int j = InteractableEmojis.Count - 1; j >= 0; j--)
+			{
+				var other = InteractableEmojis[j];
+
+				if(other == emoji)
+					continue;
+
+				var pos = emoji.GetRotatedPos();
+				var otherPos = other.GetRotatedPos();
+				float otherRadius = other.Radius * RADIUS_REPEL_SCALE;
+
+				float distSqr = (pos - otherPos).LengthSquared;
+				float reqDistSqr = MathF.Pow(radius + otherRadius, 2f);
+				if(distSqr < reqDistSqr)
+				{
+					float percent = Utils.Map(distSqr, reqDistSqr, 0f, 0f, 1f);
+					float repelStrength = REPEL_STRENGTH * other.Weight;
+					emoji.Velocity += (pos == otherPos)
+						? Utils.GetRandomVector() * repelStrength * dt
+						: (pos - otherPos).Normal * percent * repelStrength * dt;
+				}
 			}
 		}
 
@@ -193,8 +198,8 @@ public class Stage
 	{
 		Emojis.Add(emoji);
 
-		if(emoji is FaceEmoji faceEmoji)
-			_faceEmojis.Add(faceEmoji);
+		if(emoji.IsInteractable)
+			InteractableEmojis.Add(emoji);
 
 		emoji.Position = pos;
 		emoji.Stage = this;
@@ -215,8 +220,8 @@ public class Stage
 
 		Emojis.Remove(emoji);
 
-		if(emoji is FaceEmoji faceEmoji)
-			_faceEmojis.Remove(faceEmoji);
+		if(emoji.IsInteractable)
+			InteractableEmojis.Remove(emoji);
 
 		if(HoveredEmoji == emoji)
 			HoveredEmoji = null;

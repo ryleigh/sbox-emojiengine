@@ -25,7 +25,6 @@ public class BloodPuddleEmoji : Emoji
 
 		Text = "🔴";
 
-		IsInteractable = false;
 		//Saturation = Game.Random.Float(1f, 2f);
 
 		ScaleX = Game.Random.Float(1.2f, 1.4f);

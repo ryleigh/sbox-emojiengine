@@ -23,10 +23,8 @@ public class FaceEmoji : Emoji
 	private float _rotSpeed;
 	private float _rotAmount;
 
-	public Emoji ShadowEmoji { get; set; }
-	private float _shadowHeight;
+	public ShadowEmoji ShadowEmoji { get; set; }
 
-	public Vector2 Velocity { get; set; }
 	public const float FONT_SIZE_MIN = 80f;
 	public const float FONT_SIZE_MAX = 150f;
 
@@ -57,24 +55,31 @@ public class FaceEmoji : Emoji
 	//		"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
 	//		"👹", "😷", "🤑", "🌞", "👽", "🤖", "👨‍🦲", "🎃", "🟡", "😺", "😸", "👸", "🎅", "👻", "👶", "👲", "👴", "🌎️", "🐞", };
 
+	public FaceEmoji()
+	{
+		IsInteractable = true;
+	}
+
 	public override void Init()
 	{
 		base.Init();
 
 		Text = _faces[Game.Random.Int(0, _faces.Count - 1)];
-		TransformOriginY = 0.75f;
 
+		TransformOriginY = 0.75f;
 		DetermineRotVars();
 
 		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX) + 60f);
 		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
-		ShadowEmoji = Stage.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f));
+		ShadowEmoji = Stage.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f)) as ShadowEmoji;
 		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
 
 		_pokedScale = 1f;
 
 		BloodAmountLeft = Game.Random.Int(14, 16);
+
+		Weight = 10f * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 1f, 1.2f);
 	}
 
 	public override void Update(float dt)
@@ -107,7 +112,6 @@ public class FaceEmoji : Emoji
 
 		Degrees += Velocity.x * 0.1f * dt;
 
-		_shadowHeight = Utils.DynamicEaseTo(_shadowHeight, -40f, 0.2f, dt);
 		ShadowEmoji.Text = Text;
 		//ShadowEmoji.ScaleX = ScaleX * (1f + 0.25f * (IsDead ? -1f : 1f));
 		//ShadowEmoji.ScaleY = ScaleY * (1f - 0.2f * (IsDead ? -1f : 1f));
@@ -125,7 +129,7 @@ public class FaceEmoji : Emoji
 			//ShadowEmoji.ScaleX = 1f - ScaleX;
 			//ShadowEmoji.ScaleY = 1f - ScaleY;
 			ShadowEmoji.Degrees = _targetDeathDegrees;
-			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -40f) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 
 			Brightness = Utils.Map(TimeSinceDeath, 0f, 9f, 1f, _deathBrightness);
 			Sepia = Utils.Map(TimeSinceDeath, 0f, 15f, 0f, _deathSepia);
@@ -140,7 +144,7 @@ public class FaceEmoji : Emoji
 			ShadowEmoji.ScaleX = ScaleX * 1.25f;
 			ShadowEmoji.ScaleY = ScaleY * 0.8f;
 			ShadowEmoji.Degrees = Degrees * 0.2f;
-			ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, _shadowHeight) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, -40f) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 		}
 
 		Position += Velocity * dt;
@@ -157,33 +161,10 @@ public class FaceEmoji : Emoji
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
 	}
 
-	void CheckBounds()
+	public override void Hit(Vector2 hitPos)
 	{
-		if(Position.x < Hud.BOUNDS_BUFFER)
-		{
-			Position = new Vector2(Hud.BOUNDS_BUFFER, Position.y);
-			Velocity = new Vector2(MathF.Abs(Velocity.x), Velocity.y);
-		}
-		else if(Position.x > Hud.Instance.ScreenWidth - Hud.BOUNDS_BUFFER)
-		{
-			Position = new Vector2(Hud.Instance.ScreenWidth - Hud.BOUNDS_BUFFER, Position.y);
-			Velocity = new Vector2(-MathF.Abs(Velocity.x), Velocity.y);
-		}
+		base.Hit(hitPos);
 
-		if(Position.y < Hud.BOUNDS_BUFFER)
-		{
-			Position = new Vector2(Position.x, Hud.BOUNDS_BUFFER);
-			Velocity = new Vector2(Velocity.x, MathF.Abs(Velocity.y));
-		}
-		else if(Position.y > Hud.Instance.ScreenHeight - Hud.BOUNDS_BUFFER)
-		{
-			Position = new Vector2(Position.x, Hud.Instance.ScreenHeight - Hud.BOUNDS_BUFFER);
-			Velocity = new Vector2(Velocity.x, -MathF.Abs(Velocity.y));
-		}
-	}
-
-	public void Hit(Vector2 hitPos)
-	{
 		//Hud.Instance.DrawLine(new Vector2(5f, 5f), hitPos, 4f, Color.Red, 0.5f);
 
 		WoundEmoji wound = Stage.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;

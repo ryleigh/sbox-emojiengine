@@ -32,7 +32,6 @@ public class BloodDripEmoji : Emoji
 
 		Text = "🩸";
 
-		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 3f);
 
 		Lifetime = Game.Random.Float(0.55f, 0.65f);

@@ -25,9 +25,7 @@ public class WoundEmoji : Emoji
 	{
 		base.Init();
 
-		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 2f);
-
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
 		Lifetime = Game.Random.Float(6f, 6.5f);

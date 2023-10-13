@@ -19,7 +19,6 @@ public class PlayerMuzzleFlashEmoji : Emoji
 		base.Init();
 
 		Text = "💥";
-		IsInteractable = false;
 		Lifetime = Game.Random.Float(0.1f, 0.15f);
 		ZIndex = Globals.DEPTH_PLAYER_MUZZLE_FLASH;
 

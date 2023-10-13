@@ -26,15 +26,7 @@ public class Emoji
 	public float ShadowBlur { get; set; }
 	public Color ShadowColor { get; set; }
 	public int ZIndex { get; set; }
-	private float _radius;
-	public float Radius { 
-		get { return _radius * Scale; } 
-		set { _radius = value; } 
-	}
 	public bool IsVisible { get; set; }
-	public bool IsInteractable { get; set; }
-	public bool SwallowClicks { get; set; }
-	public bool IsHovered { get; set; }
 	public float TransformOriginX { get; set; }
 	public float TransformOriginY { get; set; }
 	public Vector2 AnchorPos => Position + new Vector2((TransformOriginX - 0.5f) * PanelSize, -(TransformOriginY - 0.5f) * PanelSize);
@@ -70,6 +62,18 @@ public class Emoji
 	private bool _firstUpdateFinished;
 	public string DebugText { get; set; }
 
+	public bool IsInteractable { get; set; }
+	public bool SwallowClicks { get; set; }
+	public bool IsHovered { get; set; }
+	private float _radius;
+	public float Radius
+	{
+		get { return _radius * Scale; }
+		set { _radius = value; }
+	}
+	public float Weight { get; set; }
+	public Vector2 Velocity { get; set; }
+
 	public Emoji()
 	{
 		Text = "";
@@ -78,7 +82,6 @@ public class Emoji
 		PanelSize = FontSize * PanelSizeFactor;
 		Opacity = 1f;
 		IsVisible = true;
-		IsInteractable = true;
 		SwallowClicks = true;
 		TransformOriginX = 0.5f;
 		TransformOriginY = 0.5f;
@@ -114,8 +117,8 @@ public class Emoji
 	{
 		if(IsInteractable && Radius > 0f)
 		{
-			Utils.DrawCircle(GetRotatedPos(), Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
-			Utils.DrawCircle(Position, Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(GetRotatedPos(), Radius, 7, Stage.CurrentTime * 4f, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+			//Utils.DrawCircle(Position, Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
 		}
 	}
 
@@ -128,5 +131,35 @@ public class Emoji
 	{
 		FontSize = fontSize;
 		PanelSize = FontSize * PanelSizeFactor;
+	}
+
+	protected void CheckBounds()
+	{
+		if(Position.x < Hud.BOUNDS_BUFFER)
+		{
+			Position = new Vector2(Hud.BOUNDS_BUFFER, Position.y);
+			Velocity = new Vector2(MathF.Abs(Velocity.x), Velocity.y);
+		}
+		else if(Position.x > Hud.Instance.ScreenWidth - Hud.BOUNDS_BUFFER)
+		{
+			Position = new Vector2(Hud.Instance.ScreenWidth - Hud.BOUNDS_BUFFER, Position.y);
+			Velocity = new Vector2(-MathF.Abs(Velocity.x), Velocity.y);
+		}
+
+		if(Position.y < Hud.BOUNDS_BUFFER)
+		{
+			Position = new Vector2(Position.x, Hud.BOUNDS_BUFFER);
+			Velocity = new Vector2(Velocity.x, MathF.Abs(Velocity.y));
+		}
+		else if(Position.y > Hud.Instance.ScreenHeight - Hud.BOUNDS_BUFFER)
+		{
+			Position = new Vector2(Position.x, Hud.Instance.ScreenHeight - Hud.BOUNDS_BUFFER);
+			Velocity = new Vector2(Velocity.x, -MathF.Abs(Velocity.y));
+		}
+	}
+
+	public virtual void Hit(Vector2 hitPos)
+	{
+
 	}
 }

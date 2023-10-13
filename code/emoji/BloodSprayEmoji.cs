@@ -29,9 +29,7 @@ public class BloodSprayEmoji : Emoji
 
 		Text = "💦";
 
-		IsInteractable = false;
 		Saturation = 4f;
-
 		Lifetime = Game.Random.Float(0.25f, 0.5f);
 		PanelSizeFactor = 2f;
 		SetFontSize(Game.Random.Float(45f, 52f));

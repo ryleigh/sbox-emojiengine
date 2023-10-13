@@ -26,8 +26,6 @@ public class PlayerHandLeftEmoji : Emoji
 
 		Text = "✋";
 
-		IsInteractable = false;
-
 		SetFontSize(350f);
 
 		ZIndex = Globals.DEPTH_PLAYER_HAND_LEFT;

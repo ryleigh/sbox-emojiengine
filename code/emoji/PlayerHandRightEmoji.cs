@@ -21,8 +21,6 @@ public class PlayerHandRightEmoji : Emoji
 
 		Text = "☝️";
 
-		IsInteractable = false;
-
 		//ScaleX = Game.Random.Float(1.2f, 1.4f);
 		//ScaleY = Game.Random.Float(0.7f, 0.8f);
 		SetFontSize(350f);

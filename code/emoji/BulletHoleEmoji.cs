@@ -21,9 +21,7 @@ public class BulletHoleEmoji : Emoji
 
 		Text = "💥";
 
-		IsInteractable = false;
 		Saturation = Game.Random.Float(1f, 2f);
-
 		Lifetime = Game.Random.Float(2f, 2.3f);
 		PanelSizeFactor = 2.5f;
 		SetFontSize(Game.Random.Float(19f, 25f));

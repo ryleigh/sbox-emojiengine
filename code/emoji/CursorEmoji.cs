@@ -30,7 +30,6 @@ public partial class CursorEmoji : Emoji
 		Text = "☝️";
 		SetFontSize(64f);
 		ZIndex = 9999;
-		IsInteractable = false;
 		_bounceScale = 1f;
 	}
 
