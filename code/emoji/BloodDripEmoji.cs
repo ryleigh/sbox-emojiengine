@@ -74,7 +74,8 @@ public class BloodDripEmoji : Emoji
 
 		if(GroundYPos > 0f && Position.y < GroundYPos)
 		{
-			BloodPuddleEmoji puddle = Stage.AddEmoji(new BloodPuddleEmoji(), Position) as BloodPuddleEmoji;
+			var puddlePos = Position + new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-12f, 0f));
+			BloodPuddleEmoji puddle = Stage.AddEmoji(new BloodPuddleEmoji(), puddlePos) as BloodPuddleEmoji;
 			puddle.SetFontSize(Utils.Map(FontSize, 15f, 45f, 16f, 35f) * Game.Random.Float(0.95f, 1.05f));
 			puddle.Lifetime = Utils.Map(FontSize, 15f, 45f, 1.5f, 2f) * Game.Random.Float(0.9f, 1.1f);
 

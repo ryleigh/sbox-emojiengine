@@ -123,7 +123,7 @@ public partial class CrosshairEmoji : Emoji
 			var emoji = hitEmojis[0];
 			if(emoji is FaceEmoji faceEmoji)
 			{
-				float HOLE_SIZE = 26f * faceEmoji.Scale;
+				float HOLE_SIZE = 20f * faceEmoji.Scale;
 				var facePos = faceEmoji.GetRotatedPos();
 				if((hitPos - facePos).LengthSquared > MathF.Pow(faceEmoji.Radius - HOLE_SIZE, 2f))
 					hitPos = facePos + (hitPos - facePos).Normal * (faceEmoji.Radius - HOLE_SIZE);

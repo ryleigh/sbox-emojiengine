@@ -39,10 +39,12 @@ public class FaceEmoji : Emoji
 	public bool IsDead { get; private set; }
 	private float _targetDeathDegrees;
 	private float _deathRotateSpeed;
+	private float _deathRotateSpeedEaseTime;
+	private EasingType _deathRotateSpeedEasingType;
 	private float _deathBrightness;
 	private float _deathSepia;
 	public float DeathTime { get; private set; }
-	public float TimeSinceDeath => Stage.CurrentTime - DeathTime;
+	public float TimeSinceDeath => IsDead ? Stage.CurrentTime - DeathTime : 0f;
 
 	public int BloodAmountLeft { get; set; }
 	
@@ -117,7 +119,7 @@ public class FaceEmoji : Emoji
 			ScaleX = Utils.DynamicEaseTo(ScaleX, Utils.Map(TimeSinceDeath, 0f, 10f, 1f, 0.925f), 0.1f, dt);
 			ScaleY = Utils.DynamicEaseTo(ScaleY, Utils.Map(TimeSinceDeath, 0f, 8f, 1f, 1.075f), 0.1f, dt);
 
-			Degrees = Utils.DynamicEaseTo(Degrees, _targetDeathDegrees, _deathRotateSpeed, dt);
+			Degrees = Utils.DynamicEaseTo(Degrees, _targetDeathDegrees, _deathRotateSpeed * Utils.Map(TimeSinceDeath, 0f, _deathRotateSpeedEaseTime, 0f, 1f, _deathRotateSpeedEasingType), dt);
 			ShadowEmoji.ScaleX = ScaleX * 0.75f;
 			ShadowEmoji.ScaleY = ScaleY * 1.2f;
 			//ShadowEmoji.ScaleX = 1f - ScaleX;
@@ -194,11 +196,11 @@ public class FaceEmoji : Emoji
 
 		_isPoked = true;
 		_pokeTime = Game.Random.Float(POKE_TIME_MIN, POKE_TIME_MAX);
-		_pokedScaleX = 1f + Game.Random.Float(0.1f, 0.2f) * (IsDead ? -1f : 1f);
-		_pokedScaleY = 1f + Game.Random.Float(-0.2f, -0.1f) * (IsDead ? -1f : 1f);
+		_pokedScaleX = 1f + Game.Random.Float(0.1f, 0.2f) * (IsDead && MathF.Abs(Degrees) > 25f ? -1f : 1f);
+		_pokedScaleY = 1f + Game.Random.Float(-0.2f, -0.1f) * (IsDead && MathF.Abs(Degrees) > 25f ? -1f : 1f);
 		LastPokedTime = Stage.CurrentTime;
 
-		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f) * Utils.Map(TimeSinceDeath, 0f, 1f, 1f, 0.3f);
 
 		if(!IsDead)
 		{
@@ -219,8 +221,11 @@ public class FaceEmoji : Emoji
 		//TransformOriginY = 0.5f;
 		_targetDeathDegrees = 90f * (Game.Random.Float(0f, 1f) < 0.5f ? -1f : 1f);
 		_deathRotateSpeed = Game.Random.Float(0.01f, 0.25f);
-		_deathBrightness = Game.Random.Float(0.45f, 0.55f);
+		_deathRotateSpeedEaseTime = Game.Random.Float(0.1f, 1.5f);
+		_deathRotateSpeedEasingType = GetRandomEasingType();
+		_deathBrightness = Game.Random.Float(0.35f, 0.55f);
 		_deathSepia = Game.Random.Float(0.1f, 0.25f);
+
 		Text = _deadFaces[Game.Random.Int(0, _deadFaces.Count - 1)];
 	}
 
@@ -229,5 +234,19 @@ public class FaceEmoji : Emoji
 		_rotTimeOffset = Game.Random.Float(0f, 99f);
 		_rotSpeed = Game.Random.Float(1.5f, 7f);
 		_rotAmount = Game.Random.Float(5f, 30f);
+	}
+
+	EasingType GetRandomEasingType()
+	{
+		int rand = Game.Random.Int(0, 5);
+		switch(rand)
+		{
+			case 0: default: return EasingType.Linear;
+			case 1: return EasingType.QuadOut;
+			case 2: return EasingType.QuadIn;
+			case 3: return EasingType.ExpoOut;
+			case 4: return EasingType.ExpoIn;
+			case 5: return EasingType.QuintIn;
+		}
 	}
 }

@@ -53,7 +53,7 @@ public class BloodSprayEmoji : Emoji
 		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
 		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, _brightness, 1f, EasingType.QuadOut);
 		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.QuadIn);
-		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.5f, _scale, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.4f, 0.8f));
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.5f, _scale, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.2f, 0.9f));
 
 		Position += (Velocity + _gravityVelocity) * dt;
 		Velocity *= (1f - 7f * dt);
