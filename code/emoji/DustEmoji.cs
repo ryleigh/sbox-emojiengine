@@ -13,7 +13,6 @@ public class DustEmoji : Emoji
 	public float Lifetime { get; set; }
 
 	private float _brightness;
-	public Vector2 Velocity { get; set; }
 
 	private float _opacity;
 	private float _blurStart;

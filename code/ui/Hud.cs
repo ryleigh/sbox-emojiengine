@@ -116,4 +116,9 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		CurrentStage.OnMouseUp(rightClick);
 	}
+
+	public int GetZIndex(float yPos)
+	{
+		return (int)(ScreenHeight * 10f - yPos * 10f);
+	}
 }

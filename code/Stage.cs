@@ -49,13 +49,16 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		for(int i = 0; i < 25; i++)
+		for(int i = 0; i < 35; i++)
 		{
 			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
-			var emoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f));
+			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
+
+			//if(Game.Random.Float(0f, 1f) < 0.3f)
+			//faceEmoji.AddChild(AddEmoji(new KnifeEmoji()));
 		}
 
-		AddEmoji(new KnifeEmoji(), new Vector2(400f, 400f));
+		AddEmoji(new KnifeEmoji(), new Vector2(800f, 800f));
 	}
 
 	public void Update(float dt)
@@ -83,11 +86,18 @@ public class Stage
 
 	void HandleEmoji(float dt)
 	{
-		// ALL EMOJI
+		// ALL EMOJI (need to update child emoji after their parents, so the depths etc can be set correctly)
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 		{
 			var emoji = Emojis[i];
+
+			if(emoji.HasParent)
+				continue;
+
 			emoji.Update(dt);
+
+			if(emoji.HasChildren)
+				UpdateEmojisChildren(emoji, dt);
 		}
 
 		// INTERACTABLE EMOJI ONLY
@@ -110,11 +120,15 @@ public class Stage
 					AllHoveredEmojis.Add(emoji);
 			}
 
+			if(emoji.Parent != null)
+				continue;
+
+			// repel
 			for(int j = InteractableEmojis.Count - 1; j >= 0; j--)
 			{
 				var other = InteractableEmojis[j];
 
-				if(other == emoji)
+				if(other == emoji || other.Parent != null)
 					continue;
 
 				var pos = emoji.GetRotatedPos();
@@ -137,6 +151,21 @@ public class Stage
 		HoveredEmoji = AllHoveredEmojis.Count > 0 ? AllHoveredEmojis.OrderByDescending(x => x.ZIndex).First() : null;
 		if(HoveredEmoji != null)
 			HoveredEmoji.IsHovered = true;
+	}
+
+	void UpdateEmojisChildren(Emoji emoji, float dt)
+	{
+		if(emoji.Children == null)
+			return;
+
+		for(int i = emoji.Children.Count - 1; i >= 0; i--)
+		{
+			var child = emoji.Children[i];
+			child.Update(dt);
+
+			if(child.HasChildren)
+				UpdateEmojisChildren(child, dt);
+		}
 	}
 
 	void HandleLines(float dt)
@@ -223,8 +252,13 @@ public class Stage
 		if(emoji.IsInteractable)
 			InteractableEmojis.Remove(emoji);
 
-		if(HoveredEmoji == emoji)
-			HoveredEmoji = null;
+		//if(HoveredEmoji == emoji)
+		//	HoveredEmoji = null;
+
+		//Log.Info($"RemoveEmoji: {emoji}, emoji.HasParent: {emoji.HasParent}");
+
+		if(emoji.HasParent)
+			emoji.Parent.RemoveChild(emoji);
 	}
 
 	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)

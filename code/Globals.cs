@@ -10,12 +10,15 @@ namespace EmojiEngine;
 
 public static class Globals
 {
-	public const int DEPTH_PLAYER_HAND_LEFT = 9999;
-	public const int DEPTH_PLAYER_GUN = 9999;
-	public const int DEPTH_PLAYER_HAND_RIGHT = 9998;
-	public const int DEPTH_PLAYER_MUZZLE_FLASH = 9997;
-	public const int DEPTH_PLAYER_MUZZLE_SMOKE = 9996;
-	public const int DEPTH_CROSSHAIR = 9995;
+	public const int DEPTH_INCREASE_WOUND = 1;
+	public const int DEPTH_INCREASE_HELD = 2;
 
-	public const int DEPTH_PLAYER_MUZZLE_LINE = 9989;
+	public const int DEPTH_PLAYER_HAND_LEFT = 99999;
+	public const int DEPTH_PLAYER_GUN = 99999;
+	public const int DEPTH_PLAYER_HAND_RIGHT = 99998;
+	public const int DEPTH_PLAYER_MUZZLE_FLASH = 99997;
+	public const int DEPTH_PLAYER_MUZZLE_SMOKE = 99996;
+	public const int DEPTH_CROSSHAIR = 99995;
+
+	public const int DEPTH_PLAYER_MUZZLE_LINE = 99989;
 }

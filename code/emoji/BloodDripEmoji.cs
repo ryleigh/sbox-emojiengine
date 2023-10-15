@@ -13,7 +13,6 @@ public class BloodDripEmoji : Emoji
 	public float Lifetime { get; set; }
 
 	//private float _brightness;
-	public Vector2 Velocity { get; set; }
 	private Vector2 _gravityVelocity;
 
 	public float TargetDegrees { get; set; }
@@ -21,7 +20,6 @@ public class BloodDripEmoji : Emoji
 
 	public float Gravity { get; set; }
 
-	public WoundEmoji WoundEmoji { get; set; }
 	public Vector2 WoundPosLast { get; set; }
 
 	public float GroundYPos { get; set; }
@@ -49,16 +47,16 @@ public class BloodDripEmoji : Emoji
 	{
 		base.Update(dt);
 
-		if(WoundEmoji != null)
+		if(Parent != null)
 		{
-			ZIndex = WoundEmoji.ZIndex + 1;
-			
+			ZIndex = Parent.ZIndex + 1;
+
 			if(TimeSinceSpawn < Lifetime * 0.6f)
 			{
-				Vector2 woundPosDelta = WoundEmoji.Position - WoundPosLast;
-				Position += woundPosDelta * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.6f, 1f, 0f);
+				Vector2 woundPosDelta = Parent.Position - WoundPosLast;
+				//Position += woundPosDelta * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.6f, 1f, 0f);
 
-				WoundPosLast = WoundEmoji.Position;
+				WoundPosLast = Parent.Position;
 			}
 		}
 

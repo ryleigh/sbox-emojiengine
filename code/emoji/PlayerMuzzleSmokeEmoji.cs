@@ -12,7 +12,6 @@ public class PlayerMuzzleSmokeEmoji : Emoji
 {
 	public float Lifetime { get; set; }
 
-	public Vector2 Velocity { get; set; }
 
 	private float _opacity;
 	private float _scaleStart;

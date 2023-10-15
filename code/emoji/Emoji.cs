@@ -74,6 +74,11 @@ public class Emoji
 	public float Weight { get; set; }
 	public Vector2 Velocity { get; set; }
 
+	public Emoji Parent { get; set; }
+	public bool HasParent => Parent != null;
+	public List<Emoji> Children { get; private set; }
+	public bool HasChildren => Children != null && Children.Count > 0;
+
 	public Emoji()
 	{
 		Text = "";
@@ -161,5 +166,23 @@ public class Emoji
 	public virtual void Hit(Vector2 hitPos)
 	{
 
+	}
+
+	public void AddChild(Emoji emoji)
+	{
+		if(Children == null)
+			Children = new();
+
+		Children.Add(emoji);
+		emoji.Parent = this;
+	}
+
+	public void RemoveChild(Emoji emoji)
+	{
+		if(Children == null || !Children.Contains(emoji))
+			return;
+
+		Children.Remove(emoji);
+		emoji.Parent = null;
 	}
 }

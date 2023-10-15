@@ -13,7 +13,6 @@ public class BloodSprayEmoji : Emoji
 	public float Lifetime { get; set; }
 
 	//private float _brightness;
-	public Vector2 Velocity { get; set; }
 	private Vector2 _gravityVelocity;
 
 	private float _scale;

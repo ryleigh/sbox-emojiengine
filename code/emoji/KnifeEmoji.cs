@@ -10,8 +10,6 @@ namespace EmojiEngine;
 
 public class KnifeEmoji : Emoji
 {
-	//public Emoji Parent { get; set; }
-
 	public const float RADIUS_SIZE_FACTOR = 0.56f;
 
 	public ShadowEmoji ShadowEmoji { get; set; }
@@ -47,12 +45,15 @@ public class KnifeEmoji : Emoji
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
 
-		Position += Velocity * dt;
-		Velocity *= (1f - 3f * dt);
+		if(Parent == null)
+		{
+			Position += Velocity * dt;
+			Velocity *= (1f - 3f * dt);
 
-		CheckBounds();
+			CheckBounds();
 
-		ZIndex = (int)(Hud.Instance.ScreenHeight - Position.y);
+			ZIndex = Hud.Instance.GetZIndex(Position.y);
+		}
 	}
 
 	public override void Hit(Vector2 hitPos)

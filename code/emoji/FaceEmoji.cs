@@ -49,6 +49,7 @@ public class FaceEmoji : Emoji
 	private static List<string> _faces = new() { "🙂", "😀", "😄", "🙁", "😕", "😐", "🙁", "🙄", "🤨", "😌", "🤤", "😴", "😛", "😗", "😊", "😉", };
 	private static List<string> _deadFaces = new() { "😲", "😑", "😖", "😣", "😫", "😩", "😯", "😵", "😔", "😞", };
 
+	public bool IsCivilian { get; private set; }
 
 	//private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 	//		"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
@@ -64,7 +65,12 @@ public class FaceEmoji : Emoji
 	{
 		base.Init();
 
-		Text = _faces[Game.Random.Int(0, _faces.Count - 1)];
+		IsCivilian = Game.Random.Float(0f, 1f) < 0.05f;
+
+		if(IsCivilian)
+			Text = "👸";
+		else
+			Text = _faces[Game.Random.Int(0, _faces.Count - 1)];
 
 		TransformOriginY = 0.75f;
 		DetermineRotVars();
@@ -152,10 +158,17 @@ public class FaceEmoji : Emoji
 		Velocity *= (1f - deceleration * dt);
 
 		CheckBounds();
-		
-		ZIndex = (int)(Hud.Instance.ScreenHeight - GetRotatedPos().y);
+
+		ZIndex = Hud.Instance.GetZIndex(GetRotatedPos().y);
 
 		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
+
+		//if(HeldItem != null)
+		//{
+		//	HeldItem.Position = Position + new Vector2(-Radius * 0.7f, -Radius * 0.5f);
+		//	HeldItem.ZIndex = ZIndex + Globals.DEPTH_INCREASE_HELD;
+		//	HeldItem.Degrees = Degrees;
+		//}
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
@@ -168,8 +181,8 @@ public class FaceEmoji : Emoji
 		//Hud.Instance.DrawLine(new Vector2(5f, 5f), hitPos, 4f, Color.Red, 0.5f);
 
 		WoundEmoji wound = Stage.AddEmoji(new WoundEmoji(), hitPos) as WoundEmoji;
-		wound.ZIndex = ZIndex + 1;
-		wound.ParentFace = this;
+		AddChild(wound);
+		wound.ZIndex = ZIndex + Globals.DEPTH_INCREASE_WOUND;
 
 		wound.ParentOffsetDistance = (hitPos - AnchorPos).Length / Scale;
 		wound.ParentOffsetDegrees = Utils.VectorToDegrees(hitPos - AnchorPos);
@@ -207,7 +220,8 @@ public class FaceEmoji : Emoji
 		_deathBrightness = Game.Random.Float(0.35f, 0.55f);
 		_deathSepia = Game.Random.Float(0.1f, 0.25f);
 
-		Text = _deadFaces[Game.Random.Int(0, _deadFaces.Count - 1)];
+		if(!IsCivilian)
+			Text = _deadFaces[Game.Random.Int(0, _deadFaces.Count - 1)];
 	}
 
 	void DetermineRotVars()
