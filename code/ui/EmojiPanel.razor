@@ -24,13 +24,16 @@
 </style>
 
 <root style="
-		left: @((Emoji.Position.x - Emoji.PanelSize * 0.5f) + (Emoji.SpriteOffset.x * Emoji.Scale) - Hud.Instance.CameraOffset.x)px;
-		bottom: @((Emoji.Position.y - Emoji.PanelSize * 0.5f) + (Emoji.SpriteOffset.y * Emoji.Scale) - Hud.Instance.CameraOffset.y + Emoji.Altitude)px;
+		left: @(Emoji.PanelPos.x)px;
+		bottom: @(Emoji.PanelPos.y)px;
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);
-		transform: rotate(@(Emoji.Degrees)deg) scale(@(Emoji.Scale * Hud.Instance.CameraScale)) scaleY(@(Emoji.ScaleY)) scaleX(@(Emoji.ScaleX * (Emoji.FlipX ? -1f : 1f)));
-		transform-origin: @(Emoji.TransformOriginX * 100)% @(Emoji.TransformOriginY * 100)%;
+		transform:
+			scale(@(Emoji.PanelScale.x), @(Emoji.PanelScale.y))
+			translate(@(Emoji.TransformOriginX * 100 - 50)% @(Emoji.TransformOriginY * 100 - 50)%)
+			rotate(@(Emoji.Degrees)deg)
+			translate(@(50 - Emoji.TransformOriginX * 100)% @(50 - Emoji.TransformOriginY * 100)%);
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;
 		text-stroke: @(Emoji.TextStroke)px @Emoji.TextStrokeColor.Rgba;
