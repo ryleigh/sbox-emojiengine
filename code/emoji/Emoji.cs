@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
+using System.Runtime.InteropServices;
 
 namespace EmojiEngine;
 
@@ -29,13 +30,20 @@ public class Emoji
 	public bool IsVisible { get; set; }
 	public float TransformOriginX { get; set; }
 	public float TransformOriginY { get; set; }
-	public Vector2 AnchorPos => Position + new Vector2((TransformOriginX - 0.5f) * PanelSize, -(TransformOriginY - 0.5f) * PanelSize);
+	public Vector2 AnchorPos => Position + new Vector2((TransformOriginX - 0.5f) * PanelSize, -(TransformOriginY - 0.5f) * PanelSize) * Scale;
 	public Vector2 GetRotatedPos()
 	{
 		if(TransformOriginX == 0.5f && TransformOriginY == 0.5f)
 			return Position;
 
 		return AnchorPos + Utils.RotateVector(Position - AnchorPos, -Degrees);
+	}
+	public Vector2 GetRotatedPos(Vector2 pos)
+	{
+		if(TransformOriginX == 0.5f && TransformOriginY == 0.5f)
+			return pos;
+
+		return AnchorPos + Utils.RotateVector(pos - AnchorPos, -Degrees);
 	}
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
@@ -79,6 +87,9 @@ public class Emoji
 	public List<Emoji> Children { get; private set; }
 	public bool HasChildren => Children != null && Children.Count > 0;
 
+	public float Altitude { get; set; }
+	public float Gravity { get; set; }
+
 	public Emoji()
 	{
 		Text = "";
@@ -118,12 +129,20 @@ public class Emoji
 		}
 	}
 
-	void DrawDebug()
+	public void DrawDebug()
 	{
 		if(IsInteractable && Radius > 0f)
 		{
-			Utils.DrawCircle(GetRotatedPos(), Radius, 7, Stage.CurrentTime * 4f, Color.White.WithAlpha(0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
-			//Utils.DrawCircle(Position, Radius, 12, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(GetRotatedPos(), Radius, 10, Stage.CurrentTime * 4f, new Color(0.6f, 1f, 0.6f, 0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+			Utils.DrawCircle(Position, Radius, 10, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+
+			Stage.DrawLine(Position, AnchorPos, 2f, new Color(1f, 0.3f, 0.2f, 0.6f));
+
+			float size = PanelSize;// * Scale;
+			Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
+			Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
+			Stage.DrawLine(Position + new Vector2(-size * 0.5f, size * 0.5f), Position + new Vector2(-size * 0.5f, size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
+			Stage.DrawLine(Position + new Vector2(size * 0.5f, -size * 0.5f), Position + new Vector2(size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
 		}
 	}
 

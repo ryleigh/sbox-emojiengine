@@ -25,8 +25,10 @@ public class FaceEmoji : Emoji
 
 	public ShadowEmoji ShadowEmoji { get; set; }
 
-	public const float FONT_SIZE_MIN = 80f;
-	public const float FONT_SIZE_MAX = 150f;
+	public const float FONT_SIZE_MIN = 140f;
+	public const float FONT_SIZE_MAX = 140f;
+	//public const float FONT_SIZE_MIN = 80f;
+	//public const float FONT_SIZE_MAX = 150f;
 
 	public const float RADIUS_SIZE_FACTOR = 0.56f;
 
@@ -50,6 +52,8 @@ public class FaceEmoji : Emoji
 	private static List<string> _deadFaces = new() { "😲", "😑", "😖", "😣", "😫", "😩", "😯", "😵", "😔", "😞", };
 
 	public bool IsCivilian { get; private set; }
+
+	public Emoji HeldItem { get; set; }
 
 	//private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 	//		"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
@@ -110,11 +114,11 @@ public class FaceEmoji : Emoji
 		}
 
 		//float depthScale = Utils.Map(MathX.CeilToInt(Position.y / 100f) * 100f, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
-		//float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
-		float depthScale = 1f;
+		float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.8f, 0.2f);
+		//float depthScale = 1f;
 
 		float deathScale = (IsDead ? Utils.Map(TimeSinceDeath, 0f, 10f, 1f, 0.9f) : 1f);
-		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * deathScale, 0.3f, dt);
+		//Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * deathScale, 0.3f, dt);
 
 		Degrees += Velocity.x * 0.1f * dt;
 
@@ -135,7 +139,7 @@ public class FaceEmoji : Emoji
 			//ShadowEmoji.ScaleX = 1f - ScaleX;
 			//ShadowEmoji.ScaleY = 1f - ScaleY;
 			ShadowEmoji.Degrees = _targetDeathDegrees;
-			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -40f) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -80f * Scale) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 
 			Brightness = Utils.Map(TimeSinceDeath, 0f, 9f, 1f, _deathBrightness);
 			Sepia = Utils.Map(TimeSinceDeath, 0f, 15f, 0f, _deathSepia);
@@ -149,11 +153,13 @@ public class FaceEmoji : Emoji
 			Velocity += Utils.GetRandomVector() * 1200f * dt;
 			ShadowEmoji.ScaleX = ScaleX * 1.25f;
 			ShadowEmoji.ScaleY = ScaleY * 0.8f;
-			ShadowEmoji.Degrees = Degrees * 0.2f;
-			ShadowEmoji.Position = Position + new Vector2(Degrees * 0.4f, -40f) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Degrees = 0f;// Degrees * 0.2f;
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -80f * Scale) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 		}
 
-		Position += Velocity * dt;
+		//Position += Velocity * dt;
+		//Position = new Vector2(Position.x, Utils.Map(Utils.FastSin(TimeSinceSpawn * 0.6f), -1f, 1f, 300f, Hud.Instance.ScreenHeight - 50f));
+
 		float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
 		Velocity *= (1f - deceleration * dt);
 
@@ -161,14 +167,19 @@ public class FaceEmoji : Emoji
 
 		ZIndex = Hud.Instance.GetZIndex(GetRotatedPos().y);
 
+		//TransformOriginY = 0.5f + Utils.FastSin(TimeSinceSpawn) * 0.5f;
 		//Blur = Utils.Map(y, centerY, y < centerY ? 0f : height, 0f, 10f, EasingType.QuadIn);
 
-		//if(HeldItem != null)
-		//{
-		//	HeldItem.Position = Position + new Vector2(-Radius * 0.7f, -Radius * 0.5f);
-		//	HeldItem.ZIndex = ZIndex + Globals.DEPTH_INCREASE_HELD;
-		//	HeldItem.Degrees = Degrees;
-		//}
+		if(HeldItem != null)
+		{
+			HeldItem.Position = GetRotatedPos(Position + new Vector2(-Radius * 0.9f, -Radius * 0.5f));
+			HeldItem.ZIndex = ZIndex + Globals.DEPTH_INCREASE_HELD;
+			HeldItem.Degrees = Utils.DynamicEaseTo(HeldItem.Degrees, 180f + 25f + Degrees, 0.2f, dt);
+		}
+
+		DrawDebug();
+
+		//DebugText = $"{Altitude}";
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
@@ -222,6 +233,12 @@ public class FaceEmoji : Emoji
 
 		if(!IsCivilian)
 			Text = _deadFaces[Game.Random.Int(0, _deadFaces.Count - 1)];
+
+		if(HeldItem != null)
+		{
+			RemoveChild(HeldItem);
+			HeldItem = null;
+		}
 	}
 
 	void DetermineRotVars()

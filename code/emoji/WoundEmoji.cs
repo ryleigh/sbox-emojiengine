@@ -134,7 +134,7 @@ public class WoundEmoji : Emoji
 		spray.FlipX = dir.x < 0f;
 		spray.Degrees = -Utils.VectorToDegrees(Position - parentPos) + (spray.FlipX ? 180f : 0f);
 		spray.RotateSpeed = Game.Random.Float(140f, 350f) * Utils.Map(MathF.Abs(dir.y), 0f, 1f, 1f, 0f) * (spray.FlipX ? -1f : 1f);
-		spray.Gravity = Utils.Map(MathF.Abs(dir.y), 0f, 1f, 1500f, 500f) * Game.Random.Float(0.9f, 1.1f);
+		spray.GravityModifier = Utils.Map(MathF.Abs(dir.y), 0f, 1f, 1.5f, 0.5f) * Game.Random.Float(0.9f, 1.1f);
 		spray.GroundYPos = face != null ? parentPos.y - face.Radius * 1.25f : -999f;
 	}
 
@@ -151,7 +151,6 @@ public class WoundEmoji : Emoji
 		BloodDripEmoji drip = Stage.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
 		AddChild(drip);
 		drip.ZIndex = ZIndex + 1;
-		drip.Gravity = Game.Random.Float(900f, 1400f);
 		drip.WoundPosLast = Position;
 		drip.GroundYPos = face != null ? face.GetRotatedPos().y - face.Radius * 1.25f : -999f;
 	}

@@ -18,8 +18,6 @@ public class BloodDripEmoji : Emoji
 	public float TargetDegrees { get; set; }
 	private float _scale;
 
-	public float Gravity { get; set; }
-
 	public Vector2 WoundPosLast { get; set; }
 
 	public float GroundYPos { get; set; }
@@ -66,7 +64,7 @@ public class BloodDripEmoji : Emoji
 		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.2f, _scale, EasingType.QuadOut);
 		ScaleY = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.5f, 1f, 1.2f, EasingType.QuadIn);
 
-		Position += (Velocity + _gravityVelocity) * dt;
+		Position += (Velocity + new Vector2(0f, Gravity)) * dt;
 		Velocity *= (1f - 7f * dt);
 
 		if(GroundYPos > 0f && Position.y < GroundYPos)
@@ -80,7 +78,7 @@ public class BloodDripEmoji : Emoji
 			return;
 		}
 
-		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
+		Gravity += Globals.GRAVITY_ACCEL * dt;
 
 		if(TimeSinceSpawn > Lifetime)
 			Stage.RemoveEmoji(this);

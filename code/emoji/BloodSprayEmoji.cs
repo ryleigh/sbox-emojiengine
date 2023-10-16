@@ -17,7 +17,7 @@ public class BloodSprayEmoji : Emoji
 
 	private float _scale;
 
-	public float Gravity { get; set; }
+	public float GravityModifier { get; set; }
 
 	public float GroundYPos { get; set; }
 	public float RotateSpeed { get; set; }
@@ -52,7 +52,7 @@ public class BloodSprayEmoji : Emoji
 		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.QuadIn);
 		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0.5f, _scale, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.2f, 0.9f));
 
-		Position += (Velocity + _gravityVelocity) * dt;
+		Position += (Velocity + new Vector2(0f, Gravity)) * dt;
 		Velocity *= (1f - 7f * dt);
 
 		Degrees += RotateSpeed * dt;
@@ -72,7 +72,7 @@ public class BloodSprayEmoji : Emoji
 			return;
 		}
 
-		_gravityVelocity += new Vector2(0f, -1f) * Gravity * dt;
+		Gravity += Globals.GRAVITY_ACCEL * GravityModifier * dt;
 
 		if(TimeSinceSpawn > Lifetime)
 			Stage.RemoveEmoji(this);

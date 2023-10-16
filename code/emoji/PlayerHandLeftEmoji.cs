@@ -70,7 +70,7 @@ public class PlayerHandLeftEmoji : Emoji
 		_currKickbackAmount = Utils.DynamicEaseTo(_currKickbackAmount, Utils.Map(TimeSinceShoot, 0f, 0.5f, _kickbackDistance, 0f, EasingType.QuadOut), 0.6f, dt);
 
 		Blur = Utils.Map(TimeSinceShoot, 0f, 0.3f, 15f, 3f, EasingType.QuadOut);
-		Opacity = Utils.Map(TimeSinceShoot, 0f, 0.7f, 0.5f, 1f, EasingType.QuadOut);
+		Opacity = Utils.Map(TimeSinceShoot, 0f, 0.7f, 0.5f, 1f, EasingType.QuadOut) * 0.05f;
 		ScaleX = Utils.Map(TimeSinceShoot, 0f, 0.3f, 0.8f, 1f, EasingType.QuadOut);
 		ScaleY = Utils.Map(TimeSinceShoot, 0f, 0.5f, 1.2f, 1f, EasingType.QuadOut);
 	}

@@ -21,4 +21,6 @@ public static class Globals
 	public const int DEPTH_CROSSHAIR = 99995;
 
 	public const int DEPTH_PLAYER_MUZZLE_LINE = 99989;
+
+	public const float GRAVITY_ACCEL = -1500f;
 }

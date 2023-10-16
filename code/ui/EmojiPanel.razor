@@ -24,8 +24,8 @@
 </style>
 
 <root style="
-		left: @(Emoji.Position.x - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.x - Hud.Instance.CameraOffset.x)px;
-		bottom: @(Emoji.Position.y - Emoji.PanelSize * 0.5f + Emoji.SpriteOffset.y - Hud.Instance.CameraOffset.y)px;
+		left: @((Emoji.Position.x - Emoji.PanelSize * 0.5f) + (Emoji.SpriteOffset.x * Emoji.Scale) - Hud.Instance.CameraOffset.x)px;
+		bottom: @((Emoji.Position.y - Emoji.PanelSize * 0.5f) + (Emoji.SpriteOffset.y * Emoji.Scale) - Hud.Instance.CameraOffset.y + Emoji.Altitude)px;
 		font-size: @(Emoji.FontSize)px;
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);

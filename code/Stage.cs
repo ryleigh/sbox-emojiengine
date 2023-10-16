@@ -49,16 +49,42 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		for(int i = 0; i < 35; i++)
-		{
-			//var emoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(BOUNDS_BUFFER, ScreenWidth - BOUNDS_BUFFER), Game.Random.Float(BOUNDS_BUFFER, ScreenHeight - BOUNDS_BUFFER)));
-			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
+		FaceEmoji face1 = AddEmoji(new FaceEmoji(), new Vector2(200f, 700f)) as FaceEmoji;
+		face1.Scale = 0.25f;
 
-			//if(Game.Random.Float(0f, 1f) < 0.3f)
-			//faceEmoji.AddChild(AddEmoji(new KnifeEmoji()));
+		FaceEmoji face1b = AddEmoji(new FaceEmoji(), new Vector2(200f, 300f)) as FaceEmoji;
+		face1b.Scale = 0.1f;
+
+		FaceEmoji face1c = AddEmoji(new FaceEmoji(), new Vector2(400f, 300f)) as FaceEmoji;
+		face1c.Scale = 0.33f;
+
+		FaceEmoji face2 = AddEmoji(new FaceEmoji(), new Vector2(400f, 700f)) as FaceEmoji;
+		face2.Scale = 0.5f;
+
+		FaceEmoji face3 = AddEmoji(new FaceEmoji(), new Vector2(700f, 700f)) as FaceEmoji;
+		face3.Scale = 1f;
+
+		FaceEmoji face4 = AddEmoji(new FaceEmoji(), new Vector2(1100f, 700f)) as FaceEmoji;
+		face4.Scale = 1.333333f;
+
+		FaceEmoji face5 = AddEmoji(new FaceEmoji(), new Vector2(1600f, 700f)) as FaceEmoji;
+		face5.Scale = 2.5f;
+
+
+		for(int i = 0; i < 1; i++)
+		{
+			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
+			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;
+
+			//if(Game.Random.Float(0f, 1f) < 0.7f)
+			//{
+			//	var knife = AddEmoji(new KnifeEmoji());
+			//	faceEmoji.AddChild(knife);
+			//	faceEmoji.HeldItem = knife;
+			//}
 		}
 
-		AddEmoji(new KnifeEmoji(), new Vector2(800f, 800f));
+		//AddEmoji(new KnifeEmoji(), new Vector2(800f, 800f));
 	}
 
 	public void Update(float dt)
@@ -86,7 +112,7 @@ public class Stage
 
 	void HandleEmoji(float dt)
 	{
-		// ALL EMOJI (need to update child emoji after their parents, so the depths etc can be set correctly)
+		// ALL EMOJI (need to update child emoji after their parents, so the zindex/position/etc can be set correctly)
 		for(int i = Emojis.Count - 1; i >= 0; i--)
 		{
 			var emoji = Emojis[i];
@@ -110,6 +136,8 @@ public class Stage
 		for(int i = InteractableEmojis.Count - 1; i >= 0; i--)
 		{
 			var emoji = InteractableEmojis[i];
+
+			// mouse hover
 			emoji.IsHovered = false;
 			var radius = emoji.Radius * RADIUS_REPEL_SCALE;
 
@@ -120,10 +148,10 @@ public class Stage
 					AllHoveredEmojis.Add(emoji);
 			}
 
+			// repel
 			if(emoji.Parent != null)
 				continue;
 
-			// repel
 			for(int j = InteractableEmojis.Count - 1; j >= 0; j--)
 			{
 				var other = InteractableEmojis[j];
@@ -264,6 +292,11 @@ public class Stage
 	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
 		Lines.Add(new LineData(posA, posB, thickness, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
+	}
+
+	public void DrawLineTo(Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
+	{
+		Lines.Add(new LineData(new Vector2(5f, 5f), posB, thickness, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}
 
 	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = 0)
