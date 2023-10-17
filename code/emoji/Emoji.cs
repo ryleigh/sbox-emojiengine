@@ -90,7 +90,7 @@ public class Emoji
 	public float Altitude { get; set; }
 	public float Gravity { get; set; }
 
-	internal Vector2 PanelPos => Position - PanelSize * 0.5f + SpriteOffset * Scale - Hud.Instance.CameraOffset + new Vector2( 0f, Altitude );
+	internal Vector2 PanelPos => GetRotatedPos() - PanelSize * 0.5f + SpriteOffset * Scale - Hud.Instance.CameraOffset + new Vector2( 0f, Altitude );
 	internal Vector2 PanelScale => new Vector2( ScaleX * (FlipX ? -1f : 1f), ScaleY ) * Scale;
 
 	public Emoji()

@@ -30,10 +30,8 @@
 		opacity: @(Emoji.Opacity);
 		z-index: @(Emoji.ZIndex);
 		transform:
-			scale(@(Emoji.PanelScale.x), @(Emoji.PanelScale.y))
-			translate(@(Emoji.TransformOriginX * 100 - 50)% @(Emoji.TransformOriginY * 100 - 50)%)
 			rotate(@(Emoji.Degrees)deg)
-			translate(@(50 - Emoji.TransformOriginX * 100)% @(50 - Emoji.TransformOriginY * 100)%);
+			scale(@(Emoji.PanelScale.x) @(Emoji.PanelScale.y));
 		width: @(Emoji.PanelSize)px;
 		height: @(Emoji.PanelSize)px;
 		text-stroke: @(Emoji.TextStroke)px @Emoji.TextStrokeColor.Rgba;
