@@ -28,7 +28,7 @@ public class WoundEmoji : Emoji
 		ScaleX = Game.Random.Float(1f, 1.1f);
 		ScaleY = Game.Random.Float(0.9f, 1f);
 		Lifetime = Game.Random.Float(6f, 6.5f);
-		PanelSizeFactor = 2f;
+		PanelSizeFactor = 2.2f;
 		Degrees = _startDegrees = Game.Random.Float(0, 360f);
 
 		float rand = Game.Random.Float(0f, 1f);
@@ -124,7 +124,7 @@ public class WoundEmoji : Emoji
 
 		face.BloodAmountLeft -= 1;
 
-		var parentPos = face.GetRotatedPos();
+		var parentPos = face.GetRotatedPos(); // + Altitude?
 
 		BloodSprayEmoji spray = Stage.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
 		spray.ZIndex = ZIndex + 2;

@@ -114,11 +114,11 @@ public class FaceEmoji : Emoji
 		}
 
 		//float depthScale = Utils.Map(MathX.CeilToInt(Position.y / 100f) * 100f, 0f, Hud.Instance.ScreenHeight, 2f, 0.2f);
-		float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.8f, 0.2f);
+		float depthScale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
 		//float depthScale = 1f;
 
 		float deathScale = (IsDead ? Utils.Map(TimeSinceDeath, 0f, 10f, 1f, 0.9f) : 1f);
-		//Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * deathScale, 0.3f, dt);
+		Scale = Utils.DynamicEaseTo(Scale, depthScale * _pokedScale * deathScale, 0.3f, dt);
 
 		Degrees += Velocity.x * 0.1f * dt;
 
@@ -157,7 +157,7 @@ public class FaceEmoji : Emoji
 			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -80f * Scale) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
 		}
 
-		//Position += Velocity * dt;
+		Position += Velocity * dt;
 		//Position = new Vector2(Position.x, Utils.Map(Utils.FastSin(TimeSinceSpawn * 0.6f), -1f, 1f, 300f, Hud.Instance.ScreenHeight - 50f));
 
 		float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
@@ -177,7 +177,7 @@ public class FaceEmoji : Emoji
 			HeldItem.Degrees = Utils.DynamicEaseTo(HeldItem.Degrees, 180f + 25f + Degrees, 0.2f, dt);
 		}
 
-		DrawDebug();
+		//DrawDebug();
 
 		//DebugText = $"{Altitude}";
 
@@ -211,7 +211,7 @@ public class FaceEmoji : Emoji
 		{
 			Degrees = 0f;
 			DetermineRotVars();
-			Stage.TimeScale = Game.Random.Float(0.1f, 0.5f);
+			Stage.TimeScale = MathF.Min(Game.Random.Float(0.1f, 0.5f), Stage.TimeScale);
 			Die();
 		}
 	}

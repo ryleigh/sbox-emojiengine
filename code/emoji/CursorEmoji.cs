@@ -21,7 +21,7 @@ public partial class CursorEmoji : Emoji
 
 	private float _bounceScale;
 
-	public bool IsHoveringSomething => Stage.AllHoveredEmojis.Count() > 0;
+	//public bool IsHoveringSomething => Stage.AllHoveredEmojis.Count() > 0;
 
 	public override void Init()
 	{
@@ -56,7 +56,7 @@ public partial class CursorEmoji : Emoji
 		Position = Hud.Instance.MousePos + new Vector2(-13f, -28f) + (IsDragging ? new Vector2(8f, 0f) : Vector2.Zero);
 		SpriteOffset = CurrSpriteOffset + (Hud.Instance.MouseDownLeft ? new Vector2(0f, 4f) : new Vector2(0f, 0f));
 
-		var hoveringScale = IsHoveringSomething ? 1.1f : 1f;
+		var hoveringScale = 1f;// IsHoveringSomething ? 1.1f : 1f;
 		Scale = Utils.DynamicEaseTo(Scale, _bounceScale * hoveringScale, 0.8f, dt);
 
 		Degrees = Utils.DynamicEaseTo(Degrees, Math.Clamp(dX * 2.2f, -40f, 40f), 0.65f, dt);
@@ -84,8 +84,8 @@ public partial class CursorEmoji : Emoji
 
 		if(!IsDragging)
 		{
-			Text = IsHoveringSomething ? "👆" : "☝️";
-			CurrSpriteOffset = IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
+			Text = "☝️";// IsHoveringSomething ? "👆" : "☝️";
+			CurrSpriteOffset = new Vector2(0f, 0f);// IsHoveringSomething ? new Vector2(22f, 0f) : new Vector2(0f, 0f);
 		}
 	}
 

@@ -43,7 +43,7 @@ public class BulletHoleEmoji : Emoji
 		Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _brightnessTime, _brightness, 0f, EasingType.QuadOut);
 		ZIndex = (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime * _brightnessTime, -4000f, -4500f, EasingType.QuadOut);
 		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 3f, EasingType.QuadOut);
-		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * (Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, 1.25f, 0.75f));
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut) * Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE); ;
 
 		TextStroke = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.1f, 8f, 0f, EasingType.ExpoOut);
 		TextStrokeColor = new Color(1f, Game.Random.Float(0f, 1f), 0f);

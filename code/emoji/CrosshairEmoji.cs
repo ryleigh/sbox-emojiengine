@@ -90,6 +90,8 @@ public partial class CrosshairEmoji : Emoji
 		float saturation = Utils.Map(TimeSinceShoot, 0f, 1f, 10f, 1f);
 		float blur = Utils.Map(TimeSinceShoot, 0f, 0.5f, 3f, 1f);
 
+		_length = 0f;
+
 		Stage.DrawLine(CenterPos - new Vector2(_gap, 0f), CenterPos - new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
 		Stage.DrawLine(CenterPos + new Vector2(_gap, 0f), CenterPos + new Vector2(_gap + _length, 0f), _width, color, 0f, ZIndex, invert, saturation, blur);
 		Stage.DrawLine(CenterPos - new Vector2(0f, _gap), CenterPos - new Vector2(0f, _gap + _length), _width, color, 0f, ZIndex, invert, saturation, blur);
@@ -117,14 +119,20 @@ public partial class CrosshairEmoji : Emoji
 		var aimPos = Position + _recoilOffset;
 		var hitPos = aimPos + Game.Random.Float(0f, _gap) * Utils.GetRandomVector();
 
+		hitPos = Hud.Instance.MousePos;
+
 		if(Stage.Raycast(hitPos, out List<Emoji> hitEmojis))
 		{
 			var emoji = hitEmojis[0];
 
-			float HOLE_SIZE = 20f * emoji.Scale;
-			var facePos = emoji.GetRotatedPos();
-			if((hitPos - facePos).LengthSquared > MathF.Pow(emoji.Radius - HOLE_SIZE, 2f))
-				hitPos = facePos + (hitPos - facePos).Normal * (emoji.Radius - HOLE_SIZE);
+			// move in from edge of face
+			if(emoji is FaceEmoji)
+			{
+				float HOLE_SIZE = 20f * emoji.Scale;
+				var facePos = emoji.GetRotatedPos();
+				if((hitPos - facePos).LengthSquared > MathF.Pow(emoji.Radius - HOLE_SIZE, 2f))
+					hitPos = facePos + (hitPos - facePos).Normal * (emoji.Radius - HOLE_SIZE);
+			}
 
 			emoji.Hit(hitPos);
 		}

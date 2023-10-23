@@ -45,6 +45,10 @@ public class Emoji
 
 		return AnchorPos + Utils.RotateVector(pos - AnchorPos, -Degrees);
 	}
+	//public Vector2 GetRotatedPoint(Vector2 pos, float degrees)
+	//{
+	//	return Position + Utils.RotateVector(pos - Position, degrees);
+	//}
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
@@ -90,8 +94,11 @@ public class Emoji
 	public float Altitude { get; set; }
 	public float Gravity { get; set; }
 
-	internal Vector2 PanelPos => GetRotatedPos() - PanelSize * 0.5f + SpriteOffset * Scale - Hud.Instance.CameraOffset + new Vector2( 0f, Altitude );
-	internal Vector2 PanelScale => new Vector2( ScaleX * (FlipX ? -1f : 1f), ScaleY ) * Scale;
+	internal Vector2 PanelPos => GetRotatedPos() - PanelSize * 0.5f + SpriteOffset * Scale - Hud.Instance.CameraOffset + new Vector2(0f, Altitude);
+	internal Vector2 PanelScale => new Vector2(ScaleX * (FlipX ? -1f : 1f), ScaleY) * Scale;
+
+	public Vector2 HitRectSize { get; set; }
+	public float HitRectDegrees { get; set; }
 
 	public Emoji()
 	{
@@ -136,16 +143,60 @@ public class Emoji
 	{
 		if(IsInteractable && Radius > 0f)
 		{
-			Utils.DrawCircle(GetRotatedPos(), Radius, 10, Stage.CurrentTime * 4f, new Color(0.6f, 1f, 0.6f, 0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
-			Utils.DrawCircle(Position, Radius, 10, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+			//float size = PanelSize;// * Scale;
+			//Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
+			//Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
+			//Stage.DrawLine(Position + new Vector2(-size * 0.5f, size * 0.5f), Position + new Vector2(-size * 0.5f, size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
+			//Stage.DrawLine(Position + new Vector2(size * 0.5f, -size * 0.5f), Position + new Vector2(size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
 
-			Stage.DrawLine(Position, AnchorPos, 2f, new Color(1f, 0.3f, 0.2f, 0.6f));
+			if(HitRectSize.LengthSquared > 0f)
+			{
+				GetHitRect(out var bl, out var br, out var tl, out var tr, rotated: false, withAltitude: false);
+				Stage.DrawLine(bl, br, 3f, new Color(0f, 0f, 0f, 0.3f));
+				Stage.DrawLine(br, tr, 3f, new Color(0f, 0f, 0f, 0.3f));
+				Stage.DrawLine(tr, tl, 3f, new Color(0f, 0f, 0f, 0.3f));
+				Stage.DrawLine(tl, bl, 3f, new Color(0f, 0f, 0f, 0.3f));
 
-			float size = PanelSize;// * Scale;
-			Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
-			Stage.DrawLine(Position + new Vector2(-size * 0.5f, -size * 0.5f), Position + new Vector2(-size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
-			Stage.DrawLine(Position + new Vector2(-size * 0.5f, size * 0.5f), Position + new Vector2(-size * 0.5f, size * 0.5f) + new Vector2(size, 0f), 4f, new Color(0f, 0f, 0f, 0.5f));
-			Stage.DrawLine(Position + new Vector2(size * 0.5f, -size * 0.5f), Position + new Vector2(size * 0.5f, -size * 0.5f) + new Vector2(0f, size), 4f, new Color(0f, 0f, 0f, 0.5f));
+				GetHitRect(out var blR, out var brR, out var tlR, out var trR, rotated: true);
+				Stage.DrawLine(blR, brR, 3f, new Color(1f, 0f, 0f, 0.3f));
+				Stage.DrawLine(brR, trR, 3f, new Color(1f, 0f, 0f, 0.3f));
+				Stage.DrawLine(trR, tlR, 3f, new Color(1f, 0f, 0f, 0.3f));
+				Stage.DrawLine(tlR, blR, 3f, new Color(1f, 0f, 0f, 0.3f));
+
+				Utils.DrawCircle(GetRotatedPos() + new Vector2(0f, Altitude), MathF.Max(HitRectSize.x * 0.5f, HitRectSize.y * 0.5f), 16, Stage.CurrentTime * 2f, new Color(0.6f, 0.6f, 0.6f, 0.2f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+			}
+
+			else
+			{
+				Utils.DrawCircle(GetRotatedPos() + new Vector2(0f, Altitude), Radius, 10, Stage.CurrentTime * 4f, new Color(0.6f, 1f, 0.6f, 0.6f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+				Utils.DrawCircle(Position, Radius, 10, Stage.CurrentTime, Color.White.WithAlpha(0.1f), width: 1f, lifetime: 0f, zIndex: ZIndex + 1);
+
+				Stage.DrawLine(Position, AnchorPos, 2f, new Color(1f, 0.3f, 0.2f, 0.6f));
+			}
+		}
+	}
+
+	public void GetHitRect(out Vector2 botLeft, out Vector2 botRight, out Vector2 topLeft, out Vector2 topRight, bool rotated = true, bool withAltitude = true)
+	{
+		float w = HitRectSize.x * Scale;
+		float h = HitRectSize.y * Scale;
+
+		var pos = GetRotatedPos();
+		var altitude = withAltitude ? new Vector2(0f, Altitude) : Vector2.Zero;
+
+		if(rotated)
+		{
+			botLeft = pos + Utils.RotateVector(new Vector2(-w * 0.5f, -h * 0.5f), -Degrees + HitRectDegrees) + altitude;
+			botRight = pos + Utils.RotateVector(new Vector2(w * 0.5f, -h * 0.5f), -Degrees + HitRectDegrees) + altitude;
+			topLeft = pos + Utils.RotateVector(new Vector2(-w * 0.5f, h * 0.5f), -Degrees + HitRectDegrees) + altitude;
+			topRight = pos + Utils.RotateVector(new Vector2(w * 0.5f, h * 0.5f), -Degrees + HitRectDegrees) + altitude;
+		}
+		else
+		{
+			botLeft = pos + new Vector2(-w * 0.5f, -h * 0.5f) + altitude;
+			botRight = pos + new Vector2(w * 0.5f, -h * 0.5f) + altitude;
+			topLeft = pos + new Vector2(-w * 0.5f, h * 0.5f) + altitude;
+			topRight = pos + new Vector2(w * 0.5f, h * 0.5f) + altitude;
 		}
 	}
 
@@ -183,6 +234,40 @@ public class Emoji
 			Position = new Vector2(Position.x, Hud.Instance.ScreenHeight - Hud.BOUNDS_BUFFER);
 			Velocity = new Vector2(Velocity.x, -MathF.Abs(Velocity.y));
 		}
+	}
+
+	public bool ContainsPoint(Vector2 point)
+	{
+		point -= new Vector2(0f, Altitude);
+
+		//var offsetPos = GetRotatedPos();
+		var distSqr = (point - Position).LengthSquared;
+
+		if(HitRectSize.LengthSquared > 0f)
+		{
+			if(distSqr < MathF.Pow(MathF.Max(HitRectSize.x * 0.5f, HitRectSize.y * 0.5f), 2f))
+			{
+				//var unrotatedPoint = GetRotatedPoint(point, -Degrees - HitRectDegrees);
+				var unrotatedPoint = Position + Utils.RotateVector(point - Position, -HitRectDegrees + Degrees);
+
+				GetHitRect(out var botLeft, out var botRight, out var topLeft, out var topRight, rotated: false, withAltitude: false);
+				float xMin = botLeft.x;
+				float xMax = botRight.x;
+				float yMin = botLeft.y;
+				float yMax = topRight.y;
+
+				bool doesContain = unrotatedPoint.x > xMin && unrotatedPoint.x < xMax && unrotatedPoint.y > yMin && unrotatedPoint.y < yMax;
+				Stage.DrawPoint(unrotatedPoint, doesContain ? Color.Red : new Color(0.1f, 0.1f, 0.1f, 0.8f), 1f);
+
+				return doesContain;
+			}
+		}
+		else
+		{
+			return distSqr < MathF.Pow(Radius, 2f);
+		}
+
+		return false;
 	}
 
 	public virtual void Hit(Vector2 hitPos)

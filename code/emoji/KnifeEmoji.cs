@@ -24,6 +24,8 @@ public class KnifeEmoji : Emoji
 		Text = "🔪";
 		SetFontSize(120f);
 		Radius = FontSize * 0.3f;
+		HitRectSize = new Vector2(60f, 160f);
+		HitRectDegrees = 45f;
 
 		ShadowEmoji = Stage.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f)) as ShadowEmoji;
 		ShadowEmoji.SetFontSize(FontSize * 0.8f);
@@ -50,11 +52,11 @@ public class KnifeEmoji : Emoji
 
 				Degrees += 1500f * dt;
 
-				while(Degrees > 180f)
-					Degrees -= 180f;
+				while(Degrees > 360f)
+					Degrees -= 360f;
 
-				while(Degrees < -180f)
-					Degrees += 180f;
+				while(Degrees < -360f)
+					Degrees += 360f;
 			}
 			else
 			{
@@ -72,8 +74,6 @@ public class KnifeEmoji : Emoji
 
 			ZIndex = Hud.Instance.GetZIndex(Position.y);
 
-			
-
 			ShadowEmoji.Position = Position + new Vector2(0f, -25f);
 		}
 		else
@@ -81,12 +81,21 @@ public class KnifeEmoji : Emoji
 			ShadowEmoji.Position = Position + new Vector2(0f, -45f);
 		}
 
+		Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
+
 		ShadowEmoji.Text = Text;
 		ShadowEmoji.ScaleX = ScaleX * 1.25f * Utils.Map(Altitude, 0f, 600f, 1f, 1.2f);
 		ShadowEmoji.ScaleY = ScaleY * 0.8f * Utils.Map(Altitude, 0f, 600f, 1f, 0.8f);
 		ShadowEmoji.Degrees = Degrees;
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
+
+		//Altitude = 120f;
+
+		//Degrees += 1f;
+		//Degrees = 25f;
+
+		DrawDebug();
 	}
 
 	public override void Hit(Vector2 hitPos)
@@ -102,7 +111,11 @@ public class KnifeEmoji : Emoji
 			}
 		}
 
-		Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+		//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+
+		ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
+
+		Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
 
 		Gravity = 600f;
 	}

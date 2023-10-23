@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public class Stage
 	public List<Emoji> Emojis { get; private set; }
 	public List<Emoji> InteractableEmojis { get; private set; }
 	public List<Emoji> AllHoveredEmojis { get; private set; }
-	public Emoji HoveredEmoji { get; private set; }
+	//public Emoji HoveredEmoji { get; private set; }
 
 	public Color BgColorBottom { get; set; }
 	public Color BgColorTop { get; set; }
@@ -30,7 +31,7 @@ public class Stage
 	{
 		Emojis = new();
 		InteractableEmojis = new();
-		AllHoveredEmojis = new();
+		//AllHoveredEmojis = new();
 		Lines = new();
 		Rings = new();
 	}
@@ -39,7 +40,7 @@ public class Stage
 	{
 		Emojis.Clear();
 		InteractableEmojis.Clear();
-		AllHoveredEmojis.Clear();
+		//AllHoveredEmojis.Clear();
 		Lines.Clear();
 		Rings.Clear();
 
@@ -49,42 +50,42 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		FaceEmoji face1 = AddEmoji(new FaceEmoji(), new Vector2(200f, 700f)) as FaceEmoji;
-		face1.Scale = 0.25f;
+		//FaceEmoji face1 = AddEmoji(new FaceEmoji(), new Vector2(200f, 700f)) as FaceEmoji;
+		//face1.Scale = 0.25f;
 
-		FaceEmoji face1b = AddEmoji(new FaceEmoji(), new Vector2(200f, 300f)) as FaceEmoji;
-		face1b.Scale = 0.1f;
+		//FaceEmoji face1b = AddEmoji(new FaceEmoji(), new Vector2(200f, 300f)) as FaceEmoji;
+		//face1b.Scale = 0.1f;
 
-		FaceEmoji face1c = AddEmoji(new FaceEmoji(), new Vector2(400f, 300f)) as FaceEmoji;
-		face1c.Scale = 0.33f;
+		//FaceEmoji face1c = AddEmoji(new FaceEmoji(), new Vector2(400f, 300f)) as FaceEmoji;
+		//face1c.Scale = 0.33f;
 
-		FaceEmoji face2 = AddEmoji(new FaceEmoji(), new Vector2(400f, 700f)) as FaceEmoji;
-		face2.Scale = 0.5f;
+		//FaceEmoji face2 = AddEmoji(new FaceEmoji(), new Vector2(400f, 700f)) as FaceEmoji;
+		//face2.Scale = 0.5f;
 
-		FaceEmoji face3 = AddEmoji(new FaceEmoji(), new Vector2(700f, 700f)) as FaceEmoji;
-		face3.Scale = 1f;
+		//FaceEmoji face3 = AddEmoji(new FaceEmoji(), new Vector2(700f, 700f)) as FaceEmoji;
+		//face3.Scale = 1f;
 
-		FaceEmoji face4 = AddEmoji(new FaceEmoji(), new Vector2(1100f, 700f)) as FaceEmoji;
-		face4.Scale = 1.333333f;
+		//FaceEmoji face4 = AddEmoji(new FaceEmoji(), new Vector2(1100f, 700f)) as FaceEmoji;
+		//face4.Scale = 1.333333f;
 
-		FaceEmoji face5 = AddEmoji(new FaceEmoji(), new Vector2(1600f, 700f)) as FaceEmoji;
-		face5.Scale = 2.5f;
+		//FaceEmoji face5 = AddEmoji(new FaceEmoji(), new Vector2(1600f, 700f)) as FaceEmoji;
+		//face5.Scale = 2.5f;
 
 
 		for(int i = 0; i < 1; i++)
 		{
 			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
-			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;
+			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;
 
-			//if(Game.Random.Float(0f, 1f) < 0.7f)
-			//{
-			//	var knife = AddEmoji(new KnifeEmoji());
-			//	faceEmoji.AddChild(knife);
-			//	faceEmoji.HeldItem = knife;
-			//}
+			if(Game.Random.Float(0f, 1f) < 0.3f)
+			{
+				var knife = AddEmoji(new KnifeEmoji());
+				faceEmoji.AddChild(knife);
+				faceEmoji.HeldItem = knife;
+			}
 		}
 
-		//AddEmoji(new KnifeEmoji(), new Vector2(800f, 800f));
+		AddEmoji(new KnifeEmoji(), new Vector2(1000f, 600f));
 	}
 
 	public void Update(float dt)
@@ -128,7 +129,7 @@ public class Stage
 
 		// INTERACTABLE EMOJI ONLY
 		var mousePos = Hud.Instance.MousePos;
-		AllHoveredEmojis.Clear();
+		//AllHoveredEmojis.Clear();
 
 		float RADIUS_REPEL_SCALE = 0.8f;
 		float REPEL_STRENGTH = 220f;
@@ -138,15 +139,15 @@ public class Stage
 			var emoji = InteractableEmojis[i];
 
 			// mouse hover
-			emoji.IsHovered = false;
+			//emoji.IsHovered = false;
 			var radius = emoji.Radius * RADIUS_REPEL_SCALE;
 
-			if(emoji.Radius > 0f)
-			{
-				var distSqr = (mousePos - emoji.GetRotatedPos()).LengthSquared;
-				if(distSqr < MathF.Pow(emoji.Radius, 2f))
-					AllHoveredEmojis.Add(emoji);
-			}
+			//if(emoji.Radius > 0f)
+			//{
+			//	var distSqr = (mousePos - (emoji.GetRotatedPos() + new Vector2(0f, emoji.Altitude))).LengthSquared;
+			//	if(distSqr < MathF.Pow(emoji.Radius, 2f))
+			//		AllHoveredEmojis.Add(emoji);
+			//}
 
 			// repel
 			if(emoji.Parent != null)
@@ -176,9 +177,9 @@ public class Stage
 			}
 		}
 
-		HoveredEmoji = AllHoveredEmojis.Count > 0 ? AllHoveredEmojis.OrderByDescending(x => x.ZIndex).First() : null;
-		if(HoveredEmoji != null)
-			HoveredEmoji.IsHovered = true;
+		//HoveredEmoji = AllHoveredEmojis.Count > 0 ? AllHoveredEmojis.OrderByDescending(x => x.ZIndex).First() : null;
+		//if(HoveredEmoji != null)
+		//	HoveredEmoji.IsHovered = true;
 	}
 
 	void UpdateEmojisChildren(Emoji emoji, float dt)
@@ -244,7 +245,7 @@ public class Stage
 	{
 		hitEmojis = Emojis
 			.Where(x => x.IsInteractable)
-			.Where(x => (x.GetRotatedPos() - pos).LengthSquared < MathF.Pow(x.Radius, 2f))
+			.Where(x => x.ContainsPoint(pos))
 			.OrderByDescending(x => x.ZIndex)
 			.ToList();
 
@@ -302,5 +303,10 @@ public class Stage
 	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = 0)
 	{
 		Rings.Add(new RingData(pos, color, CurrentTime, lifetime, zIndex, startRadius, endRadius, startWidth, endWidth, numSegments));
+	}
+
+	public void DrawPoint(Vector2 pos, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
+	{
+		Lines.Add(new LineData(pos - new Vector2(0f, 4f), pos + new Vector2(0f, 4f), 8f, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}
 }

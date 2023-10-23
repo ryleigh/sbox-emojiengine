@@ -94,6 +94,13 @@ public static class Utils
 		return new Vector2(ca * v.x - sa * v.y, sa * v.x + ca * v.y);
 	}
 
+	public static Vector2 RotatePointAround(Vector2 p, Vector2 anchor, float degrees)
+	{
+		var offset = p - anchor;
+		var newVec = RotateVector(offset, degrees);
+		return anchor + newVec;
+	}
+
 	public static Vector2 DegreesToVector(float degrees)
 	{
 		var rads = Deg2Rad * degrees;

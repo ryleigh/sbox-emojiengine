@@ -58,7 +58,9 @@ public class BloodPuddleEmoji : Emoji
 		//Brightness = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 5f, EasingType.Linear);
 		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 12f, EasingType.QuadIn);
 		TextStroke = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 7f, 0f, EasingType.Linear);
-		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(TimeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear);
+		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(TimeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear)
+			* Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE); ;
+
 		ZIndex = -(int)Position.y - (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1000f);
 
 		if(TimeSinceSpawn > Lifetime)

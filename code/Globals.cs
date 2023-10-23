@@ -23,4 +23,7 @@ public static class Globals
 	public const int DEPTH_PLAYER_MUZZLE_LINE = 99989;
 
 	public const float GRAVITY_ACCEL = -1500f;
+
+	public const float NEAR_SCALE = 1.5f;
+	public const float FAR_SCALE = 0.4f;
 }
