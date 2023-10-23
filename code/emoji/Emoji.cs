@@ -45,10 +45,6 @@ public class Emoji
 
 		return AnchorPos + Utils.RotateVector(pos - AnchorPos, -Degrees);
 	}
-	//public Vector2 GetRotatedPoint(Vector2 pos, float degrees)
-	//{
-	//	return Position + Utils.RotateVector(pos - Position, degrees);
-	//}
 	public float Scale { get; set; }
 	public float ScaleX { get; set; }
 	public float ScaleY { get; set; }
@@ -97,7 +93,7 @@ public class Emoji
 	internal Vector2 PanelPos => GetRotatedPos() - PanelSize * 0.5f + SpriteOffset * Scale - Hud.Instance.CameraOffset + new Vector2(0f, Altitude);
 	internal Vector2 PanelScale => new Vector2(ScaleX * (FlipX ? -1f : 1f), ScaleY) * Scale;
 
-	public Vector2 HitRectSize { get; set; }
+	public Vector2 HitRectSize { get; set; } // note: currently only works with things rotating around default anchorpos
 	public float HitRectDegrees { get; set; }
 
 	public Emoji()
@@ -238,16 +234,13 @@ public class Emoji
 
 	public bool ContainsPoint(Vector2 point)
 	{
-		point -= new Vector2(0f, Altitude);
-
-		//var offsetPos = GetRotatedPos();
-		var distSqr = (point - Position).LengthSquared;
-
 		if(HitRectSize.LengthSquared > 0f)
 		{
+			point -= new Vector2(0f, Altitude);
+			var distSqr = (point - Position).LengthSquared;
+
 			if(distSqr < MathF.Pow(MathF.Max(HitRectSize.x * 0.5f, HitRectSize.y * 0.5f), 2f))
 			{
-				//var unrotatedPoint = GetRotatedPoint(point, -Degrees - HitRectDegrees);
 				var unrotatedPoint = Position + Utils.RotateVector(point - Position, -HitRectDegrees + Degrees);
 
 				GetHitRect(out var botLeft, out var botRight, out var topLeft, out var topRight, rotated: false, withAltitude: false);
@@ -257,13 +250,13 @@ public class Emoji
 				float yMax = topRight.y;
 
 				bool doesContain = unrotatedPoint.x > xMin && unrotatedPoint.x < xMax && unrotatedPoint.y > yMin && unrotatedPoint.y < yMax;
-				Stage.DrawPoint(unrotatedPoint, doesContain ? Color.Red : new Color(0.1f, 0.1f, 0.1f, 0.8f), 1f);
-
+				//Stage.DrawPoint(unrotatedPoint, doesContain ? Color.Red : new Color(0.1f, 0.1f, 0.1f, 0.8f), 1f);
 				return doesContain;
 			}
 		}
 		else
 		{
+			var distSqr = (point - GetRotatedPos()).LengthSquared;
 			return distSqr < MathF.Pow(Radius, 2f);
 		}
 

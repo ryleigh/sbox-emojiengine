@@ -50,29 +50,7 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		//FaceEmoji face1 = AddEmoji(new FaceEmoji(), new Vector2(200f, 700f)) as FaceEmoji;
-		//face1.Scale = 0.25f;
-
-		//FaceEmoji face1b = AddEmoji(new FaceEmoji(), new Vector2(200f, 300f)) as FaceEmoji;
-		//face1b.Scale = 0.1f;
-
-		//FaceEmoji face1c = AddEmoji(new FaceEmoji(), new Vector2(400f, 300f)) as FaceEmoji;
-		//face1c.Scale = 0.33f;
-
-		//FaceEmoji face2 = AddEmoji(new FaceEmoji(), new Vector2(400f, 700f)) as FaceEmoji;
-		//face2.Scale = 0.5f;
-
-		//FaceEmoji face3 = AddEmoji(new FaceEmoji(), new Vector2(700f, 700f)) as FaceEmoji;
-		//face3.Scale = 1f;
-
-		//FaceEmoji face4 = AddEmoji(new FaceEmoji(), new Vector2(1100f, 700f)) as FaceEmoji;
-		//face4.Scale = 1.333333f;
-
-		//FaceEmoji face5 = AddEmoji(new FaceEmoji(), new Vector2(1600f, 700f)) as FaceEmoji;
-		//face5.Scale = 2.5f;
-
-
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 5; i++)
 		{
 			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
 			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;

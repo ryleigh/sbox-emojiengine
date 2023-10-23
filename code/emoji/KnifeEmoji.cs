@@ -90,12 +90,7 @@ public class KnifeEmoji : Emoji
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
 
-		//Altitude = 120f;
-
-		//Degrees += 1f;
-		//Degrees = 25f;
-
-		DrawDebug();
+		//DrawDebug();
 	}
 
 	public override void Hit(Vector2 hitPos)

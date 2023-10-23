@@ -175,6 +175,7 @@ public class FaceEmoji : Emoji
 			HeldItem.Position = GetRotatedPos(Position + new Vector2(-Radius * 0.9f, -Radius * 0.5f));
 			HeldItem.ZIndex = ZIndex + Globals.DEPTH_INCREASE_HELD;
 			HeldItem.Degrees = Utils.DynamicEaseTo(HeldItem.Degrees, 180f + 25f + Degrees, 0.2f, dt);
+			HeldItem.Altitude = 0f;
 		}
 
 		//DrawDebug();
