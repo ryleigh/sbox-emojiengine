@@ -73,21 +73,24 @@ public class WoundEmoji : Emoji
 	{
 		base.Update(dt);
 
-		if(Parent != null)
+		if(Parent == null)
 		{
-			//ZIndex = ParentFace.ZIndex + (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 5f, 2f, EasingType.Linear);
-			ZIndex = Parent.ZIndex + Globals.DEPTH_INCREASE_WOUND;
-			float parentDegreesDiff = (Parent.Degrees - ParentStartDegrees);
-			Position = Parent.AnchorPos + Utils.DegreesToVector(ParentOffsetDegrees - parentDegreesDiff) * ParentOffsetDistance * Parent.Scale;
-			Degrees = _startDegrees + parentDegreesDiff;
+			Stage.RemoveEmoji(this);
+			return;
 		}
+
+		//ZIndex = ParentFace.ZIndex + (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 5f, 2f, EasingType.Linear);
+		ZIndex = Parent.ZIndex + Globals.DEPTH_INCREASE_WOUND;
+		float parentDegreesDiff = (Parent.Degrees - ParentStartDegrees);
+		Position = Parent.AnchorPos + Utils.DegreesToVector(ParentOffsetDegrees - parentDegreesDiff) * ParentOffsetDistance * Parent.Scale;
+		Degrees = _startDegrees + parentDegreesDiff;
 
 		//Log.Info($"parent: {ParentFace.ZIndex}, wound: {ZIndex}");
 
 		Opacity = Utils.Map(TimeSinceSpawn, 0f, Lifetime, 1f, 0f, EasingType.ExpoIn);
 		Brightness = Utils.Map(TimeSinceSpawn, 0f, _brightnessTime, _brightness, 0f, EasingType.QuadOut);
 		Blur = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.25f, 7f, 5f, EasingType.QuadOut);
-		Scale = (Parent?.Scale ?? 1f) * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut);
+		Scale = Parent.Scale * Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.15f, 1.25f, 1f, EasingType.QuadOut);
 
 		TextStroke = Utils.Map(TimeSinceSpawn, 0f, Lifetime * 0.2f, 6f, 0f, EasingType.Linear);
 

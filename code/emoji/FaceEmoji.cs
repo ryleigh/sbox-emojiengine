@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Numerics;
 
 namespace EmojiEngine;
 
@@ -90,6 +91,9 @@ public class FaceEmoji : Emoji
 		BloodAmountLeft = Game.Random.Int(14, 16);
 
 		Weight = 10f * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 1f, 1.2f);
+
+		if(Game.Random.Float(0f, 1f) < 0.4f)
+			AddDecoration("🩹", new Vector2(-35f, 55f), 64f, 20f);
 	}
 
 	public override void Update(float dt)
@@ -261,5 +265,19 @@ public class FaceEmoji : Emoji
 			case 4: return EasingType.ExpoIn;
 			case 5: return EasingType.QuintIn;
 		}
+	}
+
+	public void AddDecoration(string text, Vector2 offset, float fontSize, float degrees)
+	{
+		var decorationPos = Position + offset;
+		FaceDecorationEmoji decoration = Stage.AddEmoji(new FaceDecorationEmoji(), decorationPos) as FaceDecorationEmoji;
+		AddChild(decoration);
+		decoration.Text = text;
+		decoration.SetFontSize(fontSize);
+		decoration.ZIndex = ZIndex + Globals.DEPTH_INCREASE_DECORATION;
+		decoration.ParentOffsetDistance = (decorationPos - AnchorPos).Length / Scale;
+		decoration.ParentOffsetDegrees = Utils.VectorToDegrees(decorationPos - AnchorPos);
+		decoration.ParentStartDegrees = Degrees;
+		decoration.StartDegrees = decoration.Degrees = degrees;
 	}
 }

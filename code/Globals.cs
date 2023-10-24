@@ -10,8 +10,9 @@ namespace EmojiEngine;
 
 public static class Globals
 {
-	public const int DEPTH_INCREASE_WOUND = 1;
-	public const int DEPTH_INCREASE_HELD = 2;
+	public const int DEPTH_INCREASE_DECORATION = 1;
+	public const int DEPTH_INCREASE_WOUND = 2;
+	public const int DEPTH_INCREASE_HELD = 3;
 
 	public const int DEPTH_PLAYER_HAND_LEFT = 99999;
 	public const int DEPTH_PLAYER_GUN = 99999;
@@ -21,6 +22,8 @@ public static class Globals
 	public const int DEPTH_CROSSHAIR = 99995;
 
 	public const int DEPTH_PLAYER_MUZZLE_LINE = 99989;
+
+	public const int DEPTH_DEBUG = 999999999;
 
 	public const float GRAVITY_ACCEL = -1500f;
 

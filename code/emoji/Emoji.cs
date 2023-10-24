@@ -96,6 +96,10 @@ public class Emoji
 	public Vector2 HitRectSize { get; set; } // note: currently only works with things rotating around default anchorpos
 	public float HitRectDegrees { get; set; }
 
+	public int IdNumber { get; set; }
+
+	public static int CurrIdNumber { get; set; }
+
 	public Emoji()
 	{
 		Text = "";
@@ -115,11 +119,12 @@ public class Emoji
 		Saturation = 1f;
 		SpawnTime = Hud.Instance.CurrentStage.CurrentTime;
 		IsFirstUpdate = true;
+		IdNumber = CurrIdNumber++;
 	}
 
 	public virtual void Init()
 	{
-		
+
 	}
 
 	public virtual void Update(float dt)

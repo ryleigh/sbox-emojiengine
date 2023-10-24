@@ -268,22 +268,22 @@ public class Stage
 			emoji.Parent.RemoveChild(emoji);
 	}
 
-	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
+	public void DrawLine(Vector2 posA, Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = Globals.DEPTH_DEBUG, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
 		Lines.Add(new LineData(posA, posB, thickness, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}
 
-	public void DrawLineTo(Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
+	public void DrawLineTo(Vector2 posB, float thickness, Color color, float lifetime = 0f, int zIndex = Globals.DEPTH_DEBUG, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
 		Lines.Add(new LineData(new Vector2(5f, 5f), posB, thickness, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}
 
-	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = 0)
+	public void AddRing(Vector2 pos, Color color, float lifetime, float startRadius, float endRadius, float startWidth, float endWidth, int numSegments, int zIndex = Globals.DEPTH_DEBUG)
 	{
 		Rings.Add(new RingData(pos, color, CurrentTime, lifetime, zIndex, startRadius, endRadius, startWidth, endWidth, numSegments));
 	}
 
-	public void DrawPoint(Vector2 pos, Color color, float lifetime = 0f, int zIndex = 99999, float invert = 0f, float saturation = 1f, float blur = 0f)
+	public void DrawPoint(Vector2 pos, Color color, float lifetime = 0f, int zIndex = Globals.DEPTH_DEBUG, float invert = 0f, float saturation = 1f, float blur = 0f)
 	{
 		Lines.Add(new LineData(pos - new Vector2(0f, 4f), pos + new Vector2(0f, 4f), 8f, color, CurrentTime, lifetime, zIndex, invert, saturation, blur));
 	}
