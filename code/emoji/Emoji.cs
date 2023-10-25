@@ -71,7 +71,8 @@ public class Emoji
 	public string DebugText { get; set; }
 
 	public bool IsInteractable { get; set; }
-	public bool SwallowClicks { get; set; }
+	public bool ShouldRepel { get; set; }
+	//public bool SwallowClicks { get; set; }
 	public bool IsHovered { get; set; }
 	private float _radius;
 	public float Radius
@@ -108,7 +109,7 @@ public class Emoji
 		PanelSize = FontSize * PanelSizeFactor;
 		Opacity = 1f;
 		IsVisible = true;
-		SwallowClicks = true;
+		//SwallowClicks = true;
 		TransformOriginX = 0.5f;
 		TransformOriginY = 0.5f;
 		Scale = 1f;
@@ -120,6 +121,7 @@ public class Emoji
 		SpawnTime = Hud.Instance.CurrentStage.CurrentTime;
 		IsFirstUpdate = true;
 		IdNumber = CurrIdNumber++;
+		ShouldRepel = true;
 	}
 
 	public virtual void Init()
@@ -129,6 +131,8 @@ public class Emoji
 
 	public virtual void Update(float dt)
 	{
+		//DebugText = $"{FlipX}";
+
 		//DrawDebug();
 
 		if(IsFirstUpdate)

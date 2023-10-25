@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace EmojiEngine;
 
@@ -50,7 +51,7 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
 			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;
@@ -128,14 +129,14 @@ public class Stage
 			//}
 
 			// repel
-			if(emoji.Parent != null)
+			if(emoji.Parent != null || !emoji.ShouldRepel)
 				continue;
 
 			for(int j = InteractableEmojis.Count - 1; j >= 0; j--)
 			{
 				var other = InteractableEmojis[j];
 
-				if(other == emoji || other.Parent != null)
+				if(other == emoji || other.Parent != null || !other.ShouldRepel)
 					continue;
 
 				var pos = emoji.GetRotatedPos();

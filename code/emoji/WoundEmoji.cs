@@ -66,7 +66,7 @@ public class WoundEmoji : Emoji
 
 		ImpactEmoji = Stage.AddEmoji(new ImpactEmoji(), Position) as ImpactEmoji;
 		ImpactEmoji.SetFontSize(Game.Random.Float(60f, 105f));
-		ImpactEmoji.ZIndex = ZIndex + 1;
+		ImpactEmoji.ZIndex = ZIndex + Globals.DEPTH_INCREASE_WOUND_IMPACT;
 	}
 
 	public override void Update(float dt)
@@ -110,7 +110,7 @@ public class WoundEmoji : Emoji
 		if(ImpactEmoji != null)
 		{
 			ImpactEmoji.Position = Position;
-			ImpactEmoji.ZIndex = ZIndex + 1;
+			ImpactEmoji.ZIndex = ZIndex + Globals.DEPTH_INCREASE_WOUND_IMPACT;
 		}
 
 		if(TimeSinceSpawn > Lifetime)
@@ -130,7 +130,7 @@ public class WoundEmoji : Emoji
 		var parentPos = face.GetRotatedPos(); // + Altitude?
 
 		BloodSprayEmoji spray = Stage.AddEmoji(new BloodSprayEmoji(), Position) as BloodSprayEmoji;
-		spray.ZIndex = ZIndex + 2;
+		spray.ZIndex = ZIndex + Globals.DEPTH_INCREASE_BLOOD_SPRAY;
 		spray.Velocity = (Position - parentPos).Normal * Game.Random.Float(500f, 1200f);
 
 		var dir = (Position - parentPos).Normal;
@@ -153,7 +153,7 @@ public class WoundEmoji : Emoji
 
 		BloodDripEmoji drip = Stage.AddEmoji(new BloodDripEmoji(), Position + new Vector2(0f, -5f)) as BloodDripEmoji;
 		AddChild(drip);
-		drip.ZIndex = ZIndex + 1;
+		drip.ZIndex = ZIndex + Globals.DEPTH_INCREASE_BLOOD_DRIP;
 		drip.WoundPosLast = Position;
 		drip.GroundYPos = face != null ? face.GetRotatedPos().y - face.Radius * 1.25f : -999f;
 	}

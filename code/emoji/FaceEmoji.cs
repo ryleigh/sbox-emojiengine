@@ -94,6 +94,12 @@ public class FaceEmoji : Emoji
 
 		if(Game.Random.Float(0f, 1f) < 0.4f)
 			AddDecoration("🩹", new Vector2(-35f, 55f), 64f, 20f);
+		else if(Game.Random.Float(0f, 1f) < 0.2f)
+			AddDecoration("🎀", new Vector2(65f, 65f), 80f, -45f);
+		else if(Game.Random.Float(0f, 1f) < 0.05f)
+			AddDecoration("👁️", new Vector2(0f, 50f), 60f, 0f);
+		else if(Game.Random.Float(0f, 1f) < 0.1f)
+			AddDecoration("👃", new Vector2(0f, 0f), 50f, 0f);
 	}
 
 	public override void Update(float dt)

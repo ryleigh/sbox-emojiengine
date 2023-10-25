@@ -61,7 +61,7 @@ public class BloodPuddleEmoji : Emoji
 		Scale = Utils.Map(TimeSinceSpawn, 0f, Lifetime * _scaleMidTime, _startScale, 1f, EasingType.QuadOut) * Utils.Map(TimeSinceSpawn, Lifetime * _scaleMidTime, Lifetime, 1f, _endScale, EasingType.Linear)
 			* Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE); ;
 
-		ZIndex = -(int)Position.y - (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, 1000f);
+		ZIndex = -(int)Position.y + (int)Utils.Map(TimeSinceSpawn, 0f, Lifetime, 0f, Globals.DEPTH_BLOOD_PUDDLE_MIN);
 
 		if(TimeSinceSpawn > Lifetime)
 			Stage.RemoveEmoji(this);

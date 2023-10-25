@@ -5,12 +5,22 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace EmojiEngine;
 
 public class KnifeEmoji : Emoji
 {
 	public ShadowEmoji ShadowEmoji { get; set; }
+
+	public bool IsThrownAtPlayer { get; set; }
+
+	public float ThrowTime { get; set; }
+	public float TimeSinceThrown => Stage.CurrentTime - ThrowTime;
+	private Vector2 _throwStartPos;
+	private Vector2 _throwTargetPos;
+	private float _throwTotalTime;
+	private float _throwStartScale;
 
 	public KnifeEmoji()
 	{
@@ -39,53 +49,78 @@ public class KnifeEmoji : Emoji
 
 		//Stage.DrawLineTo(ShadowEmoji.Position, 2f, Color.White);
 
-		if(Parent == null)
+		if(IsThrownAtPlayer)
 		{
-			Position += Velocity * dt;
-			Velocity *= (1f - 3f * dt);
+			float throwProgress = Utils.Map(TimeSinceThrown, 0f, _throwTotalTime, 0f, 1f);
 
-			Altitude += Gravity * dt;
-			
-			if(Altitude > 0f)
-			{
-				Gravity += Globals.GRAVITY_ACCEL * dt;
+			//targetPos = Hud.Instance.MousePos;
 
-				Degrees += 1500f * dt;
+			Position = Vector2.Lerp(_throwStartPos, _throwTargetPos, Utils.Map(throwProgress, 0f, 1f, 0f, 1f, EasingType.QuadIn));
+			//Altitude += 100f * dt;
 
-				while(Degrees > 360f)
-					Degrees -= 360f;
+			Scale = Utils.Map(throwProgress, 0f, 1f, _throwStartScale, 3f, EasingType.SineIn);
 
-				while(Degrees < -360f)
-					Degrees += 360f;
-			}
-			else
-			{
-				if(Altitude < 0f)
-					Altitude = 0f;
+			ZIndex = (int)MathF.Round(Utils.Map(throwProgress, 0f, 1f, Globals.THROWN_AT_PLAYER_MIN, Globals.THROWN_AT_PLAYER_MAX)) + (int)Position.x;
 
-				Degrees = Utils.DynamicEaseTo(Degrees, 0f, 0.3f, dt);
-			}
-
-			//DebugText = $"{(int)Degrees}";
-
-			//Height = 32f + Utils.FastSin(TimeSinceSpawn) * 32f;
-
-			CheckBounds();
-
-			ZIndex = Hud.Instance.GetZIndex(Position.y);
-
-			ShadowEmoji.Position = Position + new Vector2(0f, -25f);
+			ShadowEmoji.Position = Position + new Vector2(0f, Utils.Map(throwProgress, 0f, 1f, -45f, -300f, EasingType.SineIn));
+			ShadowEmoji.Opacity = Utils.Map(throwProgress, 0f, 1f, 1f, 0f, EasingType.QuadIn);
+			ShadowEmoji.ScaleX = ScaleX;
+			ShadowEmoji.ScaleY = ScaleY;
+			ShadowEmoji.ZIndex = Globals.THROWN_AT_PLAYER_SHADOW;
 		}
 		else
 		{
-			ShadowEmoji.Position = Position + new Vector2(0f, -45f);
+			if(Parent == null)
+			{
+				Position += Velocity * dt;
+				Velocity *= (1f - 3f * dt);
+
+				Altitude += Gravity * dt;
+
+				if(Altitude > 0f)
+				{
+					Gravity += Globals.GRAVITY_ACCEL * dt;
+
+					Degrees += 1500f * dt;
+
+					while(Degrees > 360f)
+						Degrees -= 360f;
+
+					while(Degrees < -360f)
+						Degrees += 360f;
+				}
+				else
+				{
+					if(Altitude < 0f)
+						Altitude = 0f;
+
+					Degrees = Utils.DynamicEaseTo(Degrees, 0f, 0.3f, dt);
+				}
+
+				//DebugText = $"{(int)Degrees}";
+
+				//Height = 32f + Utils.FastSin(TimeSinceSpawn) * 32f;
+
+				CheckBounds();
+
+				ZIndex = Hud.Instance.GetZIndex(Position.y);
+
+				Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
+				ShadowEmoji.Position = Position + new Vector2(0f, -25f * Scale);
+				ShadowEmoji.Opacity = 1f;
+			}
+			else
+			{
+				Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
+				ShadowEmoji.Position = Position + new Vector2(0f, -45f * Scale);
+				ShadowEmoji.Opacity = 1f;
+			}
+
+			ShadowEmoji.ScaleX = ScaleX * 1.25f * Utils.Map(Altitude, 0f, 600f, 1f, 1.2f);
+			ShadowEmoji.ScaleY = ScaleY * 0.8f * Utils.Map(Altitude, 0f, 600f, 1f, 0.8f);
 		}
 
-		Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
-
 		ShadowEmoji.Text = Text;
-		ShadowEmoji.ScaleX = ScaleX * 1.25f * Utils.Map(Altitude, 0f, 600f, 1f, 1.2f);
-		ShadowEmoji.ScaleY = ScaleY * 0.8f * Utils.Map(Altitude, 0f, 600f, 1f, 0.8f);
 		ShadowEmoji.Degrees = Degrees;
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
@@ -96,22 +131,44 @@ public class KnifeEmoji : Emoji
 	public override void Hit(Vector2 hitPos)
 	{
 		base.Hit(hitPos);
-
-		if(Parent != null && Parent is FaceEmoji face)
+		
+		if(IsThrownAtPlayer)
 		{
-			if(face.HeldItem != null)
-			{
-				face.RemoveChild(face.HeldItem);
-				face.HeldItem = null;
-			}
+			IsThrownAtPlayer = false;
+			Gravity = 600f;
 		}
+		else
+		{
+			if(Parent != null && Parent is FaceEmoji face)
+			{
+				if(face.HeldItem != null)
+				{
+					face.RemoveChild(face.HeldItem);
+					face.HeldItem = null;
+				}
+			}
 
-		//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+			//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
 
-		ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
+			ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
 
-		Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
+			Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
 
-		Gravity = 600f;
+			//Gravity = 600f;
+
+			ThrowAtPlayer();
+		}
+	}
+
+	public void ThrowAtPlayer()
+	{
+		IsThrownAtPlayer = true;
+		ThrowTime = Stage.CurrentTime;
+		_throwStartPos = Position;
+		_throwTargetPos = Vector2.Lerp(new Vector2(Position.x, 0f), new Vector2(Hud.Instance.ScreenWidth * 0.5f, 0f), Game.Random.Float(0.2f, 0.7f));
+		Degrees = -45f - Utils.VectorToDegrees(_throwTargetPos - Position);
+		ShouldRepel = false;
+		_throwStartScale = Scale;
+		_throwTotalTime = Utils.Map((_throwTargetPos - Position).Length, 0f, 1000f, 0.25f, 0.8f, EasingType.SineOut);
 	}
 }

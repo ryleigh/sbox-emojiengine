@@ -47,7 +47,7 @@ public class BloodDripEmoji : Emoji
 
 		if(Parent != null)
 		{
-			ZIndex = Parent.ZIndex + 1;
+			ZIndex = Parent.ZIndex + Globals.DEPTH_INCREASE_BLOOD_DRIP;
 
 			if(TimeSinceSpawn < Lifetime * 0.6f)
 			{

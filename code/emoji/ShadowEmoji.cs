@@ -17,7 +17,7 @@ public class ShadowEmoji : Emoji
 		base.Init();
 
 		Text = "⚫️";
-		ZIndex = -9999;
+		ZIndex = Globals.DEPTH_SHADOW;
 		Contrast = 2f;
 		Brightness = 0f;
 	}
