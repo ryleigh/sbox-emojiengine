@@ -168,7 +168,7 @@ public class Emoji
 				Stage.DrawLine(trR, tlR, 3f, new Color(1f, 0f, 0f, 0.3f));
 				Stage.DrawLine(tlR, blR, 3f, new Color(1f, 0f, 0f, 0.3f));
 
-				Utils.DrawCircle(GetRotatedPos() + new Vector2(0f, Altitude), MathF.Max(HitRectSize.x * 0.5f, HitRectSize.y * 0.5f), 16, Stage.CurrentTime * 2f, new Color(0.6f, 0.6f, 0.6f, 0.2f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
+				Utils.DrawCircle(GetRotatedPos() + new Vector2(0f, Altitude), MathF.Max(HitRectSize.x * 0.55f, HitRectSize.y * 0.55f) * Scale, 16, Stage.CurrentTime * 2f, new Color(0.6f, 0.6f, 0.6f, 0.2f), width: 2f, lifetime: 0f, zIndex: ZIndex + 1);
 			}
 
 			else
@@ -248,7 +248,7 @@ public class Emoji
 			point -= new Vector2(0f, Altitude);
 			var distSqr = (point - Position).LengthSquared;
 
-			if(distSqr < MathF.Pow(MathF.Max(HitRectSize.x * 0.5f, HitRectSize.y * 0.5f), 2f))
+			if(distSqr < MathF.Pow(MathF.Max(HitRectSize.x * 0.55f, HitRectSize.y * 0.55f) * Scale, 2f))
 			{
 				var unrotatedPoint = Position + Utils.RotateVector(point - Position, -HitRectDegrees + Degrees);
 

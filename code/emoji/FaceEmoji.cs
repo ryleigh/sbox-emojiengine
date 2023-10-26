@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Numerics;
+using static Sandbox.Package;
 
 namespace EmojiEngine;
 
@@ -56,6 +57,8 @@ public class FaceEmoji : Emoji
 
 	public Emoji HeldItem { get; set; }
 
+	private float _throwTimer;
+
 	//private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
 	//		"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
 	//		"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
@@ -100,6 +103,8 @@ public class FaceEmoji : Emoji
 			AddDecoration("👁️", new Vector2(0f, 50f), 60f, 0f);
 		else if(Game.Random.Float(0f, 1f) < 0.1f)
 			AddDecoration("👃", new Vector2(0f, 0f), 50f, 0f);
+
+		_throwTimer = Game.Random.Float(2f, 5f);
 	}
 
 	public override void Update(float dt)
@@ -186,6 +191,14 @@ public class FaceEmoji : Emoji
 			HeldItem.ZIndex = ZIndex + Globals.DEPTH_INCREASE_HELD;
 			HeldItem.Degrees = Utils.DynamicEaseTo(HeldItem.Degrees, 180f + 25f + Degrees, 0.2f, dt);
 			HeldItem.Altitude = 0f;
+
+			_throwTimer -= dt;
+			if(_throwTimer < 0f && HeldItem is KnifeEmoji knife)
+			{
+				RemoveChild(knife);
+				HeldItem = null;
+				knife.ThrowAtPlayer();
+			}
 		}
 
 		//DrawDebug();

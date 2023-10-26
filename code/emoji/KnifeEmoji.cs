@@ -22,6 +22,15 @@ public class KnifeEmoji : Emoji
 	private float _throwTotalTime;
 	private float _throwStartScale;
 
+	private float _blinkTimer;
+	private bool _blinked;
+	private const float BLINK_TIME = 0.075f;
+
+	public bool DidHitPlayer { get; set; }
+	public float HitPlayerTime { get; set; }
+	public float TimeSinceHitPlayer => Stage.CurrentTime - HitPlayerTime;
+	private float FADE_OUT_TIME = 0.7f;
+
 	public KnifeEmoji()
 	{
 		IsInteractable = true;
@@ -49,7 +58,16 @@ public class KnifeEmoji : Emoji
 
 		//Stage.DrawLineTo(ShadowEmoji.Position, 2f, Color.White);
 
-		if(IsThrownAtPlayer)
+		if(DidHitPlayer)
+		{
+			float hitProgress = Utils.Map(TimeSinceHitPlayer, 0f, FADE_OUT_TIME, 0f, 1f);
+
+			Opacity = Utils.Map(hitProgress, 0f, 1f, 1f, 0f, EasingType.QuadIn);
+
+			if(TimeSinceHitPlayer > FADE_OUT_TIME)
+				Stage.RemoveEmoji(this);
+		}
+		else if(IsThrownAtPlayer)
 		{
 			float throwProgress = Utils.Map(TimeSinceThrown, 0f, _throwTotalTime, 0f, 1f);
 
@@ -67,6 +85,18 @@ public class KnifeEmoji : Emoji
 			ShadowEmoji.ScaleX = ScaleX;
 			ShadowEmoji.ScaleY = ScaleY;
 			ShadowEmoji.ZIndex = Globals.THROWN_AT_PLAYER_SHADOW;
+
+			_blinkTimer += dt;
+			if(_blinkTimer > BLINK_TIME)
+			{
+				_blinkTimer -= BLINK_TIME;
+				_blinked = !_blinked;
+			}
+
+			Brightness = _blinked ? 6f : 1f;
+
+			if(TimeSinceThrown > _throwTotalTime)
+				HitPlayer();
 		}
 		else
 		{
@@ -105,16 +135,13 @@ public class KnifeEmoji : Emoji
 
 				ZIndex = Hud.Instance.GetZIndex(Position.y);
 
-				Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
-				ShadowEmoji.Position = Position + new Vector2(0f, -25f * Scale);
-				ShadowEmoji.Opacity = 1f;
+				
 			}
-			else
-			{
-				Scale = Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE);
-				ShadowEmoji.Position = Position + new Vector2(0f, -45f * Scale);
-				ShadowEmoji.Opacity = 1f;
-			}
+
+			Brightness = 1f;
+			Scale = Utils.DynamicEaseTo(Scale, Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE), 0.2f, dt);
+			ShadowEmoji.Position = Position + new Vector2(0f, (Parent == null ? -25f : -45f) * Scale);
+			ShadowEmoji.Opacity = Utils.DynamicEaseTo(ShadowEmoji.Opacity, 1f, 0.3f, dt);
 
 			ShadowEmoji.ScaleX = ScaleX * 1.25f * Utils.Map(Altitude, 0f, 600f, 1f, 1.2f);
 			ShadowEmoji.ScaleY = ScaleY * 0.8f * Utils.Map(Altitude, 0f, 600f, 1f, 0.8f);
@@ -124,40 +151,32 @@ public class KnifeEmoji : Emoji
 		ShadowEmoji.Degrees = Degrees;
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
+		ShadowEmoji.ZIndex = Globals.DEPTH_SHADOW;
 
-		//DrawDebug();
+		DrawDebug();
 	}
 
 	public override void Hit(Vector2 hitPos)
 	{
 		base.Hit(hitPos);
 		
-		if(IsThrownAtPlayer)
+		if(Parent != null && Parent is FaceEmoji face)
 		{
-			IsThrownAtPlayer = false;
-			Gravity = 600f;
-		}
-		else
-		{
-			if(Parent != null && Parent is FaceEmoji face)
+			if(face.HeldItem != null)
 			{
-				if(face.HeldItem != null)
-				{
-					face.RemoveChild(face.HeldItem);
-					face.HeldItem = null;
-				}
+				face.RemoveChild(face.HeldItem);
+				face.HeldItem = null;
 			}
-
-			//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
-
-			ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
-
-			Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
-
-			//Gravity = 600f;
-
-			ThrowAtPlayer();
 		}
+
+		//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+
+		ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
+
+		Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
+
+		Gravity = 600f;
+		IsThrownAtPlayer = false;
 	}
 
 	public void ThrowAtPlayer()
@@ -170,5 +189,13 @@ public class KnifeEmoji : Emoji
 		ShouldRepel = false;
 		_throwStartScale = Scale;
 		_throwTotalTime = Utils.Map((_throwTargetPos - Position).Length, 0f, 1000f, 0.25f, 0.8f, EasingType.SineOut);
+	}
+
+	public void HitPlayer()
+	{
+		DidHitPlayer = true;
+		HitPlayerTime = Stage.CurrentTime;
+		Brightness = 1f;
+
 	}
 }
