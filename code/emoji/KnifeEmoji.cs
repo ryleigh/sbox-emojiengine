@@ -142,7 +142,7 @@ public class KnifeEmoji : Emoji
 			Scale = Utils.DynamicEaseTo(Scale, Utils.Map(Position.y, 0f, Hud.Instance.ScreenHeight, Globals.NEAR_SCALE, Globals.FAR_SCALE), 0.2f, dt);
 			ShadowEmoji.Position = Position + new Vector2(0f, (Parent == null ? -25f : -45f) * Scale);
 			ShadowEmoji.Opacity = Utils.DynamicEaseTo(ShadowEmoji.Opacity, 1f, 0.3f, dt);
-
+			ShadowEmoji.ZIndex = Globals.DEPTH_SHADOW;
 			ShadowEmoji.ScaleX = ScaleX * 1.25f * Utils.Map(Altitude, 0f, 600f, 1f, 1.2f);
 			ShadowEmoji.ScaleY = ScaleY * 0.8f * Utils.Map(Altitude, 0f, 600f, 1f, 0.8f);
 		}
@@ -151,14 +151,16 @@ public class KnifeEmoji : Emoji
 		ShadowEmoji.Degrees = Degrees;
 		ShadowEmoji.Blur = Blur * 0.1f + Utils.DynamicEaseTo(ShadowEmoji.Blur, 6f, 0.2f, dt);
 		ShadowEmoji.Scale = Utils.DynamicEaseTo(ShadowEmoji.Scale, Scale, 0.2f, dt);
-		ShadowEmoji.ZIndex = Globals.DEPTH_SHADOW;
 
-		DrawDebug();
+		//DrawDebug();
 	}
 
 	public override void Hit(Vector2 hitPos)
 	{
 		base.Hit(hitPos);
+
+		if(DidHitPlayer)
+			return;
 		
 		if(Parent != null && Parent is FaceEmoji face)
 		{
@@ -177,6 +179,7 @@ public class KnifeEmoji : Emoji
 
 		Gravity = 600f;
 		IsThrownAtPlayer = false;
+		ShouldRepel = true;
 	}
 
 	public void ThrowAtPlayer()
