@@ -64,6 +64,8 @@ public class FaceEmoji : Emoji
 	//		"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
 	//		"👹", "😷", "🤑", "🌞", "👽", "🤖", "👨‍🦲", "🎃", "🟡", "😺", "😸", "👸", "🎅", "👻", "👶", "👲", "👴", "🌎️", "🐞", };
 
+	private BubbleEmoji _bubble;
+
 	public FaceEmoji()
 	{
 		IsInteractable = true;
@@ -238,6 +240,8 @@ public class FaceEmoji : Emoji
 			Stage.TimeScale = MathF.Min(Game.Random.Float(0.1f, 0.5f), Stage.TimeScale);
 			Die();
 		}
+
+		AddBubble(BubbleMode.Yell, "❗️", 1f, leftSide: _bubble?.LeftSide ?? false);
 	}
 
 	public void Die()
@@ -298,5 +302,31 @@ public class FaceEmoji : Emoji
 		decoration.ParentOffsetDegrees = Utils.VectorToDegrees(decorationPos - AnchorPos);
 		decoration.ParentStartDegrees = Degrees;
 		decoration.StartDegrees = decoration.Degrees = degrees;
+	}
+
+	public void AddBubble(BubbleMode mode, string text, float lifetime, bool leftSide = false)
+	{
+		if(_bubble == null)
+		{
+			_bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
+			AddChild(_bubble);
+		}
+
+		_bubble.SetBubbleMode(mode, leftSide);
+		_bubble.SetInnerEmoji(text);
+		_bubble.Lifetime = lifetime;
+	}
+
+	public void AddBubble(BubbleMode mode, string text1, string text2, float lifetime, bool leftSide = false)
+	{
+		if(_bubble == null)
+		{
+			_bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
+			AddChild(_bubble);
+		}
+
+		_bubble.SetBubbleMode(mode, leftSide);
+		_bubble.SetInnerEmoji(text1, text2);
+		_bubble.Lifetime = lifetime;
 	}
 }

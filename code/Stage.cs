@@ -63,15 +63,10 @@ public class Stage
 				faceEmoji.HeldItem = knife;
 			}
 
-			BubbleEmoji bubble = AddEmoji(new BubbleEmoji(), new Vector2(1200f, 670f)) as BubbleEmoji;
-			faceEmoji.AddChild(bubble);
-			bubble.SetBubbleMode((BubbleMode)Game.Random.Int(0, 2));
-			bubble.FlipX = Game.Random.Float(0f, 1f) < 0.5f;
-
-			if(Game.Random.Float(0f, 1f) < 0.5f)
-				bubble.SetThoughtEmoji("🧄");
-			else
-				bubble.SetThoughtEmoji("🧄", "☄️");
+			if(Game.Random.Float(0f, 1f) < 0.3f)
+				faceEmoji.AddBubble((BubbleMode)Game.Random.Int(0, 2), Globals.GetRandomEmoji(), Game.Random.Float(1f, 4f), leftSide: Game.Random.Float(0f, 1f) < 0.3f);
+			else if(Game.Random.Float(0f, 1f) < 0.3f)
+				faceEmoji.AddBubble((BubbleMode)Game.Random.Int(0, 2), Globals.GetRandomEmoji(), Globals.GetRandomEmoji(), Game.Random.Float(1f, 4f), leftSide: Game.Random.Float(0f, 1f) < 0.3f);
 		}
 
 		AddEmoji(new KnifeEmoji(), new Vector2(1000f, 600f));
