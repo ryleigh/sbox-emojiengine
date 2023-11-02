@@ -128,8 +128,15 @@ public class BubbleEmoji : Emoji
 	{
 		base.Update(dt);
 
-		if(Parent == null || Parent is not FaceEmoji face || (face.IsDead && face.TimeSinceDeath > 1f && Opacity < 0.01f))
+		if(Parent == null || Parent is not FaceEmoji face)
 		{
+			Stage.RemoveEmoji(this);
+			return;
+		}
+
+		if(Opacity < 0.01f && ((face.IsDead && face.TimeSinceDeath > 1f) || (Lifetime > 0f && TimeSinceSpawn > Lifetime)))
+		{
+			face.Bubble = null;
 			Stage.RemoveEmoji(this);
 			return;
 		}

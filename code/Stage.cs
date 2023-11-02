@@ -77,7 +77,7 @@ public class Stage
 	{
 		float dtRaw = dt;
 		dt *= TimeScale;
-		
+
 		CurrentTime += dt;
 
 		HandleEmoji(dt);
@@ -113,7 +113,7 @@ public class Stage
 		}
 
 		// INTERACTABLE EMOJI ONLY
-		var mousePos = Hud.Instance.MousePos;
+		//var mousePos = Hud.Instance.MousePos;
 		//AllHoveredEmojis.Clear();
 
 		float RADIUS_REPEL_SCALE = 0.8f;

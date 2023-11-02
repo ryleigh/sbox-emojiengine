@@ -27,11 +27,6 @@ public class FaceEmoji : Emoji
 
 	public ShadowEmoji ShadowEmoji { get; set; }
 
-	public const float FONT_SIZE_MIN = 140f;
-	public const float FONT_SIZE_MAX = 140f;
-	//public const float FONT_SIZE_MIN = 80f;
-	//public const float FONT_SIZE_MAX = 150f;
-
 	public const float RADIUS_SIZE_FACTOR = 0.56f;
 
 	private float _pokedScale;
@@ -59,12 +54,7 @@ public class FaceEmoji : Emoji
 
 	private float _throwTimer;
 
-	//private static List<string> _faces = new() { "🙂", "🙄", "😱", "😐", "😔", "😋", "😇", "🤔", "😩", "😳", "😌", "🤗", "🤤", "😰", "😁", "🤨", "😡", "🥴", "🤓", "😫", "😒", "😜", "😬", "🙃", "🥱", "🧐", "😨",
-	//		"😥", "😥", "😲", "😖", "😶", "🤧", "😤", "😑", "🥶", "😕", "😆", "🥳", "😞", "😮", "😓", "😀", "😃", "😄", "😵", "😛", "😢", "🤫", "👿", "😟", "😣", "😧", "☹️", "🤮", "🌝", "🐸", "😠", "😪", "😝", "🤐",
-	//		"🌚", "😦", "😙", "😴", "🙁", "🤬", "🤯", "😗", "😯", "🤒", "😘", "😎", "🤡", "🥺", "🤕", "😏", "🤪", "💀", "🤣", "🥵", "🥰", "😈", "😭", "😍", "🤩", "😊", "😉", "😂", "🤭", "😚", "🤢", "😅", "☺️",
-	//		"👹", "😷", "🤑", "🌞", "👽", "🤖", "👨‍🦲", "🎃", "🟡", "😺", "😸", "👸", "🎅", "👻", "👶", "👲", "👴", "🌎️", "🐞", };
-
-	private BubbleEmoji _bubble;
+	public BubbleEmoji Bubble { get; set; }
 
 	public FaceEmoji()
 	{
@@ -85,17 +75,17 @@ public class FaceEmoji : Emoji
 		TransformOriginY = 0.75f;
 		DetermineRotVars();
 
-		SetFontSize(Game.Random.Float(FONT_SIZE_MIN, FONT_SIZE_MAX) + 60f);
+		SetFontSize(200f);
 		Radius = FontSize * RADIUS_SIZE_FACTOR;
 
 		ShadowEmoji = Stage.AddEmoji(new ShadowEmoji(), new Vector2(-999f, -999f)) as ShadowEmoji;
-		ShadowEmoji.SetFontSize(FontSize * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.75f, 0.8f));
+		ShadowEmoji.SetFontSize(FontSize * 0.75f);
 
 		_pokedScale = 1f;
 
 		BloodAmountLeft = Game.Random.Int(14, 16);
 
-		Weight = 10f * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 1f, 1.2f);
+		Weight = 10f;
 
 		if(Game.Random.Float(0f, 1f) < 0.4f)
 			AddDecoration("🩹", new Vector2(-35f, 55f), 64f, 20f);
@@ -151,12 +141,12 @@ public class FaceEmoji : Emoji
 			ScaleY = Utils.DynamicEaseTo(ScaleY, Utils.Map(TimeSinceDeath, 0f, 8f, 1f, 1.075f), 0.1f, dt);
 
 			Degrees = Utils.DynamicEaseTo(Degrees, _targetDeathDegrees, _deathRotateSpeed * Utils.Map(TimeSinceDeath, 0f, _deathRotateSpeedEaseTime, 0f, 1f, _deathRotateSpeedEasingType), dt);
-			ShadowEmoji.ScaleX = ScaleX * 0.75f;
-			ShadowEmoji.ScaleY = ScaleY * 1.2f;
-			//ShadowEmoji.ScaleX = 1f - ScaleX;
-			//ShadowEmoji.ScaleY = 1f - ScaleY;
+			ShadowEmoji.ScaleX = Utils.Map(TimeSinceDeath, 0f, 0.2f, ScaleX * 0.6f, ScaleX * 0.75f, EasingType.QuadOut);
+			ShadowEmoji.ScaleY = Utils.Map(TimeSinceDeath, 0f, 0.2f, ScaleY * 1.5f, ScaleY * 1.2f, EasingType.QuadOut);
+			//ShadowEmoji.ScaleX = ScaleX * 0.75f;
+			//ShadowEmoji.ScaleY = ScaleY * 1.2f;
 			ShadowEmoji.Degrees = _targetDeathDegrees;
-			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -80f * Scale) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -64f * Scale);
 
 			Brightness = Utils.Map(TimeSinceDeath, 0f, 9f, 1f, _deathBrightness);
 			Sepia = Utils.Map(TimeSinceDeath, 0f, 15f, 0f, _deathSepia);
@@ -170,14 +160,14 @@ public class FaceEmoji : Emoji
 			Velocity += Utils.GetRandomVector() * 1200f * dt;
 			ShadowEmoji.ScaleX = ScaleX * 1.25f;
 			ShadowEmoji.ScaleY = ScaleY * 0.8f;
-			ShadowEmoji.Degrees = 0f;// Degrees * 0.2f;
-			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -80f * Scale) * Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 0.8f, 1.3f);
+			ShadowEmoji.Degrees = Degrees * 0.1f;
+			ShadowEmoji.Position = GetRotatedPos() + new Vector2(0f, -64f * Scale);
 		}
 
 		Position += Velocity * dt;
 		//Position = new Vector2(Position.x, Utils.Map(Utils.FastSin(TimeSinceSpawn * 0.6f), -1f, 1f, 300f, Hud.Instance.ScreenHeight - 50f));
 
-		float deceleration = Utils.Map(FontSize, FONT_SIZE_MIN, FONT_SIZE_MAX, 3f, 5.5f);
+		float deceleration = 3f;
 		Velocity *= (1f - deceleration * dt);
 
 		CheckBounds();
@@ -205,7 +195,7 @@ public class FaceEmoji : Emoji
 
 		//DrawDebug();
 
-		//DebugText = $"{Altitude}";
+		//DebugText = $"{Bubble == null}";
 
 		//Hud.Instance.DrawLine(Position, AnchorPos, 4f, Color.White, 0f, 999);
 		//Hud.Instance.DebugDisplay.Text = $"Screen.Width: {Hud.Instance.ScreenWidth}, Position.x: {Position.x}, Position.x * Hud.Instance.ScaleToScreen: {Position.x * Hud.Instance.ScaleToScreen}";
@@ -241,7 +231,7 @@ public class FaceEmoji : Emoji
 			Die();
 		}
 
-		AddBubble(BubbleMode.Yell, "❗️", 1f, leftSide: _bubble?.LeftSide ?? false);
+		AddBubble(BubbleMode.Yell, "❗️", 2f, leftSide: Bubble?.LeftSide ?? false);
 	}
 
 	public void Die()
@@ -306,27 +296,27 @@ public class FaceEmoji : Emoji
 
 	public void AddBubble(BubbleMode mode, string text, float lifetime, bool leftSide = false)
 	{
-		if(_bubble == null)
+		if(Bubble == null)
 		{
-			_bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
-			AddChild(_bubble);
+			Bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
+			AddChild(Bubble);
 		}
 
-		_bubble.SetBubbleMode(mode, leftSide);
-		_bubble.SetInnerEmoji(text);
-		_bubble.Lifetime = lifetime;
+		Bubble.SetBubbleMode(mode, leftSide);
+		Bubble.SetInnerEmoji(text);
+		Bubble.Lifetime = lifetime;
 	}
 
 	public void AddBubble(BubbleMode mode, string text1, string text2, float lifetime, bool leftSide = false)
 	{
-		if(_bubble == null)
+		if(Bubble == null)
 		{
-			_bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
-			AddChild(_bubble);
+			Bubble = Stage.AddEmoji(new BubbleEmoji(), Position) as BubbleEmoji;
+			AddChild(Bubble);
 		}
 
-		_bubble.SetBubbleMode(mode, leftSide);
-		_bubble.SetInnerEmoji(text1, text2);
-		_bubble.Lifetime = lifetime;
+		Bubble.SetBubbleMode(mode, leftSide);
+		Bubble.SetInnerEmoji(text1, text2);
+		Bubble.Lifetime = lifetime;
 	}
 }
