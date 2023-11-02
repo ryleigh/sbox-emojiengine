@@ -144,6 +144,11 @@ public class Emoji
 		}
 	}
 
+	public virtual void OnRemove()
+	{
+
+	}
+
 	public void DrawDebug()
 	{
 		if(IsInteractable && Radius > 0f)

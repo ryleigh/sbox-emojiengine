@@ -51,7 +51,7 @@ public class Stage
 		//CursorEmoji = AddEmoji(new CursorEmoji(), new Vector2(-999f, -999f)) as CursorEmoji;
 		CrosshairEmoji = AddEmoji(new CrosshairEmoji(), Hud.Instance.MousePos) as CrosshairEmoji;
 
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			//FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Hud.Instance.ScreenWidth / 2f, Hud.Instance.ScreenHeight / 2f)) as FaceEmoji;
 			FaceEmoji faceEmoji = AddEmoji(new FaceEmoji(), new Vector2(Game.Random.Float(0f, Hud.Instance.ScreenWidth), Game.Random.Float(0f, Hud.Instance.ScreenHeight))) as FaceEmoji;
@@ -63,8 +63,15 @@ public class Stage
 				faceEmoji.HeldItem = knife;
 			}
 
-			var bubble = AddEmoji(new BubbleEmoji(), new Vector2(1200f, 670f));
+			BubbleEmoji bubble = AddEmoji(new BubbleEmoji(), new Vector2(1200f, 670f)) as BubbleEmoji;
 			faceEmoji.AddChild(bubble);
+			bubble.SetBubbleMode((BubbleMode)Game.Random.Int(0, 2));
+			bubble.FlipX = Game.Random.Float(0f, 1f) < 0.5f;
+
+			if(Game.Random.Float(0f, 1f) < 0.5f)
+				bubble.SetThoughtEmoji("🧄");
+			else
+				bubble.SetThoughtEmoji("🧄", "☄️");
 		}
 
 		AddEmoji(new KnifeEmoji(), new Vector2(1000f, 600f));
@@ -260,6 +267,8 @@ public class Stage
 			return;
 
 		Emojis.Remove(emoji);
+
+		emoji.OnRemove();
 
 		if(emoji.IsInteractable)
 			InteractableEmojis.Remove(emoji);
