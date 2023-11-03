@@ -40,6 +40,9 @@ public partial class CrosshairEmoji : Emoji
 	public PlayerGunEmoji PlayerGunEmoji { get; private set; }
 	public PlayerHandLeftEmoji PlayerHandEmoji { get; private set; }
 
+	public float LastHurtTime { get; private set; }
+	private float TimeSinceHurt => Stage.CurrentTime - LastHurtTime;
+
 	public override void Init()
 	{
 		base.Init();
@@ -55,6 +58,8 @@ public partial class CrosshairEmoji : Emoji
 
 		PlayerHandEmoji = Stage.AddEmoji(new PlayerHandLeftEmoji(), new Vector2(0f, -999f)) as PlayerHandLeftEmoji;
 		PlayerHandEmoji.CrosshairEmoji = this;
+
+		LastHurtTime = -99f;
 	}
 
 	public override void Update(float dt)
@@ -102,6 +107,10 @@ public partial class CrosshairEmoji : Emoji
 		Hud.Instance.OverlayDisplay.Blur = Utils.Map(TimeSinceShoot, 0f, _blurTime, _blurAmount, 0f, EasingType.Linear);
 
 		Hud.Instance.CameraOffset = Utils.GetRandomVector() * Utils.Map(TimeSinceShoot, 0f, _shakeTime, _shakeAmount, 0f, EasingType.QuadOut);
+
+		Stage.FgOpacity = Utils.Map(TimeSinceHurt, 0f, 0.3f, 1f, 0f);
+		Stage.FgColorBottom = new Color(1f, 0f, 0f, 0.66f);
+		Stage.FgColorTop = new Color(1f, 0f, 0f, 0f);
 	}
 
 	public override void OnMouseDown(bool rightClick)
@@ -158,5 +167,10 @@ public partial class CrosshairEmoji : Emoji
 
 		PlayerGunEmoji.Shoot(hitPos);
 		PlayerHandEmoji.Shoot(hitPos);
+	}
+
+	public void Hurt()
+	{
+		LastHurtTime = Stage.CurrentTime;
 	}
 }

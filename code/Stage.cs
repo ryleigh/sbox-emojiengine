@@ -28,6 +28,10 @@ public class Stage
 	public float CurrentTime { get; private set; }
 	public float TimeScale { get; set; }
 
+	public Color FgColorBottom { get; set; }
+	public Color FgColorTop { get; set; }
+	public float FgOpacity { get; set; }
+
 	public Stage()
 	{
 		Emojis = new();
@@ -71,6 +75,9 @@ public class Stage
 
 		AddEmoji(new KnifeEmoji(), new Vector2(1000f, 600f));
 
+		FgOpacity = 0f;
+		FgColorBottom = Color.Red;
+		FgColorTop = Color.Blue;
 	}
 
 	public void Update(float dt)
@@ -86,7 +93,7 @@ public class Stage
 
 		if(Input.Pressed("Restart"))
 		{
-			Restart();
+			Hud.Instance.Restart();
 			return;
 		}
 

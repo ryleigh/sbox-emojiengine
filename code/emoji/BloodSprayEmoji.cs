@@ -31,7 +31,7 @@ public class BloodSprayEmoji : Emoji
 		SetFontSize(Game.Random.Float(45f, 52f));
 		Brightness = Game.Random.Float(0.7f, 1.2f);
 		Opacity = 0f;
-		_scale = Game.Random.Float(1.1f, 1.4f);
+		_scale = Game.Random.Float(1.2f, 1.45f);
 
 		HueRotateDegrees = 170f;
 

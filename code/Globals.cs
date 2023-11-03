@@ -36,8 +36,8 @@ public static class Globals
 	public const int DEPTH_CROSSHAIR = 99995;
 	public const int DEPTH_PLAYER_MUZZLE_LINE = 99989;
 
-	public const int DEPTH_DEBUG = 999999999;
-
+	public const int DEPTH_DEBUG = 999999998;
+	public const int DEPTH_FG_COLOR = 999999999;
 
 
 	public const float GRAVITY_ACCEL = -1500f;

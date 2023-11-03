@@ -134,7 +134,7 @@ public class BubbleEmoji : Emoji
 			return;
 		}
 
-		if(Opacity < 0.01f && ((face.IsDead && face.TimeSinceDeath > 1f) || (Lifetime > 0f && TimeSinceSpawn > Lifetime)))
+		if(Opacity < 0.005f && ((face.IsDead && face.TimeSinceDeath > 1f) || (Lifetime > 0f && TimeSinceSpawn > Lifetime)))
 		{
 			face.Bubble = null;
 			Stage.RemoveEmoji(this);
@@ -176,5 +176,8 @@ public class BubbleEmoji : Emoji
 		base.OnRemove();
 
 		Stage.RemoveEmoji(_emoji);
+
+		if(_emoji2 != null)
+			Stage.RemoveEmoji(_emoji2);
 	}
 }

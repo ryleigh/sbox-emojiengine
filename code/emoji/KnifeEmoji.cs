@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using static Sandbox.Package;
 
 namespace EmojiEngine;
 
@@ -29,7 +30,9 @@ public class KnifeEmoji : Emoji
 	public bool DidHitPlayer { get; set; }
 	public float HitPlayerTime { get; set; }
 	public float TimeSinceHitPlayer => Stage.CurrentTime - HitPlayerTime;
-	private float FADE_OUT_TIME = 0.7f;
+	private float FADE_OUT_TIME = 0.9f;
+	private float _bloodSprayTimer;
+	private float _bloodSprayDelay;
 
 	public KnifeEmoji()
 	{
@@ -61,6 +64,24 @@ public class KnifeEmoji : Emoji
 		if(DidHitPlayer)
 		{
 			float hitProgress = Utils.Map(TimeSinceHitPlayer, 0f, FADE_OUT_TIME, 0f, 1f);
+
+			_bloodSprayTimer += dt;
+			if(_bloodSprayTimer > _bloodSprayDelay)
+			{
+				var bloodPos = Position + (_throwTargetPos - _throwStartPos).Normal * Game.Random.Float(10f, 25f);
+
+				PlayerBloodSprayEmoji spray = Stage.AddEmoji(new PlayerBloodSprayEmoji(), bloodPos) as PlayerBloodSprayEmoji;
+				spray.ZIndex = ZIndex + 1;
+
+				var dir = Utils.RotateVector((Position - bloodPos).Normal, Game.Random.Float(-30f, 30f));
+				spray.Velocity = dir * Game.Random.Float(1000f, 6000f);
+				spray.FlipX = dir.x < 0f;
+				spray.Degrees = -Utils.VectorToDegrees(Position - bloodPos) + (spray.FlipX ? 180f : 0f);
+				spray.RotateSpeed = Game.Random.Float(140f, 450f) * Utils.Map(MathF.Abs(dir.y), 0f, 1f, 1f, 0f) * (spray.FlipX ? -1f : 1f);
+
+				_bloodSprayTimer = 0f;
+				_bloodSprayDelay = Game.Random.Float(0.05f, 0.33f) * Utils.Map(hitProgress, 0f, 1f, 0.5f, 1.5f, EasingType.QuadOut);
+			}
 
 			Opacity = Utils.Map(hitProgress, 0f, 1f, 1f, 0f, EasingType.QuadIn);
 
@@ -199,6 +220,8 @@ public class KnifeEmoji : Emoji
 		DidHitPlayer = true;
 		HitPlayerTime = Stage.CurrentTime;
 		Brightness = 1f;
+		_bloodSprayDelay = Game.Random.Float(0.05f, 0.15f);
 
+		Stage.CrosshairEmoji.Hurt();
 	}
 }

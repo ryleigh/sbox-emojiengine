@@ -63,6 +63,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		DebugDisplay.Text = "";
 
+		OverlayDisplay.Restart();
 		CurrentStage.Restart();
 	}
 
@@ -72,7 +73,7 @@ public partial class Hud : RootPanel, Sandbox.Menu.IGameMenuPanel
 
 		CurrentStage.Update(Time.Delta);
 
-		//DebugDisplay.Text = $"{_faceEmojis.Count}";
+		//DebugDisplay.Text = $"{OverlayDisplay.HueRotateDegrees}";
 
 		//Log.Info($"{Input.Pressed("Restart")}, {Input.Pressed("attack1")}");
 

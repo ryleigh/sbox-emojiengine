@@ -28,6 +28,17 @@
 	public float Saturation { get; set; } = 1f;
 	public float Invert { get; set; }
 
+	public void Restart()
+	{
+		Blur = 0f;
+		HueRotateDegrees = 0f;
+		Brightness = 1f;
+		Contrast = 1f;
+		Sepia = 0f;
+		Saturation = 1f;
+		Invert = 0f;
+	}
+
 	public override void Tick()
 	{
 		base.Tick();
