@@ -35,5 +35,8 @@ public class FaceDecorationEmoji : Emoji
 		Position = Parent.AnchorPos + Utils.DegreesToVector(ParentOffsetDegrees - parentDegreesDiff) * ParentOffsetDistance * Parent.Scale;
 		Degrees = StartDegrees + parentDegreesDiff;
 		Scale = Parent.Scale;
+
+		Sepia = Parent.Sepia;
+		Brightness = Parent.Brightness;
 	}
 }

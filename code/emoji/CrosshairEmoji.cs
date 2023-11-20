@@ -86,7 +86,9 @@ public partial class CrosshairEmoji : Emoji
 
 		float targetMouseDeltaGap = Utils.Map(mouseDeltaLength, 0f, 20f, 0f, 120f, EasingType.SineIn);
 		_mouseDeltaGap = Utils.DynamicEaseTo(_mouseDeltaGap, targetMouseDeltaGap, targetMouseDeltaGap > _mouseDeltaGap ? 0.3f : 0.15f, dt);
-		_recoilGap = Utils.DynamicEaseTo(_recoilGap, Utils.Map(TimeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut), 0.3f, dt);
+
+		float targetRecoil = Utils.Map(TimeSinceShoot, 0f, 0.5f, _recoilAmount, 0f, EasingType.SineOut) + Utils.Map(TimeSinceHurt, 0f, 0.25f, 160f, 0f, EasingType.QuadOut);
+		_recoilGap = Utils.DynamicEaseTo(_recoilGap, targetRecoil, 0.3f, dt);
 		_recoilAmount = Utils.DynamicEaseTo(_recoilAmount, 0f, 0.05f, dt);
 
 		_gap = Utils.DynamicEaseTo(_gap, MIN_GAP + _mouseDeltaGap + _recoilGap, 0.25f, dt);
@@ -106,9 +108,9 @@ public partial class CrosshairEmoji : Emoji
 		Hud.Instance.OverlayDisplay.Brightness = Utils.Map(TimeSinceShoot, 0f, 0.125f, _brightnessAmount, 1f, EasingType.QuadOut);
 		Hud.Instance.OverlayDisplay.Blur = Utils.Map(TimeSinceShoot, 0f, _blurTime, _blurAmount, 0f, EasingType.Linear);
 
-		Hud.Instance.CameraOffset = Utils.GetRandomVector() * Utils.Map(TimeSinceShoot, 0f, _shakeTime, _shakeAmount, 0f, EasingType.QuadOut);
+		Hud.Instance.CameraOffset = Utils.GetRandomVector() * (Utils.Map(TimeSinceShoot, 0f, _shakeTime, _shakeAmount, 0f, EasingType.QuadOut) + Utils.Map(TimeSinceHurt, 0f, 0.07f, 60f, 0f, EasingType.QuadOut));
 
-		Stage.FgOpacity = Utils.Map(TimeSinceHurt, 0f, 0.3f, 1f, 0f);
+		Stage.FgOpacity = Utils.Map(TimeSinceHurt, 0f, 0.4f, 1f, 0f, EasingType.QuadOut);
 		Stage.FgColorBottom = new Color(1f, 0f, 0f, 0.66f);
 		Stage.FgColorTop = new Color(1f, 0f, 0f, 0f);
 	}
@@ -155,7 +157,7 @@ public partial class CrosshairEmoji : Emoji
 		}
 
 		LastShootTime = Stage.CurrentTime;
-		_recoilAmount += 160f;
+		_recoilAmount += Game.Random.Float(120f, 160f);
 		_targetRecoilOffset += new Vector2(Game.Random.Float(-70f, 70f), Game.Random.Float(0f, 1f) < 0.8f ? Game.Random.Float(50f, 350f) : Game.Random.Float(-20f, -70f));
 		//_velocity += Utils.GetRandomVector() * Game.Random.Float(50f, 500f);
 		_shakeTime = Game.Random.Float(0.05f, 0.15f);
@@ -172,5 +174,6 @@ public partial class CrosshairEmoji : Emoji
 	public void Hurt()
 	{
 		LastHurtTime = Stage.CurrentTime;
+		Stage.TimeScale = MathF.Min(Game.Random.Float(0.08f, 0.10f), Stage.TimeScale);
 	}
 }

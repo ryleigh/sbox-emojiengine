@@ -30,7 +30,7 @@ public class KnifeEmoji : Emoji
 	public bool DidHitPlayer { get; set; }
 	public float HitPlayerTime { get; set; }
 	public float TimeSinceHitPlayer => Stage.CurrentTime - HitPlayerTime;
-	private float FADE_OUT_TIME = 0.9f;
+	private float FADE_OUT_TIME = 1.2f;
 	private float _bloodSprayTimer;
 	private float _bloodSprayDelay;
 
@@ -80,10 +80,10 @@ public class KnifeEmoji : Emoji
 				spray.RotateSpeed = Game.Random.Float(140f, 450f) * Utils.Map(MathF.Abs(dir.y), 0f, 1f, 1f, 0f) * (spray.FlipX ? -1f : 1f);
 
 				_bloodSprayTimer = 0f;
-				_bloodSprayDelay = Game.Random.Float(0.05f, 0.33f) * Utils.Map(hitProgress, 0f, 1f, 0.5f, 1.5f, EasingType.QuadOut);
+				_bloodSprayDelay = Game.Random.Float(0.05f, 0.2f) * Utils.Map(hitProgress, 0f, 1f, 0.5f, 1.5f, EasingType.QuadOut);
 			}
 
-			Opacity = Utils.Map(hitProgress, 0f, 1f, 1f, 0f, EasingType.QuadIn);
+			Opacity = Utils.Map(hitProgress, 0f, 1f, 1f, 0f, EasingType.ExpoIn);
 
 			if(TimeSinceHitPlayer > FADE_OUT_TIME)
 				Stage.RemoveEmoji(this);
@@ -155,8 +155,6 @@ public class KnifeEmoji : Emoji
 				CheckBounds();
 
 				ZIndex = Hud.Instance.GetZIndex(Position.y);
-
-				
 			}
 
 			Brightness = 1f;
@@ -192,13 +190,15 @@ public class KnifeEmoji : Emoji
 			}
 		}
 
-		//Velocity += new Vector2(0f, 1f) * Game.Random.Float(50f, 140f);
+		var velAdd = (Position == hitPos ? Utils.GetRandomVector() : (Position - hitPos).Normal) * Game.Random.Float(80f, 400f);
+		velAdd = new Vector2(velAdd.x, MathF.Abs(velAdd.y));
+		Velocity += velAdd;
 
 		ImpactEmoji impact = Stage.AddEmoji(new ImpactEmoji(), hitPos) as ImpactEmoji;
 
 		Stage.TimeScale = MathF.Min(Game.Random.Float(0.5f, 0.6f), Stage.TimeScale);
 
-		Gravity = 600f;
+		Gravity = Game.Random.Float(400f, 700f);
 		IsThrownAtPlayer = false;
 		ShouldRepel = true;
 	}

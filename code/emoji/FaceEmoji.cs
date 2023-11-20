@@ -227,7 +227,7 @@ public class FaceEmoji : Emoji
 		{
 			Degrees = 0f;
 			DetermineRotVars();
-			Stage.TimeScale = MathF.Min(Game.Random.Float(0.1f, 0.5f), Stage.TimeScale);
+			Stage.TimeScale = MathF.Min(Game.Random.Float(0.1f, 0.4f), Stage.TimeScale);
 			Die();
 		}
 

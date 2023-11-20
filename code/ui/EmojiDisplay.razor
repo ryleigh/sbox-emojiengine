@@ -37,7 +37,7 @@
 <root style="background: linear-gradient(@(90f + Utils.FastSin(Hud.Instance.CurrentStage.CurrentTime * 0.1f) * 10f)deg, @(Hud.Instance.CurrentStage.BgColorBottom.Rgba), @(Hud.Instance.CurrentStage.BgColorTop.Rgba));">
 	@foreach(var emoji in Hud.Instance.CurrentStage.Emojis)
 	{
-		@if (!emoji.IsVisible || (string.IsNullOrEmpty(emoji.Text) && string.IsNullOrEmpty(emoji.BackgroundImage)))
+		@if (!emoji.IsVisible || !(emoji.Opacity > 0f) || (string.IsNullOrEmpty(emoji.Text) && string.IsNullOrEmpty(emoji.BackgroundImage)))
 			continue;
 
 		<EmojiPanel Emoji=@emoji></EmojiPanel>
